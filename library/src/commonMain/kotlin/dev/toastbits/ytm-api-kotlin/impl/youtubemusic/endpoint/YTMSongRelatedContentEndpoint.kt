@@ -1,50 +1,45 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.loader.MediaItemLoader
 import dev.toastbits.ytmapi.model.external.mediaitem.Song
-import dev.toastbits.ytmapi.model.external.mediaitem.song.SongData
 import dev.toastbits.ytmapi.SongRelatedContentEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.RelatedGroup
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicApi
-import dev.toastbits.ytmapi.model.YoutubeiBrowseResponse
+import dev.toastbits.ytmapi.model.internal.YoutubeiBrowseResponse
+import dev.toastbits.ytmapi.itemcache.MediaItemCache
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.put
 
 class YTMSongRelatedContentEndpoint(override val api: YoutubeMusicApi): SongRelatedContentEndpoint() {
     override suspend fun getSongRelated(
         song_id: String
     ): Result<List<RelatedGroup>> = runCatching {
-        var related_browse_id: String? = api.item_cache.getSongRelatedBrowseId(song_id)
+        val song: Song = api.item_cache.loadSong(
+            api,
+            song_id,
+            setOf(MediaItemCache.SongKey.RELATED_BROWSE_ID)
+        )
 
-        if (related_browse_id == null) {
-            val load_result: Result<Song> = api.LoadSong.implementedOrNull()?.loadSong(song_id)
-
-            related_browse_id = load_result.fold(
-                { it.related_browse_id },
-                { return@runCatching Result.failure(it) }
-            )
-        }
-
-        if (related_browse_id == null) {
-            return@runCatching Result.failure(RuntimeException("Song $song_id has no related_browse_id"))
+        if (song.related_browse_id == null) {
+            throw RuntimeException("Song $song_id has no related_browse_id")
         }
 
         val hl: String = api.data_language
         val response: HttpResponse = api.client.request {
             endpointPath("browse")
             addAuthApiHeaders()
-            postWithBody(mapOf("browseId" to related_browse_id))
+            postWithBody {
+                put("browseId", song.related_browse_id)
+            }
         }
 
-        val parsed: BrowseResponse = response.body
+        val parsed: BrowseResponse = response.body()
 
         val groups = parsed.contents.sectionListRenderer?.contents?.map { group ->
-            val items = group.getMediaItemsOrNull(hl)
-            for (item in items ?: emptyList()) {
-                item.saveToDatabase(api.database)
-            }
-
             RelatedGroup(
                 title = group.title?.text,
-                items = items,
+                items = group.getMediaItemsOrNull(hl, api),
                 description = group.description
             )
         }

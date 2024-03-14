@@ -1,6 +1,7 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.loadmediaitem
 
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.call.body
 import dev.toastbits.ytmapi.YoutubeApi
 import dev.toastbits.ytmapi.radio.YoutubeiNextResponse
 import dev.toastbits.ytmapi.model.external.mediaitem.Artist
@@ -11,7 +12,7 @@ suspend fun parseSongResponse(
     response: HttpResponse,
     api: YoutubeApi
 ): Result<Song> = runCatching {
-    val response_data: YoutubeiNextResponse = response.body
+    val response_data: YoutubeiNextResponse = response.body()
     val tabs: List<YoutubeiNextResponse.Tab> =
         response_data
             .contents
@@ -29,12 +30,12 @@ suspend fun parseSongResponse(
     val title: String = video.title.first_text
     val is_explicit: Boolean = video.badges?.any { it.isExplicit() } == true
 
-    val artist: Artist? = video.getArtist().getOrThrow()
+    val artist: Artist? = video.getArtist(api).getOrThrow()
 
     return@runCatching Song(
         id = song_id,
-        artist_id = artist?.id,
-        title = title,
+        artist = artist,
+        name = title,
         is_explicit = is_explicit,
         lyrics_browse_id = lyrics_browse_id,
         related_browse_id = related_browse_id

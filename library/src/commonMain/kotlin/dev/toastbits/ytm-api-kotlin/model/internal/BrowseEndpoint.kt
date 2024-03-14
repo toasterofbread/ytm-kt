@@ -1,12 +1,7 @@
 package dev.toastbits.ytmapi.model.internal
 
+import dev.toastbits.ytmapi.model.external.*
 import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
-import dev.toastbits.ytmapi.model.external.mediaitem.enums.MediaItemType
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.ListPageBrowseIdViewMore
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.MediaItemViewMore
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.PlainViewMore
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.ViewMore
 
 data class WatchEndpoint(val videoId: String?, val playlistId: String?)
 data class BrowseEndpointContextMusicConfig(val pageType: String)
@@ -18,33 +13,33 @@ data class BrowseEndpoint(
 ) {
     fun getPageType(): String? =
         browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType
-    fun getMediaItemType(): MediaItemType? =
-        getPageType()?.let { MediaItemType.fromBrowseEndpointType(it) }
+    fun getMediaItemType(): MediaItem.Type? =
+        getPageType()?.let { MediaItem.Type.fromBrowseEndpointType(it) }
 
-    fun getMediaItem(): MediaItemData? =
+    fun getMediaItem(): MediaItem? =
         getPageType()?.let { page_type ->
             browseId?.let { browse_id ->
-                MediaItemData.fromBrowseEndpointType(page_type, browse_id)
+                MediaItem.Type.fromBrowseEndpointType(page_type).itemFromId(browse_id)
             }
         }
 
-    fun getViewMore(base_item: MediaItem): ViewMore? {
+    fun getViewMore(base_item: MediaItem): YoutubePage? {
         val item = getMediaItem()
         if (item != null) {
-            return MediaItemViewMore(item, params, base_item)
+            return MediaItemYoutubePage(item, params, base_item)
         }
         else if (browseId == null) {
             return null
         }
         else if (params != null) {
-            return ListPageBrowseIdViewMore(
-                base_item.id,
+            return ListPageBrowseIdYoutubePage(
+                base_item,
                 list_page_browse_id = browseId,
                 browse_params = params
             )
         }
         else {
-            return PlainViewMore(browseId)
+            return PlainYoutubePage(browseId)
         }
     }
 }

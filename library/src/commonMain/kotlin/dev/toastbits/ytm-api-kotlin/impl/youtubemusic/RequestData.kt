@@ -1,10 +1,15 @@
 package dev.toastbits.ytmapi.impl.youtubemusic
 
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.putJsonObject
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.JsonObject
+
 internal object RequestData {
     val yt_i_api_key: String = "AIzaSyAOghZGza2MQSZkY_zfZ370N-PUdXEo8AI"
     val ytm_user_agent: String = "Mozilla/5.0 (X11; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0"
 
-    val ytm_headers = mapOf(
+    val ytm_headers: Map<String, String> = mapOf(
         "accept" to "*/*",
         "content-type" to "application/json",
         "x-youtube-client-name" to "67",
@@ -28,7 +33,7 @@ internal object RequestData {
         }
     }
 
-    fun getYtmContextAndroid(hl: String) = buildJsonObject {
+    fun getYtmContextAndroid(hl: String): JsonObject = buildJsonObject {
         putJsonObject("context") {
             putJsonObject("client") {
                 put("hl", hl)
@@ -42,7 +47,7 @@ internal object RequestData {
         }
     }
 
-    fun getYtmContextMobile(hl: String) = buildJsonObject {
+    fun getYtmContextMobile(hl: String): JsonObject = buildJsonObject {
         putJsonObject("context") {
             putJsonObject("client") {
                 put("hl", hl)
@@ -58,7 +63,7 @@ internal object RequestData {
         }
     }
 
-    fun getYtmContextAndroidMusic(hl: String) = buildJsonObject {
+    fun getYtmContextAndroidMusic(hl: String): JsonObject = buildJsonObject {
         putJsonObject("context") {
             putJsonObject("client") {
                 put("hl", hl)

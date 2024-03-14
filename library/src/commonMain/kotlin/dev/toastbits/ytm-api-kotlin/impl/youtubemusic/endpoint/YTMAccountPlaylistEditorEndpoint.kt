@@ -1,104 +1,133 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.playlist.RemotePlaylist
 import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
-import dev.toastbits.ytmapi.model.external.mediaitem.song.SongRef
 import dev.toastbits.ytmapi.model.external.PlaylistEditor
 import dev.toastbits.ytmapi.endpoint.AccountPlaylistEditorEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicAuthInfo
+import dev.toastbits.ytmapi.impl.youtubemusic.formatYoutubePlaylistId
+import io.ktor.client.request.request
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.putJsonArray
+import kotlinx.serialization.json.JsonObject
 
 class YTMAccountPlaylistEditorEndpoint(override val auth: YoutubeMusicAuthInfo): AccountPlaylistEditorEndpoint() {
-    override fun getEditor(playlist_id: String, item_set_ids: List<String>): PlaylistEditor {
-        return AccountPlaylistEditor(playlist_id, playlist_id, auth, this)
+    override fun getEditor(
+        playlist_id: String,
+        item_ids: List<String>,
+        item_set_ids: List<String>
+    ): PlaylistEditor {
+        return AccountPlaylistEditor(playlist_id, item_ids, item_set_ids, auth, this)
     }
 }
 
 private class AccountPlaylistEditor(
     val playlist_id: String,
-    val item_set_ids: List<String>,
+    item_ids: List<String>,
+    item_set_ids: List<String>,
     val auth: YoutubeMusicAuthInfo,
     val endpoint: AccountPlaylistEditorEndpoint
-): PlaylistEditor(playlist, auth.api.context) {
+): PlaylistEditor {
+    private val item_ids: MutableList<String> = item_ids.toMutableList()
+    private val item_set_ids: MutableList<String> = item_set_ids.toMutableList()
+
     override fun canPerformDeletion(): Boolean = auth.DeleteAccountPlaylist.isImplemented()
 
     override suspend fun performDeletion(): Result<Unit> = runCatching {
         check(canPerformDeletion())
-        return auth.DeleteAccountPlaylist.deleteAccountPlaylist(playlist.id).getOrThrow()
+        auth.DeleteAccountPlaylist.deleteAccountPlaylist(playlist_id).getOrThrow()
     }
 
     override suspend fun performAndCommitActions(
-        actions: List<Action>
+        actions: List<PlaylistEditor.Action>
     ): Result<Unit> = runCatching {
-        lazyAssert { playlist.isPlaylistEditable(context) }
-
         if (actions.isEmpty()) {
             return@runCatching Unit
         }
-
-        val actions_request_data: List<Map<String, String>> = actions.map { getActionRequestData(it) }
 
         with(endpoint) {
             api.client.request {
                 endpointPath("browse/edit_playlist")
                 addAuthApiHeaders()
-                postWithBody(
-                    mapOf(
-                        "playlistId" to RemotePlaylist.formatYoutubeId(playlist.id),
-                        "actions" to actions_request_data
-                    )
-                )
+                postWithBody {
+                    put("playlistId", formatYoutubePlaylistId(playlist_id))
+
+                    putJsonArray("actions") {
+                        for (action in actions) {
+                            val request_data: JsonObject? = getActionRequestData(action)
+                            if (request_data != null) {
+                                add(request_data)
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (action in actions) {
+                when (action) {
+                    is PlaylistEditor.Action.Add -> {
+                        item_ids.add(action.song_id)
+                        // TODO
+                        // item_set_ids.add()
+                    }
+                    is PlaylistEditor.Action.Move -> {
+                        item_ids.add(action.to, item_ids.removeAt(action.from))
+                        item_set_ids.add(action.to, item_set_ids.removeAt(action.from))
+                    }
+                    is PlaylistEditor.Action.Remove -> {
+                        item_ids.removeAt(action.index)
+                        item_set_ids.removeAt(action.index)
+                    }
+
+                    is PlaylistEditor.Action.SetTitle -> {}
+                    is PlaylistEditor.Action.SetImage -> {}
+                    is PlaylistEditor.Action.SetImageWidth -> {}
+                }
             }
         }
     }
 
-    private fun getActionRequestData(action: Action): Map<String, String> {
+    private fun getActionRequestData(action: PlaylistEditor.Action): JsonObject? {
         when(action) {
-            is Action.SetTitle -> {
-                return mapOf(
-                    "action" to "ACTION_SET_PLAYLIST_NAME",
-                    "playlistName" to action.title
-                )
+            is PlaylistEditor.Action.SetTitle -> {
+                return buildJsonObject {
+                    put("action", "ACTION_SET_PLAYLIST_NAME")
+                    put("playlistName", action.title)
+                }
             }
-            is Action.Add -> {
-                return mapOf(
-                    "action" to "ACTION_ADD_VIDEO",
-                    "addedVideoId" to action.song_id,
-                    "dedupeOption" to "DEDUPE_OPTION_SKIP"
-                )
+            is PlaylistEditor.Action.Add -> {
+                return buildJsonObject {
+                    put("action", "ACTION_ADD_VIDEO")
+                    put("addedVideoId", action.song_id)
+                    put("dedupeOption", "DEDUPE_OPTION_SKIP")
+                }
             }
-            is Action.Move -> {
-                check(playlist is Playlist) { "$playlist is not a Playlist" }
-                checkNotNull(playlist.item_set_ids) { "$playlist item set IDs have not been loaded" }
-
-                val set_ids = playlist.item_set_ids!!.toMutableList()
-                check(set_ids.size == playlist.items!!.size)
+            is PlaylistEditor.Action.Move -> {
                 check(action.from != action.to)
 
-                val data = mutableMapOf(
-                    "action" to "ACTION_MOVE_VIDEO_BEFORE",
-                    "setVideoId" to set_ids[action.from]
-                )
+                return buildJsonObject {
+                    put("action", "ACTION_MOVE_VIDEO_BEFORE")
+                    put("setVideoId", item_set_ids[action.from])
 
-                val to_index = if (action.to > action.from) action.to + 1 else action.to
-                if (to_index in set_ids.indices) {
-                    data["movedSetVideoIdSuccessor"] = set_ids[to_index]
+                    val to_index: Int =
+                        if (action.to > action.from) action.to + 1
+                        else action.to
+
+                    if (to_index in item_set_ids.indices) {
+                        put("movedSetVideoIdSuccessor", item_set_ids[to_index])
+                    }
                 }
-
-                set_ids.add(action.to, set_ids.removeAt(action.from))
-                playlist.item_set_ids = set_ids
-
-                return data
             }
-            is Action.Remove -> {
-                check(playlist is Playlist) { "$playlist is not a Playlist" }
-                checkNotNull(playlist.item_set_ids) { "$playlist item set IDs have not been loaded" }
-
-                return mapOf(
-                    "action" to "ACTION_REMOVE_VIDEO",
-                    "removedVideoId" to playlist.items!![action.index].id,
-                    "setVideoId" to playlist.item_set_ids!![action.index]
-                )
+            is PlaylistEditor.Action.Remove -> {
+                return buildJsonObject {
+                    put("action", "ACTION_REMOVE_VIDEO")
+                    put("removedVideoId", item_ids[action.index])
+                    put("setVideoId", item_set_ids[action.index])
+                }
             }
+
+            is PlaylistEditor.Action.SetImage -> return null
+            is PlaylistEditor.Action.SetImageWidth -> return null
         }
     }
 }

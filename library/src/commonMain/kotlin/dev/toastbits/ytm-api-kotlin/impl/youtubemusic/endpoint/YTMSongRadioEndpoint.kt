@@ -1,22 +1,25 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.artist.ArtistRef
-import dev.toastbits.ytmapi.model.external.mediaitem.song.SongData
-import dev.toastbits.ytmapi.model.external.mediaitem.song.SongRef
-import dev.toastbits.ytmapi.EndpointNotImplementedException
+import dev.toastbits.ytmapi.model.external.mediaitem.Song
+import dev.toastbits.ytmapi.model.external.mediaitem.Artist
 import dev.toastbits.ytmapi.RadioBuilderModifier
 import dev.toastbits.ytmapi.endpoint.SongRadioEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicApi
 import dev.toastbits.ytmapi.radio.YoutubeiNextContinuationResponse
 import dev.toastbits.ytmapi.radio.YoutubeiNextResponse
-import java.io.IOException
+import dev.toastbits.ytmapi.itemcache.MediaItemCache
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.putJsonObject
+import kotlinx.serialization.json.put
 
 private const val RADIO_ID_PREFIX = "RDAMVM"
 private const val MODIFIED_RADIO_ID_PREFIX = "RDAT"
 
 class YTMSongRadioEndpoint(override val api: YoutubeMusicApi): SongRadioEndpoint() {
     override suspend fun getSongRadio(
-        video_id: String,
+        song_id: String,
         continuation: String?,
         filters: List<RadioBuilderModifier>
     ): Result<RadioData> = runCatching {
@@ -27,29 +30,17 @@ class YTMSongRadioEndpoint(override val api: YoutubeMusicApi): SongRadioEndpoint
 
             when (filter) {
                 RadioBuilderModifier.Internal.ARTIST -> {
-                    val song: SongRef = SongRef(video_id)
-                    var artist: ArtistRef? = song.Artist.get(api.database)
-
-                    if (artist == null) {
-                        song.loadData(api.context, populate_data = false).onFailure {
-                            return@runCatching Result.failure(IOException(it))
-                        }
-                        artist = song.Artist.get(api.database)
-
-                        if (artist == null) {
-                            return@runCatching Result.failure(NullPointerException("$song artist is null"))
-                        }
-                    }
-
-                    val endpoint = api.ArtistRadio
-                    if (!endpoint.isImplemented()) {
-                        return@runCatching Result.failure(EndpointNotImplementedException(endpoint))
-                    }
-
-                    endpoint.getArtistRadio(artist, null).fold(
-                        { return@runCatching Result.success(RadioData(it.items, it.continuation, null)) },
-                        { return@runCatching Result.failure(it) }
+                    val song: Song = api.item_cache.loadSong(
+                        api,
+                        song_id,
+                        setOf(MediaItemCache.SongKey.ARTIST_ID)
                     )
+
+                    val artist: Artist = song.artist
+                        ?: throw NullPointerException("Song $song_id has no artist")
+
+                    val radio = api.ArtistRadio.getArtistRadio(artist.id, null).getOrThrow()
+                    return@runCatching RadioData(radio.items, radio.continuation, null)
                 }
             }
         }
@@ -57,32 +48,28 @@ class YTMSongRadioEndpoint(override val api: YoutubeMusicApi): SongRadioEndpoint
         val response: HttpResponse = api.client.request {
             endpointPath("next")
             addAuthApiHeaders()
-            postWithBody(
-                mutableMapOf(
-                    "enablePersistentPlaylistPanel" to true,
-                    "tunerSettingValue" to "AUTOMIX_SETTING_NORMAL",
-                    "playlistId" to videoIdToRadio(video_id, filters.filter { it !is RadioBuilderModifier.Internal }),
-                    "watchEndpointMusicSupportedConfigs" to mapOf(
-                        "watchEndpointMusicConfig" to mapOf(
-                            "hasPersistentPlaylistPanel" to true,
-                            "musicVideoType" to "MUSIC_VIDEO_TYPE_ATV"
-                        )
-                    ),
-                    "isAudioOnly" to true
-                )
-                .also {
-                    if (continuation != null) {
-                        it["continuation"] = continuation
+            postWithBody {
+                put("enablePersistentPlaylistPanel", true)
+                put("tunerSettingValue", "AUTOMIX_SETTING_NORMAL")
+                put("playlistId", videoIdToRadio(song_id, filters.filter { it !is RadioBuilderModifier.Internal }))
+                put("isAudioOnly", true)
+                putJsonObject("watchEndpointMusicSupportedConfigs") {
+                    putJsonObject("watchEndpointMusicConfig") {
+                        put("hasPersistentPlaylistPanel", true)
+                        put("musicVideoType", "MUSIC_VIDEO_TYPE_ATV")
                     }
                 }
-            )
+                if (continuation != null) {
+                    put("continuation", continuation)
+                }
+            }
         }
-            
+
         val radio: YoutubeiNextResponse.PlaylistPanelRenderer?
         val out_filters: List<List<RadioBuilderModifier>>?
 
         if (continuation == null) {
-            val data: YoutubeiNextResponse = response.body
+            val data: YoutubeiNextResponse = response.body()
 
             val renderer: YoutubeiNextResponse.MusicQueueRenderer = data
                 .contents
@@ -97,48 +84,38 @@ class YTMSongRadioEndpoint(override val api: YoutubeMusicApi): SongRadioEndpoint
 
             radio = renderer.content?.playlistPanelRenderer
             out_filters = renderer.subHeaderChipCloud?.chipCloudRenderer?.chips?.mapNotNull { chip ->
-                radioToFilters(chip.getPlaylistId(), video_id)
+                radioToFilters(chip.getPlaylistId(), song_id)
             }
         }
         else {
-            val data: YoutubeiNextContinuationResponse = response.body
+            val data: YoutubeiNextContinuationResponse = response.body()
             radio = data.continuationContents.playlistPanelContinuation
             out_filters = null
         }
 
-        return@runCatching Result.success(
-            RadioData(
-                radio?.contents?.map { item ->
-                    val renderer = item.getRenderer()
-                    val song = SongData(renderer.videoId)
+        return@runCatching RadioData(
+            radio?.contents?.map { item ->
+                val renderer = item.getRenderer()
 
-                    song.title = renderer.title.first_text
-
-                    renderer.getArtist(song, api.context).fold(
-                        { artist ->
-                            if (artist != null) {
-                                song.artist = artist
-                            }
-                        },
-                        { return@runCatching Result.failure(it) }
-                    )
-
-                    return@map song
-                } ?: emptyList(),
-                radio?.continuations?.firstOrNull()?.data?.continuation,
-                out_filters
-            )
+                return@map Song(
+                    renderer.videoId,
+                    name = renderer.title.first_text,
+                    artist = renderer.getArtist(api).getOrThrow()
+                )
+            } ?: emptyList(),
+            radio?.continuations?.firstOrNull()?.data?.continuation,
+            out_filters
         )
     }
 }
 
-private fun radioToFilters(radio: String, video_id: String): List<RadioBuilderModifier>? {
+private fun radioToFilters(radio: String, song_id: String): List<RadioBuilderModifier>? {
     if (!radio.startsWith(MODIFIED_RADIO_ID_PREFIX)) {
         return null
     }
 
     val ret: MutableList<RadioBuilderModifier> = mutableListOf()
-    val modifier_string = radio.substring(MODIFIED_RADIO_ID_PREFIX.length, radio.length - video_id.length)
+    val modifier_string = radio.substring(MODIFIED_RADIO_ID_PREFIX.length, radio.length - song_id.length)
 
     var c = 0
     while (c + 1 < modifier_string.length) {

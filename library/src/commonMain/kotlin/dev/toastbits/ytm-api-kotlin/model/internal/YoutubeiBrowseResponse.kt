@@ -3,6 +3,8 @@ package dev.toastbits.ytmapi.model.internal
 import dev.toastbits.ytmapi.impl.youtubemusic.endpoint.ChipCloudRendererHeader
 import dev.toastbits.ytmapi.impl.youtubemusic.endpoint.YTMGetHomeFeedEndpoint
 import dev.toastbits.ytmapi.radio.YoutubeiNextResponse
+import dev.toastbits.ytmapi.uistrings.YoutubeUiString
+import dev.toastbits.ytmapi.endpoint.HomeFeedFilterChip
 
 data class YoutubeiBrowseResponse(
     val contents: Contents?,
@@ -17,6 +19,14 @@ data class YoutubeiBrowseResponse(
         return if (has_continuation) continuationContents?.sectionListContinuation?.contents ?: emptyList()
         else contents?.singleColumnBrowseResultsRenderer?.tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents ?: emptyList()
     }
+
+    fun getHeaderChips(data_language: String): List<HomeFeedFilterChip>? =
+        contents?.singleColumnBrowseResultsRenderer?.tabs?.first()?.tabRenderer?.content?.sectionListRenderer?.header?.chipCloudRenderer?.chips?.map {
+            HomeFeedFilterChip(
+                YoutubeUiString.Type.FILTER_CHIP.createFromKey(it.chipCloudChipRenderer.text!!.first_text, data_language),
+                it.chipCloudChipRenderer.navigationEndpoint.browseEndpoint!!.params!!
+            )
+        }
 
     data class Contents(
         val singleColumnBrowseResultsRenderer: SingleColumnBrowseResultsRenderer?,

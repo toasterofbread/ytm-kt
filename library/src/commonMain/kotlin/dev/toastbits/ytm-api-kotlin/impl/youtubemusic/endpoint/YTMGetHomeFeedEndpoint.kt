@@ -1,30 +1,31 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import com.toasterofbread.spmp.model.FilterChip
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
-import dev.toastbits.ytmapi.model.external.mediaitem.enums.MediaItemType
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.MediaItemLayout
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.MediaItemViewMore
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.PlainViewMore
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.ViewMore
-import com.toasterofbread.spmp.model.sortFilterChips
-import com.toasterofbread.spmp.resources.uilocalisation.AppLocalisedString
-import com.toasterofbread.spmp.resources.uilocalisation.LocalisedString
-import com.toasterofbread.spmp.resources.uilocalisation.RawLocalisedString
-import com.toasterofbread.spmp.resources.uilocalisation.YoutubeLocalisedString
+import dev.toastbits.ytmapi.endpoint.HomeFeedFilterChip
+import dev.toastbits.ytmapi.model.external.*
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemLayout
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
+import dev.toastbits.ytmapi.model.external.mediaitem.copyWithName
+import dev.toastbits.ytmapi.uistrings.AppUiString
+import dev.toastbits.ytmapi.uistrings.UiString
+import dev.toastbits.ytmapi.uistrings.RawUiString
+import dev.toastbits.ytmapi.uistrings.YoutubeUiString
 import dev.toastbits.ytmapi.endpoint.HomeFeedEndpoint
 import dev.toastbits.ytmapi.endpoint.HomeFeedLoadResult
 import dev.toastbits.ytmapi.impl.youtubemusic.DataParseException
 import dev.toastbits.ytmapi.impl.youtubemusic.PLAIN_HEADERS
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicApi
-import dev.toastbits.ytmapi.model.BrowseEndpoint
-import dev.toastbits.ytmapi.model.NavigationEndpoint
-import dev.toastbits.ytmapi.model.TextRuns
-import dev.toastbits.ytmapi.model.YoutubeiBrowseResponse
-import dev.toastbits.ytmapi.model.YoutubeiHeaderContainer
-import dev.toastbits.ytmapi.model.YoutubeiShelf
-import dev.toastbits.ytmapi.model.YoutubeiShelfContentsItem
+import dev.toastbits.ytmapi.model.internal.BrowseEndpoint
+import dev.toastbits.ytmapi.model.internal.NavigationEndpoint
+import dev.toastbits.ytmapi.model.internal.TextRuns
+import dev.toastbits.ytmapi.model.internal.YoutubeiBrowseResponse
+import dev.toastbits.ytmapi.model.internal.YoutubeiHeaderContainer
+import dev.toastbits.ytmapi.model.internal.YoutubeiShelf
+import dev.toastbits.ytmapi.model.internal.YoutubeiShelfContentsItem
 import dev.toastbits.ytmapi.radio.YoutubeiNextResponse
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.put
 
 class YTMGetHomeFeedEndpoint(override val api: YoutubeMusicApi): HomeFeedEndpoint() {
     override suspend fun getHomeFeed(
@@ -32,10 +33,10 @@ class YTMGetHomeFeedEndpoint(override val api: YoutubeMusicApi): HomeFeedEndpoin
         allow_cached: Boolean,
         params: String?,
         continuation: String?
-    ): Result<HomeFeedLoadResult> {
+    ): Result<HomeFeedLoadResult> = runCatching {
         val hl: String = api.data_language
 
-        suspend fun performRequest(ctoken: String?): Result<YoutubeiBrowseResponse> = runCatching {
+        suspend fun performRequest(ctoken: String?): YoutubeiBrowseResponse {
             val response: HttpResponse = api.client.request {
                 endpointPath("browse")
 
@@ -47,24 +48,24 @@ class YTMGetHomeFeedEndpoint(override val api: YoutubeMusicApi): HomeFeedEndpoin
 
                 addAuthApiHeaders()
                 addApiHeadersNoAuth(PLAIN_HEADERS)
-                postWithBody(
-                    params?.let {
-                        mapOf("params" to it)
+                postWithBody {
+                    if (params != null) {
+                        put("params", params)
                     }
-                )
+                }
             }
 
-            return@runCatching response.body
+            return response.body()
         }
 
-        var data: YoutubeiBrowseResponse = performRequest(continuation).getOrThrow()
-        val header_chips: List<FilterChip>? = data.getHeaderChips(api.context)?.sortFilterChips()
+        var data: YoutubeiBrowseResponse = performRequest(continuation)
+        val header_chips: List<HomeFeedFilterChip>? = data.getHeaderChips(hl)
 
         val rows: MutableList<MediaItemLayout> = processRows(data.getShelves(continuation != null), hl).toMutableList()
 
         var ctoken: String? = data.ctoken
         while (ctoken != null && min_rows >= 1 && rows.size < min_rows) {
-            data = performRequest(ctoken).getOrThrow()
+            data = performRequest(ctoken)
             ctoken = data.ctoken
 
             val shelves = data.getShelves(true)
@@ -75,11 +76,11 @@ class YTMGetHomeFeedEndpoint(override val api: YoutubeMusicApi): HomeFeedEndpoin
             rows.addAll(processRows(shelves, hl))
         }
 
-        return Result.success(HomeFeedLoadResult(rows, ctoken, header_chips))
+        return@runCatching HomeFeedLoadResult(rows, ctoken, header_chips)
     }
 
     private suspend fun processRows(
-        rows: List<YoutubeiShelf>, 
+        rows: List<YoutubeiShelf>,
         hl: String
     ): List<MediaItemLayout> {
         val ret: MutableList<MediaItemLayout> = mutableListOf<MediaItemLayout>()
@@ -92,18 +93,12 @@ class YTMGetHomeFeedEndpoint(override val api: YoutubeMusicApi): HomeFeedEndpoin
             val header = renderer.header?.header_renderer ?: continue
 
             fun add(
-                title: LocalisedString,
-                subtitle: LocalisedString? = null,
-                view_more: ViewMore? = null,
+                title: UiString,
+                subtitle: UiString? = null,
+                view_more: YoutubePage? = null,
                 type: MediaItemLayout.Type? = null
             ) {
-                val items: MutableList<MediaItemData> = row.getMediaItems(hl).toMutableList()
-                api.database.transaction {
-                    for (item in items) {
-                        item.saveToDatabase(api.database)
-                    }
-                }
-
+                val items: MutableList<MediaItem> = row.getMediaItems(hl, api).toMutableList()
                 ret.add(
                     MediaItemLayout(
                         items,
@@ -117,8 +112,8 @@ class YTMGetHomeFeedEndpoint(override val api: YoutubeMusicApi): HomeFeedEndpoin
             val browse_endpoint: BrowseEndpoint? = header.title?.runs?.first()?.navigationEndpoint?.browseEndpoint
             if (browse_endpoint == null) {
                 add(
-                    YoutubeLocalisedString.Type.HOME_FEED.createFromKey(header.title!!.first_text, api.context),
-                    header.subtitle?.first_text?.let { YoutubeLocalisedString.Type.HOME_FEED.createFromKey(it, api.context) }
+                    YoutubeUiString.Type.HOME_FEED.createFromKey(header.title!!.first_text, api.data_language),
+                    header.subtitle?.first_text?.let { YoutubeUiString.Type.HOME_FEED.createFromKey(it, api.data_language) }
                 )
                 continue
             }
@@ -135,9 +130,9 @@ class YTMGetHomeFeedEndpoint(override val api: YoutubeMusicApi): HomeFeedEndpoin
 
             if (view_more_page_title_key != null) {
                 add(
-                    AppLocalisedString(view_more_page_title_key),
+                    AppUiString(view_more_page_title_key),
                     null,
-                    view_more = PlainViewMore(browse_endpoint.browseId!!),
+                    view_more = PlainYoutubePage(browse_endpoint.browseId!!),
                     type = when(browse_endpoint.browseId) {
                         "FEmusic_listen_again" -> MediaItemLayout.Type.GRID_ALT
                         else -> null
@@ -148,14 +143,14 @@ class YTMGetHomeFeedEndpoint(override val api: YoutubeMusicApi): HomeFeedEndpoin
 
             val page_type: String? = browse_endpoint.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType
             if (page_type != null && browse_endpoint.browseId != null) {
-                val media_item = MediaItemType.fromBrowseEndpointType(page_type).referenceFromId(browse_endpoint.browseId).apply {
-                    Title.set(header.title.runs?.getOrNull(0)?.text, api.database)
-                }
+                val media_item: MediaItem =
+                    MediaItem.Type.fromBrowseEndpointType(page_type).itemFromId(browse_endpoint.browseId)
+                        .copyWithName(name = header.title.runs?.getOrNull(0)?.text)
 
                 add(
-                    RawLocalisedString(header.title.first_text),
-                    header.subtitle?.first_text?.let { YoutubeLocalisedString.Type.HOME_FEED.createFromKey(it, api.context) },
-                    view_more = MediaItemViewMore(media_item, null)
+                    RawUiString(header.title.first_text),
+                    header.subtitle?.first_text?.let { YoutubeUiString.Type.HOME_FEED.createFromKey(it, api.data_language) },
+                    view_more = MediaItemYoutubePage(media_item, null)
                 )
             }
         }

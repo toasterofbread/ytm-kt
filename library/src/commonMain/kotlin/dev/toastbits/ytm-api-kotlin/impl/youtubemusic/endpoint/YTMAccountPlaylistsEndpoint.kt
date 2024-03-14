@@ -1,16 +1,19 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
-import dev.toastbits.ytmapi.model.external.mediaitem.playlist.RemotePlaylist
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
 import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
 import dev.toastbits.ytmapi.YoutubeApi
 import dev.toastbits.ytmapi.endpoint.AccountPlaylistsEndpoint
 import dev.toastbits.ytmapi.endpoint.CreateAccountPlaylistEndpoint
 import dev.toastbits.ytmapi.endpoint.DeleteAccountPlaylistEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicAuthInfo
-import dev.toastbits.ytmapi.impl.youtubemusic.unit
-import dev.toastbits.ytmapi.model.YoutubeiBrowseResponse
-import dev.toastbits.ytmapi.model.YoutubeiShelfContentsItem
+import dev.toastbits.ytmapi.impl.youtubemusic.formatYoutubePlaylistId
+import dev.toastbits.ytmapi.model.internal.YoutubeiBrowseResponse
+import dev.toastbits.ytmapi.model.internal.YoutubeiShelfContentsItem
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.put
 
 class YTMAccountPlaylistsEndpoint(override val auth: YoutubeMusicAuthInfo): AccountPlaylistsEndpoint() {
     override suspend fun getAccountPlaylists(): Result<List<Playlist>> = runCatching {
@@ -18,10 +21,12 @@ class YTMAccountPlaylistsEndpoint(override val auth: YoutubeMusicAuthInfo): Acco
         val response: HttpResponse = api.client.request {
             endpointPath("browse")
             addAuthApiHeaders()
-            postWithBody(mapOf("browseId" to "FEmusic_liked_playlists"))
+            postWithBody {
+                put("browseId", "FEmusic_liked_playlists")
+            }
         }
 
-        val data: YoutubeiBrowseResponse = response.body
+        val data: YoutubeiBrowseResponse = response.body()
 
         val playlist_data: List<YoutubeiShelfContentsItem> =
             data.contents!!
@@ -36,28 +41,27 @@ class YTMAccountPlaylistsEndpoint(override val auth: YoutubeMusicAuthInfo): Acco
                 .gridRenderer!!
                 .items
 
-        val playlists: List<Playlist> = playlist_data.mapNotNull {
+        return@runCatching playlist_data.mapNotNull {
             // Skip 'New playlist' item
             if (it.musicTwoRowItemRenderer?.navigationEndpoint?.browseEndpoint == null) {
                 return@mapNotNull null
             }
 
-            val item: MediaItemData? = it.toMediaItemData(hl)?.first
+            val item: MediaItem? = it.toMediaItemData(hl, api)?.first
             if (item !is Playlist) {
                 return@mapNotNull null
             }
 
             for (menu_item in it.musicTwoRowItemRenderer.menu?.menuRenderer?.items?.asReversed() ?: emptyList()) {
                 if (item.id == "VLLM" || menu_item.menuNavigationItemRenderer?.icon?.iconType == "DELETE") {
-                    item.owner = auth.own_channel
-                    break
+                    return@mapNotNull item.copy(
+                        owner_id = auth.own_channel_id
+                    )
                 }
             }
 
             return@mapNotNull item
         }
-
-        return result
     }
 }
 
@@ -65,19 +69,19 @@ private class PlaylistCreateResponse(val playlistId: String)
 
 class YTMCreateAccountPlaylistEndpoint(override val auth: YoutubeMusicAuthInfo): CreateAccountPlaylistEndpoint() {
     override suspend fun createAccountPlaylist(
-        title: String, 
+        title: String,
         description: String
     ): Result<String> = runCatching {
         val response: HttpResponse = api.client.request {
             endpointPath("playlist/create")
             addAuthApiHeaders()
-            postWithBody(
-                mapOf("title" to title, "description" to description),
-                YoutubeApi.PostBodyContext.UI_LANGUAGE
-            )
+            postWithBody(YoutubeApi.PostBodyContext.UI_LANGUAGE) {
+                put("title", title)
+                put("description", description)
+            }
         }
 
-        val data: PlaylistCreateResponse = response.body
+        val data: PlaylistCreateResponse = response.body()
         return@runCatching data.playlistId
     }
 }
@@ -89,11 +93,9 @@ class YTMDeleteAccountPlaylistEndpoint(override val auth: YoutubeMusicAuthInfo):
         api.client.request {
             endpointPath("playlist/delete")
             addAuthApiHeaders()
-            postWithBody(
-                mapOf(
-                    "playlistId" to RemotePlaylist.formatYoutubeId(playlist_id)
-                )
-            )
+            postWithBody {
+                put("playlistId", formatYoutubePlaylistId(playlist_id))
+            }
         }
     }
 }

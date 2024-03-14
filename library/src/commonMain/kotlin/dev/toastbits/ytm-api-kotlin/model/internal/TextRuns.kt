@@ -1,5 +1,7 @@
 package dev.toastbits.ytmapi.model.internal
 
+import kotlinx.serialization.SerialName
+
 data class TextRuns(
     @SerialName("id")
     val _runs: List<TextRun>?

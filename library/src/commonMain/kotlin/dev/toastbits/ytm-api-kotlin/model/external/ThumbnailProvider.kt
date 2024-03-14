@@ -1,7 +1,5 @@
 package dev.toastbits.ytmapi.model.external
 
-import com.toasterofbread.spmp.db.mediaitem.ThumbnailProviderById
-
 interface ThumbnailProvider {
     fun getThumbnailUrl(quality: Quality): String?
     override fun equals(other: Any?): Boolean
@@ -86,11 +84,7 @@ data class ThumbnailProviderImpl(
         }
 
         // Dynamic provdier
-        val target_size = quality.getTargetSize()
-        return "$url_a${target_size.width}-h${target_size.height}$url_b"
+        val (width, height) = quality.getTargetSize()
+        return "$url_a${width}-h${height}$url_b"
     }
 }
-
-fun ThumbnailProviderById.toThumbnailProvider(): ThumbnailProvider? =
-    if (thumb_url_a == null) null
-    else ThumbnailProviderImpl(thumb_url_a, thumb_url_b)

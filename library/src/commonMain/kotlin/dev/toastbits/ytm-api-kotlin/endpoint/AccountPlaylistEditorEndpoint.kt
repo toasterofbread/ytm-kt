@@ -4,5 +4,9 @@ import dev.toastbits.ytmapi.model.external.PlaylistEditor
 import dev.toastbits.ytmapi.YoutubeApi
 
 abstract class AccountPlaylistEditorEndpoint: YoutubeApi.UserAuthState.UserAuthEndpoint() {
-    abstract fun getEditor(playlist_id: String, item_set_ids: List<String>): PlaylistEditor
+    abstract fun getEditor(
+        playlist_id: String,
+        item_ids: List<String>,
+        item_set_ids: List<String>
+    ): PlaylistEditor
 }

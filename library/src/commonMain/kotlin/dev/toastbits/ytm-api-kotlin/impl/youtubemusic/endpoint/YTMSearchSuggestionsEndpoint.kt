@@ -3,6 +3,10 @@ package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 import dev.toastbits.ytmapi.endpoint.SearchSuggestion
 import dev.toastbits.ytmapi.endpoint.SearchSuggestionsEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicApi
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.put
 
 class YTMSearchSuggestionsEndpoint(override val api: YoutubeMusicApi): SearchSuggestionsEndpoint() {
     override suspend fun getSearchSuggestions(
@@ -11,10 +15,12 @@ class YTMSearchSuggestionsEndpoint(override val api: YoutubeMusicApi): SearchSug
         val response: HttpResponse = api.client.request {
             endpointPath("music/get_search_suggestions")
             addAuthApiHeaders()
-            postWithBody(mapOf("input" to query))
+            postWithBody {
+                put("input", query)
+            }
         }
 
-        val parsed: YoutubeiSearchSuggestionsResponse = response.body
+        val parsed: YoutubeiSearchSuggestionsResponse = response.body()
 
         val suggestions = parsed.getSuggestions()
         if (suggestions == null) {

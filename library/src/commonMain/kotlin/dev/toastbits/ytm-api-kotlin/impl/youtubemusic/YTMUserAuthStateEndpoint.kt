@@ -1,8 +1,13 @@
 package dev.toastbits.ytmapi.impl.youtubemusic
 
 import dev.toastbits.ytmapi.model.external.mediaitem.Artist
-import com.toasterofbread.spmp.ui.layout.youtubemusiclogin.YTAccountMenuResponse
+import dev.toastbits.ytmapi.model.internal.YoutubeAccountMenuResponse
 import dev.toastbits.ytmapi.endpoint.UserAuthStateEndpoint
+import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.request.request
+import io.ktor.client.request.headers
+import io.ktor.http.Headers
 
 class YTMUserAuthStateEndpoint(
     override val api: YoutubeMusicApi
@@ -20,7 +25,7 @@ class YTMUserAuthStateEndpoint(
         }
 
         if (missing_headers.isNotEmpty()) {
-            return Result.failure(IllegalArgumentException("Missing the following headers: $missing_headers"))
+            throw IllegalArgumentException("Missing the following headers: $missing_headers")
         }
 
         val response: HttpResponse = api.client.request {
@@ -28,21 +33,21 @@ class YTMUserAuthStateEndpoint(
             addAuthApiHeaders()
             headers {
                 for (key in YoutubeMusicAuthInfo.REQUIRED_HEADERS) {
-                    for (value in headers.values(key)) {
+                    for (value in headers.getAll(key) ?: emptyList()) {
                         set(key, value)
                     }
                 }
             }
             postWithBody()
         }
-            
-        val data: YTAccountMenuResponse = response.body
+
+        val data: YoutubeAccountMenuResponse = response.body()
 
         val artist: Artist? = data.getAritst()
         if (artist == null) {
             throw YoutubeChannelNotCreatedException(headers, data.getChannelCreationToken())
         }
 
-        return@runCatching YoutubeMusicAuthInfo.create(api, artist, headers)
+        return@runCatching YoutubeMusicAuthInfo.create(api, artist.id, headers)
     }
 }

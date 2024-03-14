@@ -2,9 +2,10 @@ package dev.toastbits.ytmapi.formats
 
 import dev.toastbits.ytmapi.YoutubeApi
 import dev.toastbits.ytmapi.model.external.YoutubeVideoFormat
-import dev.toastbits.ytmapi.fromJson
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.client.plugins.expectSuccess
+import io.ktor.client.call.body
 
 class PipedVideoFormatsEndpoint(override val api: YoutubeApi): VideoFormatsEndpoint() {
     override suspend fun getVideoFormats(
@@ -14,18 +15,12 @@ class PipedVideoFormatsEndpoint(override val api: YoutubeApi): VideoFormatsEndpo
         val response: HttpResponse =
             api.client.request("https://pipedapi.kavin.rocks/streams/$id") {
                 expectSuccess = false
-                headers.append(HttpHeaders.UserAgent, "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0")
+                headers.append("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0")
             }
 
-        val streams: PipedStreamsResponse =
-            try {
-                response.body
-            }
-            catch (e: Throwable) {
-                throw RuntimeException("getVideoFormats for $id using Piped API failed", e)
-            }
+        val streams: PipedStreamsResponse = response.body()
 
-        if (!response.status.is_successful) {
+        if (response.status.value !in 200 .. 299) {
             if (streams.error?.contains("YoutubeMusicPremiumContentException") == true) {
                 throw YoutubeMusicPremiumContentException(streams.message)
             }
@@ -33,8 +28,8 @@ class PipedVideoFormatsEndpoint(override val api: YoutubeApi): VideoFormatsEndpo
             throw RuntimeException(streams.message)
         }
 
-        return@runCatching streams.audioStreams?.let { streams ->
-            if (filter != null) streams.filter(filter) else streams
+        return@runCatching streams.audioStreams?.let { audio_streams ->
+            if (filter != null) audio_streams.filter(filter) else audio_streams
         } ?: emptyList()
     }
 }

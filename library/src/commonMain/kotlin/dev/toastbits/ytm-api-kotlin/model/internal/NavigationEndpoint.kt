@@ -1,11 +1,7 @@
 package dev.toastbits.ytmapi.model.internal
 
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.MediaItemViewMore
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.ViewMore
-import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
-import dev.toastbits.ytmapi.model.external.mediaitem.song.SongData
+import dev.toastbits.ytmapi.model.external.*
+import dev.toastbits.ytmapi.model.external.mediaitem.*
 
 data class NavigationEndpoint(
     val watchEndpoint: WatchEndpoint?,
@@ -14,10 +10,10 @@ data class NavigationEndpoint(
     val watchPlaylistEndpoint: WatchPlaylistEndpoint?,
     val channelCreationFormEndpoint: ChannelCreationFormEndpoint?
 ) {
-    fun getMediaItem(): MediaItemData? {
+    fun getMediaItem(): MediaItem? {
         if (watchEndpoint != null) {
             if (watchEndpoint.videoId != null) {
-                return SongData(watchEndpoint.videoId)
+                return Song(watchEndpoint.videoId)
             }
             else if (watchEndpoint.playlistId != null) {
                 return Playlist(watchEndpoint.playlistId)
@@ -32,11 +28,11 @@ data class NavigationEndpoint(
         return null
     }
 
-    fun getViewMore(item: MediaItem): ViewMore? {
+    fun getViewMore(item: MediaItem): YoutubePage? {
         if (browseEndpoint != null) {
             browseEndpoint.getViewMore(item).also { return it }
         }
-        return getMediaItem()?.let { MediaItemViewMore(it, null, item) }
+        return getMediaItem()?.let { MediaItemYoutubePage(it, null, item) }
     }
 }
 

@@ -2,6 +2,10 @@ package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
 import dev.toastbits.ytmapi.endpoint.SetSubscribedToArtistEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicAuthInfo
+import io.ktor.client.request.request
+import kotlinx.serialization.json.put
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.putJsonArray
 
 class YTMSetSubscribedToArtistEndpoint(override val auth: YoutubeMusicAuthInfo): SetSubscribedToArtistEndpoint() {
     override suspend fun setSubscribedToArtist(
@@ -12,9 +16,11 @@ class YTMSetSubscribedToArtistEndpoint(override val auth: YoutubeMusicAuthInfo):
         api.client.request {
             endpointPath("subscription/${if (subscribed) "subscribe" else "unsubscribe"}")
             addAuthApiHeaders()
-            postWithBody(
-                mapOf("channelIds" to listOf(subscribe_channel_id ?: artist_id))
-            )
+            postWithBody {
+                putJsonArray("channelIds") {
+                    add(subscribe_channel_id ?: artist_id)
+                }
+            }
         }
     }
 }

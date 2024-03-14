@@ -1,8 +1,12 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.song.SongLikedStatus
+import dev.toastbits.ytmapi.model.external.SongLikedStatus
 import dev.toastbits.ytmapi.endpoint.SongLikedEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicAuthInfo
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.put
 
 private data class PlayerLikeResponse(
     val playerOverlays: PlayerOverlays?
@@ -20,10 +24,12 @@ class YTMSongLikedEndpoint(override val auth: YoutubeMusicAuthInfo): SongLikedEn
         val response: HttpResponse = api.client.request {
             endpointPath("next")
             addAuthApiHeaders()
-            postWithBody(mapOf("videoId" to song_id))
+            postWithBody {
+                put("videoId", song_id)
+            }
         }
 
-        val data: PlayerLikeResponse = response.body
+        val data: PlayerLikeResponse = response.body()
 
         if (data.status == null) {
             throw NullPointerException(song_id)

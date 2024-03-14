@@ -1,34 +1,41 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
-import dev.toastbits.ytmapi.model.external.mediaitem.enums.PlaylistType
-import dev.toastbits.ytmapi.model.external.mediaitem.enums.SongType
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.MediaItemLayout
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemLayout
 import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
-import dev.toastbits.ytmapi.model.external.mediaitem.song.SongData
-import com.toasterofbread.spmp.resources.uilocalisation.YoutubeLocalisedString
+import dev.toastbits.ytmapi.model.external.mediaitem.Song
+import dev.toastbits.ytmapi.model.external.mediaitem.Artist
+import dev.toastbits.ytmapi.uistrings.YoutubeUiString
 import dev.toastbits.ytmapi.endpoint.SearchEndpoint
 import dev.toastbits.ytmapi.endpoint.SearchFilter
 import dev.toastbits.ytmapi.endpoint.SearchResults
 import dev.toastbits.ytmapi.endpoint.SearchType
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicApi
-import dev.toastbits.ytmapi.model.MusicCardShelfRenderer
-import dev.toastbits.ytmapi.model.NavigationEndpoint
-import dev.toastbits.ytmapi.model.TextRuns
-import dev.toastbits.ytmapi.model.YoutubeiShelf
+import dev.toastbits.ytmapi.model.internal.MusicCardShelfRenderer
+import dev.toastbits.ytmapi.model.internal.NavigationEndpoint
+import dev.toastbits.ytmapi.model.internal.TextRuns
+import dev.toastbits.ytmapi.model.internal.YoutubeiShelf
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.put
 
 class YTMSearchEndpoint(override val api: YoutubeMusicApi): SearchEndpoint() {
     override suspend fun searchMusic(
-        query: String, 
+        query: String,
         params: String?
     ): Result<SearchResults> = runCatching {
         val hl: String = api.data_language
         val response: HttpResponse = api.client.request {
             endpointPath("search")
             addAuthApiHeaders()
-            postWithBody(mapOf("query" to query, "params" to params))
-            
-        val parsed: YoutubeiSearchResponse = response.body
+            postWithBody {
+                put("query", query)
+                put("params", params)
+            }
+        }
+
+        val parsed: YoutubeiSearchResponse = response.body()
 
         val tab = parsed.contents.tabbedSearchResultsRenderer.tabs.first().tabRenderer
 
@@ -55,7 +62,7 @@ class YTMSearchEndpoint(override val api: YoutubeMusicApi): SearchEndpoint() {
                 category_layouts.add(Pair(
                     MediaItemLayout(
                         mutableListOf(card.getMediaItem()),
-                        YoutubeLocalisedString.Type.SEARCH_PAGE.createFromKey(key, api.context),
+                        YoutubeUiString.Type.SEARCH_PAGE.createFromKey(key, hl),
                         null,
                         type = MediaItemLayout.Type.CARD
                     ),
@@ -65,34 +72,33 @@ class YTMSearchEndpoint(override val api: YoutubeMusicApi): SearchEndpoint() {
             }
 
             val shelf: YTMGetHomeFeedEndpoint.MusicShelfRenderer = category.value.musicShelfRenderer ?: continue
-            val items = shelf.contents?.mapNotNull { it.toMediaItemData(hl)?.first }?.toMutableList() ?: continue
+            val items = shelf.contents?.mapNotNull { it.toMediaItemData(hl, api)?.first }?.toMutableList() ?: continue
             val search_params = if (category.index == 0) null else chips?.get(category.index - 1)?.chipCloudChipRenderer?.navigationEndpoint?.searchEndpoint?.params
 
             val title: String? = shelf.title?.firstTextOrNull()
             if (title != null) {
                 category_layouts.add(Pair(
-                    MediaItemLayout(items, YoutubeLocalisedString.Type.SEARCH_PAGE.createFromKey(title, api.context), null),
+                    MediaItemLayout(items, YoutubeUiString.Type.SEARCH_PAGE.createFromKey(title, hl), null),
                     search_params?.let {
                         val item = items.firstOrNull() ?: return@let null
-                        SearchFilter(when (item) {
-                            is SongData -> if (item.song_type == SongType.VIDEO) SearchType.VIDEO else SearchType.SONG
-                            is ArtistData -> SearchType.ARTIST
-                            is Playlist -> when (item.playlist_type) {
-                                PlaylistType.ALBUM -> SearchType.ALBUM
-                                else -> SearchType.PLAYLIST
-                            }
-                            else -> throw NotImplementedError(item.getType().toString())
-                        }, it)
+                        SearchFilter(
+                            when (item) {
+                                is Song ->
+                                    if (item.type == Song.Type.VIDEO) SearchType.VIDEO else SearchType.SONG
+
+                                is Artist ->
+                                    SearchType.ARTIST
+
+                                is Playlist ->
+                                    when (item.type) {
+                                        Playlist.Type.ALBUM -> SearchType.ALBUM
+                                        else -> SearchType.PLAYLIST
+                                    }
+                            },
+                            it
+                        )
                     }
                 ))
-            }
-        }
-
-        api.database.transaction {
-            for (category in category_layouts) {
-                for (item in category.first.items) {
-                    (item as MediaItemData).saveToDatabase(api.database)
-                }
             }
         }
 
@@ -123,3 +129,4 @@ data class Chip(val chipCloudChipRenderer: ChipCloudChipRenderer)
 data class ChipCloudChipRenderer(val navigationEndpoint: NavigationEndpoint, val text: TextRuns?)
 
 data class ChipCloudRendererHeader(val chipCloudRenderer: ChipCloudRenderer?)
+

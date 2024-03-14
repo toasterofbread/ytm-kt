@@ -1,15 +1,18 @@
 package dev.toastbits.ytmapi.impl.youtubemusic
 
 import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
-import dev.toastbits.ytmapi.model.external.mediaitem.Artist
 import dev.toastbits.ytmapi.YoutubeApi
 import dev.toastbits.ytmapi.endpoint.GenericFeedViewMorePageEndpoint
 import dev.toastbits.ytmapi.endpoint.LikedAlbumsEndpoint
 import dev.toastbits.ytmapi.endpoint.LikedArtistsEndpoint
 import dev.toastbits.ytmapi.endpoint.LikedPlaylistsEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.endpoint.*
-import dev.toastbits.ytmapi.model.YoutubeiBrowseResponse
+import dev.toastbits.ytmapi.model.internal.YoutubeiBrowseResponse
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.Headers
+import kotlinx.serialization.json.put
 
 class YoutubeChannelNotCreatedException(
     val headers: Headers,
@@ -19,14 +22,13 @@ class YoutubeChannelNotCreatedException(
 class YoutubeMusicAuthInfo private constructor(
     override val api: YoutubeMusicApi,
     override val own_channel_id: String,
-    headers: Map<String, String>
+    headers: Headers
 ): YoutubeApi.UserAuthState(headers) {
     companion object {
         val REQUIRED_HEADERS: List<String> = listOf("authorization", "cookie")
 
-        fun create(api: YoutubeMusicApi, own_channel: Artist, headers: Headers): YoutubeMusicAuthInfo {
-            own_channel.createDbEntry(api.database)
-            return YoutubeMusicAuthInfo(api, own_channel, headers)
+        fun create(api: YoutubeMusicApi, own_channel_id: String, headers: Headers): YoutubeMusicAuthInfo {
+            return YoutubeMusicAuthInfo(api, own_channel_id, headers)
         }
     }
 
@@ -53,14 +55,14 @@ class YTMGenericFeedViewMorePageEndpoint(override val api: YoutubeApi): GenericF
         val response: HttpResponse = api.client.request {
             endpointPath("browse")
             addAuthApiHeaders()
-            postWithBody(
-                mapOf("browseId" to browse_id)
-            )
+            postWithBody {
+                put("browseId", browse_id)
+            }
         }
 
-        val data: YoutubeiBrowseResponse = response.body
+        val data: YoutubeiBrowseResponse = response.body()
 
-        val items: List<MediaItemData> = 
+        val items: List<MediaItem> =
             data.contents!!
                 .singleColumnBrowseResultsRenderer!!
                 .tabs
@@ -70,13 +72,7 @@ class YTMGenericFeedViewMorePageEndpoint(override val api: YoutubeApi): GenericF
                 .sectionListRenderer!!
                 .contents!!
                 .first()
-                .getMediaItems(hl)
-
-        api.database.transaction {
-            for (item in items) {
-                item.saveToDatabase(api.database)
-            }
-        }
+                .getMediaItems(hl, api)
 
         return@runCatching items
     }

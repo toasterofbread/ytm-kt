@@ -1,13 +1,18 @@
 package dev.toastbits.ytmapi.endpoint
 
-import com.toasterofbread.spmp.model.FilterChip
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.MediaItemLayout
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemLayout
 import dev.toastbits.ytmapi.YoutubeApi
+import dev.toastbits.ytmapi.uistrings.UiString
 
 data class HomeFeedLoadResult(
     val layouts: List<MediaItemLayout>,
     val ctoken: String?,
-    val filter_chips: List<FilterChip>?
+    val filter_chips: List<HomeFeedFilterChip>?
+)
+
+data class HomeFeedFilterChip(
+    val text: UiString,
+    val params: String
 )
 
 abstract class HomeFeedEndpoint: YoutubeApi.Endpoint() {

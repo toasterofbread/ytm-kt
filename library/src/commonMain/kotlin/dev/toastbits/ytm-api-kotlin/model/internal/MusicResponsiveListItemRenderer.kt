@@ -1,14 +1,11 @@
 package dev.toastbits.ytmapi.model.internal
 
 import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
 import dev.toastbits.ytmapi.model.external.mediaitem.Artist
-import dev.toastbits.ytmapi.model.external.mediaitem.enums.MediaItemType
-import dev.toastbits.ytmapi.model.external.mediaitem.enums.PlaylistType
-import dev.toastbits.ytmapi.model.external.mediaitem.enums.SongType
 import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
-import dev.toastbits.ytmapi.model.external.mediaitem.song.SongData
-import com.toasterofbread.spmp.resources.uilocalisation.parseYoutubeDurationString
+import dev.toastbits.ytmapi.model.external.mediaitem.Song
+import dev.toastbits.ytmapi.model.external.ThumbnailProvider
+import dev.toastbits.ytmapi.uistrings.parseYoutubeDurationString
 import dev.toastbits.ytmapi.radio.YoutubeiNextResponse
 
 data class MusicResponsiveListItemRenderer(
@@ -26,13 +23,13 @@ data class MusicResponsiveListItemRenderer(
     }
     data class MusicInlineBadgeRenderer(val icon: YoutubeiNextResponse.MenuIcon?)
 
-    fun toMediaItemAndPlaylistSetVideoId(hl: String): Pair<MediaItemData, String?>? {
+    fun toMediaItemAndPlaylistSetVideoId(hl: String): Pair<MediaItem, String?>? {
         var video_id: String? = playlistItemData?.videoId ?: navigationEndpoint?.watchEndpoint?.videoId
         val browse_id: String? = navigationEndpoint?.browseEndpoint?.browseId
         var video_is_main: Boolean = true
 
         var title: String? = null
-        var artist: ArtistData? = null
+        var artist: Artist? = null
         var playlist: Playlist? = null
         var duration: Long? = null
         var album: Playlist? = null
@@ -41,18 +38,19 @@ data class MusicResponsiveListItemRenderer(
             val page_type: String? = navigationEndpoint!!.browseEndpoint!!.getPageType()
             when (
                 page_type?.let { type ->
-                    MediaItemType.fromBrowseEndpointType(type)
+                    MediaItem.Type.fromBrowseEndpointType(type)
                 }
             ) {
-                MediaItemType.PLAYLIST_REM -> {
+                MediaItem.Type.PLAYLIST -> {
                     video_is_main = false
-                    playlist = Playlist(browse_id).apply {
-                        playlist_type = PlaylistType.fromBrowseEndpointType(page_type)
-                    }
+                    playlist = Playlist(
+                        browse_id,
+                        type = Playlist.Type.fromBrowseEndpointType(page_type)
+                    )
                 }
-                MediaItemType.ARTIST -> {
+                MediaItem.Type.ARTIST -> {
                     video_is_main = false
-                    artist = ArtistData(browse_id)
+                    artist = Artist(browse_id)
                 }
                 else -> {}
             }
@@ -82,9 +80,11 @@ data class MusicResponsiveListItemRenderer(
                     }
 
                     val browse_endpoint: BrowseEndpoint = run.navigationEndpoint.browseEndpoint ?: continue
-                    if (artist == null && browse_endpoint.browseId != null && browse_endpoint.getMediaItemType() == MediaItemType.ARTIST) {
-                        artist = ArtistData(browse_endpoint.browseId)
-                        artist.title = run.text
+                    if (artist == null && browse_endpoint.browseId != null && browse_endpoint.getMediaItemType() == MediaItem.Type.ARTIST) {
+                        artist = Artist(
+                            browse_endpoint.browseId,
+                            name = run.text
+                        )
                     }
                 }
             }
@@ -101,30 +101,48 @@ data class MusicResponsiveListItemRenderer(
             }
         }
 
-        val item_data: MediaItemData
+        var item_data: MediaItem
+        val thumbnail_provider: ThumbnailProvider? = thumbnail?.toThumbnailProvider()
+
         if (video_id != null) {
-            item_data = SongData(video_id).also { data ->
-                data.duration = duration
-                thumbnail?.musicThumbnailRenderer?.thumbnail?.thumbnails?.firstOrNull()?.also {
-                    data.song_type = if (it.height == it.width) SongType.SONG else SongType.VIDEO
-                }
-                data.explicit = badges?.any { it.isExplicit() } == true
+            val first_thumbnail = thumbnail?.musicThumbnailRenderer?.thumbnail?.thumbnails?.firstOrNull()
+            val song_type: Song.Type? = first_thumbnail?.let {
+                if (it.height == it.width) Song.Type.SONG else Song.Type.VIDEO
             }
+
+            item_data = Song(
+                video_id,
+                name = title,
+                duration = duration,
+                type = song_type,
+                is_explicit = badges?.any { it.isExplicit() } == true,
+                thumbnail_provider = thumbnail_provider
+            )
         }
         else if (video_is_main) {
             return null
         }
         else {
-            item_data = (playlist?.apply { total_duration = duration }) ?: artist ?: return null
+            item_data =
+                playlist?.copy(
+                    total_duration = duration,
+                    thumbnail_provider = thumbnail_provider
+                )
+                ?: artist?.copy(
+                    thumbnail_provider = thumbnail_provider
+                ) 
+                ?: return null
         }
 
         // Handle songs with no artist (or 'Various artists')
-        if (artist == null) {
+        if (artist == null && (item_data is Song || item_data is Playlist)) {
             if (flexColumns != null && flexColumns.size > 1) {
                 val text = flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text
                 if (text.runs != null) {
-                    artist = ArtistData(Artist.getForItemId(item_data))
-                    artist.title = text.first_text
+                    artist = Artist(
+                        Artist.getForItemId(item_data),
+                        name = text.first_text
+                    )
                 }
             }
         }
@@ -136,12 +154,12 @@ data class MusicResponsiveListItemRenderer(
             }
 
             when (browse_endpoint.getMediaItemType()) {
-                MediaItemType.ARTIST -> {
+                MediaItem.Type.ARTIST -> {
                     if (artist == null) {
-                        artist = ArtistData(browse_endpoint.browseId)
+                        artist = Artist(browse_endpoint.browseId)
                     }
                 }
-                MediaItemType.PLAYLIST_REM -> {
+                MediaItem.Type.PLAYLIST -> {
                     if (album == null) {
                         album = Playlist(browse_endpoint.browseId)
                     }
@@ -150,14 +168,16 @@ data class MusicResponsiveListItemRenderer(
             }
         }
 
-        item_data.title = title
-        item_data.thumbnail_provider = thumbnail?.toThumbnailProvider()
-
-        if (item_data is MediaItem.DataWithArtist) {
-            item_data.artist = artist
+        if (item_data is Song) {
+            item_data = item_data.copy(
+                artist = artist,
+                album = album
+            )
         }
-        if (item_data is SongData) {
-            item_data.album = album
+        else if (item_data is Playlist) {
+            item_data = item_data.copy(
+                artist = artist
+            )
         }
 
         return Pair(item_data, playlistItemData?.playlistSetVideoId)

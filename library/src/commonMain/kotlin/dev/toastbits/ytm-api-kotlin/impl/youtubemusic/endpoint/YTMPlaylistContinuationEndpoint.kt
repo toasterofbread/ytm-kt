@@ -1,53 +1,64 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
-import dev.toastbits.ytmapi.model.external.mediaitem.playlist.RemotePlaylistRef
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
+import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
 import dev.toastbits.ytmapi.endpoint.PlaylistContinuationEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicApi
-import dev.toastbits.ytmapi.model.YoutubeiBrowseResponse
+import dev.toastbits.ytmapi.model.internal.YoutubeiBrowseResponse
+import dev.toastbits.ytmapi.radio.RadioContinuation
+import dev.toastbits.ytmapi.itemcache.MediaItemCache
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
 
 class YTMPlaylistContinuationEndpoint(override val api: YoutubeMusicApi): PlaylistContinuationEndpoint() {
     override suspend fun getPlaylistContinuation(
         initial: Boolean,
         token: String,
         skip_initial: Int,
-    ): Result<Pair<List<MediaItemData>, String?>> = runCatching {
+    ): Result<Pair<List<MediaItem>, RadioContinuation?>> = runCatching {
         if (initial) {
-            val playlist = RemotePlaylistRef(token)
-            playlist.loadData(api.context, false).onFailure {
-                return@runCatching Result.failure(it)
-            }
+            val playlist: Playlist = api.item_cache.loadPlaylist(
+                api,
+                playlist_id = token,
+                keys = setOf(MediaItemCache.PlaylistKey.ITEMS, MediaItemCache.PlaylistKey.CONTINUATION)
+            )
 
-            val items = playlist.Items.get(api.database) ?: return@runCatching Result.failure(IllegalStateException("Items for loaded $playlist is null"))
-
-            return@runCatching Result.success(Pair(
-                items.drop(skip_initial).map { it.getEmptyData() },
-                playlist.Continuation.get(api.database)?.token
-            ))
+            return@runCatching Pair(
+                playlist.items!!.drop(skip_initial),
+                playlist.continuation!!
+            )
         }
 
-        val hl = api.data_language
+        val hl: String = api.data_language
         val response: HttpResponse = api.client.request {
-            endpointPath("browse?ctoken=$token&continuation=$token&type=next")
+            endpointPath("browse")
+            url {
+                parameters.append("ctoken", token)
+                parameters.append("continuation", token)
+                parameters.append("type", "next")
+            }
             addAuthApiHeaders()
             postWithBody()
-
-        val result = api.performRequest(request)
-        val data: YoutubeiBrowseResponse = result.parseJsonResponse {
-            return@runCatching Result.failure(it)
         }
 
-        return@runCatching runCatching {
-            val shelf = data.continuationContents?.musicPlaylistShelfContinuation ?: return@runCatching Pair(emptyList(), null)
+        val data: YoutubeiBrowseResponse = response.body()
 
-            val items: List<MediaItemData> =
-                shelf.contents!!.mapNotNull { item ->
-                    item.toMediaItemData(hl)?.first
-                }
+        val shelf = data.continuationContents?.musicPlaylistShelfContinuation ?: return@runCatching Pair(emptyList(), null)
 
-            val continuation: String? = shelf.continuations?.firstOrNull()?.nextContinuationData?.continuation
+        val items: List<MediaItem> =
+            shelf.contents!!.mapNotNull { item ->
+                item.toMediaItemData(hl, api)?.first
+            }
 
-            return@runCatching Pair(items.drop(skip_initial), continuation)
-        }
+        return@runCatching Pair(
+            items.drop(skip_initial),
+            shelf.continuations?.firstOrNull()?.nextContinuationData?.continuation?.let {
+                RadioContinuation(
+                    token = it,
+                    type = RadioContinuation.Type.PLAYLIST
+                )
+            }
+        )
     }
 }

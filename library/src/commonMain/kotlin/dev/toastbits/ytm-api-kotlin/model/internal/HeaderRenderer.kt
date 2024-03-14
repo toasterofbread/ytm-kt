@@ -1,5 +1,7 @@
 package dev.toastbits.ytmapi.model.internal
 
+import dev.toastbits.ytmapi.model.external.Thumbnail
+
 
 open class HeaderRenderer(
     val title: TextRuns?,

@@ -7,8 +7,12 @@ import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicApi
 import dev.toastbits.ytmapi.itemcache.MediaItemCache
 import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.headers
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.Headers
+import io.ktor.http.HeadersBuilder
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonObjectBuilder
 
 interface YoutubeApi {
     companion object {
@@ -17,7 +21,7 @@ interface YoutubeApi {
 
     val data_language: String
     val ui_language: String
-    val item_cache: MediaItemCache?
+    val item_cache: MediaItemCache
 
     val client: HttpClient
 
@@ -72,8 +76,8 @@ interface YoutubeApi {
     }
 
     suspend fun HttpRequestBuilder.postWithBody(
-        body: Map<String, Any?>? = null,
         context: PostBodyContext = PostBodyContext.BASE,
+        buildPostBody: (JsonObjectBuilder.() -> Unit)? = null
     ): HttpRequestBuilder
 
     interface Implementable {
@@ -111,9 +115,12 @@ interface YoutubeApi {
                 addAuthlessApiHeaders(include)
             }
 
-        suspend fun HttpRequestBuilder.postWithBody(body: Map<String, Any?>? = null, context: PostBodyContext = PostBodyContext.BASE): HttpRequestBuilder =
+        suspend fun HttpRequestBuilder.postWithBody(
+            context: PostBodyContext = PostBodyContext.BASE,
+            buildPostBody: (JsonObjectBuilder.() -> Unit)? = null
+        ): HttpRequestBuilder =
             with (api) {
-                postWithBody(body, context)
+                postWithBody(context, buildPostBody)
             }
     }
 
@@ -156,32 +163,37 @@ interface YoutubeApi {
     val SongLyrics: SongLyricsEndpoint
 
     abstract class UserAuthState(
-        headers: Map<String, String>
+        headers: Headers
     ) {
         abstract val api: YoutubeApi
         abstract val own_channel_id: String?
         val headers: Headers
 
         init {
-            val headers_builder: Headers.Builder = Headers.Builder()
+            val headers_builder: HeadersBuilder = HeadersBuilder()
 
-            for (header in INCLUDE_HEADERS) {
-                val value: String = headers[header] ?: continue
-                if (header == "cookie") {
-                    val filtered_cookies: String = filterCookieString(value) {
-                        it.startsWith("__Secure-")
-                    }
-
-                    headers_builder.add("cookie", filtered_cookies)
+            for ((key, values) in headers.entries()) {
+                if (INCLUDE_HEADERS.none { it.equals(key, ignoreCase = true) }) {
                     continue
                 }
 
-                headers_builder.add(header, value)
+                if (key.equals("cookie", ignoreCase = true)) {
+                    headers_builder.appendAll(
+                        key,
+                        values.map {
+                            filterCookieString(it) {
+                                it.startsWith("__Secure-")
+                            }
+                        }
+                    )
+                }
+                else {
+                    headers_builder.appendAll(key, values)
+                }
             }
 
-            this.headers = headers_builder        }
-
-        private enum class ValueType { CHANNEL, HEADER }
+            this.headers = headers_builder.build()
+        }
 
         private fun filterCookieString(cookies_string: String, shouldKeepCookie: (String) -> Boolean): String {
             var ret: String = ""
@@ -212,8 +224,8 @@ interface YoutubeApi {
                     }
                 }
                 else {
-                    for (header in headers) {
-                        set(header.first, header.second)
+                    for ((key, value) in headers.entries()) {
+                        set(key, value.first())
                     }
                 }
             }
@@ -254,6 +266,4 @@ interface YoutubeApi {
         abstract val SetSongLiked: SetSongLikedEndpoint
         abstract val MarkSongAsWatched: MarkSongAsWatchedEndpoint
     }
-
-    val HttpStatusCode.is_successful: Boolean get() = value in 200 .. 299
 }

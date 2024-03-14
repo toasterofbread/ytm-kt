@@ -1,7 +1,8 @@
 package dev.toastbits.ytmapi.endpoint
 
 import dev.toastbits.ytmapi.YoutubeApi
-import dev.toastbits.ytmapi.model.TextRuns
+import dev.toastbits.ytmapi.model.internal.TextRuns
+import io.ktor.http.Headers
 
 abstract class YoutubeChannelCreationFormEndpoint: YoutubeApi.Endpoint() {
     abstract suspend fun getForm(

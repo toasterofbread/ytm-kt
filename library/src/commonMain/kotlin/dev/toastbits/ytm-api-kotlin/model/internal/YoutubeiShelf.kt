@@ -1,7 +1,8 @@
 package dev.toastbits.ytmapi.model.internal
 
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
 import dev.toastbits.ytmapi.impl.youtubemusic.endpoint.YTMGetHomeFeedEndpoint
+import dev.toastbits.ytmapi.YoutubeApi
 
 data class YoutubeiShelf(
     val musicShelfRenderer: YTMGetHomeFeedEndpoint.MusicShelfRenderer?,
@@ -25,19 +26,19 @@ data class YoutubeiShelf(
     fun getNavigationEndpoint(): NavigationEndpoint? =
         musicShelfRenderer?.bottomEndpoint ?: musicCarouselShelfRenderer?.header?.getRenderer()?.moreContentButton?.buttonRenderer?.navigationEndpoint
 
-    fun getMediaItems(hl: String): List<MediaItemData> =
+    fun getMediaItems(hl: String, api: YoutubeApi): List<MediaItem> =
         (musicShelfRenderer?.contents ?: musicCarouselShelfRenderer?.contents ?: musicPlaylistShelfRenderer?.contents ?: gridRenderer!!.items).mapNotNull {
-            it.toMediaItemData(hl)?.first
+            it.toMediaItemData(hl, api)?.first
         }
 
-    fun getMediaItemsOrNull(hl: String): List<MediaItemData>? =
+    fun getMediaItemsOrNull(hl: String, api: YoutubeApi): List<MediaItem>? =
         (musicShelfRenderer?.contents ?: musicCarouselShelfRenderer?.contents ?: musicPlaylistShelfRenderer?.contents ?: gridRenderer?.items)?.mapNotNull {
-            it.toMediaItemData(hl)?.first
+            it.toMediaItemData(hl, api)?.first
         }
 
-    fun getMediaItemsAndSetIds(hl: String): List<Pair<MediaItemData, String?>> =
+    fun getMediaItemsAndSetIds(hl: String, api: YoutubeApi): List<Pair<MediaItem, String?>> =
         (musicShelfRenderer?.contents ?: musicCarouselShelfRenderer?.contents ?: musicPlaylistShelfRenderer?.contents ?: gridRenderer?.items ?: emptyList()).mapNotNull {
-            it.toMediaItemData(hl)
+            it.toMediaItemData(hl, api)
         }
 
     fun getRenderer(): Any? =

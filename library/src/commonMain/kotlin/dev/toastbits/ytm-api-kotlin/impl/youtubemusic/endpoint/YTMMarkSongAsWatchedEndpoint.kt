@@ -4,7 +4,13 @@ import dev.toastbits.ytmapi.model.external.mediaitem.Song
 import dev.toastbits.ytmapi.YoutubeApi
 import dev.toastbits.ytmapi.endpoint.MarkSongAsWatchedEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicAuthInfo
-import dev.toastbits.ytmapi.impl.youtubemusic.unit
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.plugins.expectSuccess
+import kotlinx.serialization.json.put
+import kotlin.random.Random
 
 private data class PlaybackTrackingRepsonse(
     val playbackTracking: PlaybackTracking
@@ -28,23 +34,24 @@ class YTMMarkSongAsWatchedEndpoint(override val auth: YoutubeMusicAuthInfo): Mar
             buildPlayerRequest(song.id, false)
         }
 
-        if (!response.status.is_success) {
+        if (response.status.value !in 200 .. 299) {
             response = api.client.request {
                 buildPlayerRequest(song.id, true)
             }
         }
 
-        val data: PlaybackTrackingRepsonse = response.body
+        val data: PlaybackTrackingRepsonse = response.body()
 
         check(data.playback_url.contains("s.youtube.com")) { data.playback_url }
 
         val playback_url: String = data.playback_url.replace("s.youtube.com", "music.youtube.com")
-            .toHttpUrl().newBuilder()
-            .setQueryParameter("ver", "2")
-            .setQueryParameter("c", "WEB_REMIX")
-            .setQueryParameter("cpn", generateCpn())
 
         api.client.request(playback_url) {
+            url {
+                parameters.append("ver", "2")
+                parameters.append("c", "WEB_REMIX")
+                parameters.append("cpn", generateCpn())
+            }
             addAuthApiHeaders(include = listOf("cookie", "user-agent"))
         }
     }
@@ -53,9 +60,10 @@ class YTMMarkSongAsWatchedEndpoint(override val auth: YoutubeMusicAuthInfo): Mar
         endpointPath("player")
         addAuthApiHeaders()
         postWithBody(
-            mapOf("videoId" to id),
             if (alt) YoutubeApi.PostBodyContext.ANDROID_MUSIC else YoutubeApi.PostBodyContext.BASE
-        )
+        ) {
+            put("videoId", id)
+        }
 
         if (!alt) {
             expectSuccess = false

@@ -1,11 +1,15 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
 import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
 import dev.toastbits.ytmapi.endpoint.LikedPlaylistsEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicAuthInfo
-import dev.toastbits.ytmapi.model.YoutubeiBrowseResponse
-import dev.toastbits.ytmapi.model.YoutubeiShelfContentsItem
+import dev.toastbits.ytmapi.model.internal.YoutubeiBrowseResponse
+import dev.toastbits.ytmapi.model.internal.YoutubeiShelfContentsItem
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.put
 
 class YTMLikedPlaylistsEndpoint(override val auth: YoutubeMusicAuthInfo): LikedPlaylistsEndpoint() {
     override suspend fun getLikedPlaylists(): Result<List<Playlist>> = runCatching {
@@ -13,10 +17,12 @@ class YTMLikedPlaylistsEndpoint(override val auth: YoutubeMusicAuthInfo): LikedP
         val response: HttpResponse = api.client.request {
             endpointPath("browse")
             addAuthApiHeaders()
-            postWithBody(mapOf("browseId" to "FEmusic_liked_playlists"))
+            postWithBody {
+                put("browseId", "FEmusic_liked_playlists")
+            }
         }
-            
-        val data: YoutubeiBrowseResponse = response.body
+
+        val data: YoutubeiBrowseResponse = response.body()
 
         val playlist_data: List<YoutubeiShelfContentsItem> =
             data.contents!!
@@ -37,7 +43,7 @@ class YTMLikedPlaylistsEndpoint(override val auth: YoutubeMusicAuthInfo): LikedP
                 return@mapNotNull null
             }
 
-            var item: MediaItemData? = it.toMediaItemData(hl)?.first
+            var item: MediaItem? = it.toMediaItemData(hl, api)?.first
             if (item !is Playlist) {
                 return@mapNotNull null
             }

@@ -1,13 +1,17 @@
 package dev.toastbits.ytmapi.impl.youtubemusic.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.enums.PlaylistType
-import dev.toastbits.ytmapi.model.external.mediaitem.loader.MediaItemLoader
 import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
+import dev.toastbits.ytmapi.model.external.Thumbnail
+import dev.toastbits.ytmapi.model.external.ThumbnailProvider
 import dev.toastbits.ytmapi.RadioBuilderArtist
 import dev.toastbits.ytmapi.RadioBuilderEndpoint
 import dev.toastbits.ytmapi.RadioBuilderModifier
 import dev.toastbits.ytmapi.YoutubeApi
 import dev.toastbits.ytmapi.impl.youtubemusic.YoutubeMusicApi
+import io.ktor.client.call.body
+import io.ktor.client.request.request
+import io.ktor.client.statement.HttpResponse
+import kotlinx.serialization.json.put
 
 class YTMRadioBuilderEndpoint(override val api: YoutubeMusicApi): RadioBuilderEndpoint() {
     // https://gist.github.com/toasterofbread/8982ffebfca5919cb51e8967e0122982
@@ -17,13 +21,12 @@ class YTMRadioBuilderEndpoint(override val api: YoutubeMusicApi): RadioBuilderEn
         val response: HttpResponse = api.client.request {
             endpointPath("browse")
             addAuthApiHeaders()
-            postWithBody(
-                mapOf("browseId" to "FEmusic_radio_builder"),
-                YoutubeApi.PostBodyContext.ANDROID
-            )
+            postWithBody(YoutubeApi.PostBodyContext.ANDROID) {
+                put("browseId", "FEmusic_radio_builder")
+            }
         }
 
-        val parsed: RadioBuilderBrowseResponse = response.body
+        val parsed: RadioBuilderBrowseResponse = response.body()
 
         return@runCatching parsed.items.zip(parsed.mutations).mapNotNull { artist ->
             artist.second.token?.let { token ->
@@ -74,24 +77,18 @@ class YTMRadioBuilderEndpoint(override val api: YoutubeMusicApi): RadioBuilderEn
         return radio_token
     }
 
-    override suspend fun getBuiltRadio(radio_token: String): Result<Playlist?> {
+    override suspend fun getBuiltRadio(radio_token: String): Result<Playlist?> = runCatching {
         require(radio_token.startsWith("VLRDAT"))
         require(radio_token.contains('E'))
 
-        val playlist_result = MediaItemLoader.loadRemotePlaylist(
-            Playlist(radio_token).apply {
-                playlist_type = PlaylistType.RADIO
-            },
-            api.context
-        )
-        val playlist = playlist_result.getOrNull() ?: return playlist_result
+        val playlist: Playlist = api.LoadPlaylist.loadPlaylist(radio_token).getOrThrow()
 
-        val thumb_url = playlist.thumbnail_provider?.getThumbnailUrl(ThumbnailProvider.Quality.HIGH)
+        val thumb_url: String? = playlist.thumbnail_provider?.getThumbnailUrl(ThumbnailProvider.Quality.HIGH)
         if (thumb_url?.contains("fallback") == true) {
-            return Result.success(null)
+            return@runCatching null
         }
 
-        return Result.success(playlist)
+        return@runCatching playlist.copy(type = Playlist.Type.RADIO)
     }
 }
 

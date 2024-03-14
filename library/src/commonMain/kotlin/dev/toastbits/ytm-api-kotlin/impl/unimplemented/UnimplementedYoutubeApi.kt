@@ -1,28 +1,32 @@
 package dev.toastbits.ytmapi.impl.unimplemented
 
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
-import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemData
-import dev.toastbits.ytmapi.model.external.mediaitem.Artist
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.BrowseParamsData
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.MediaItemLayout
-import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
-import dev.toastbits.ytmapi.model.external.mediaitem.Song
-import dev.toastbits.ytmapi.model.external.mediaitem.song.SongData
+import dev.toastbits.ytmapi.model.external.mediaitem.*
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemLayout
 import dev.toastbits.ytmapi.RadioBuilderArtist
 import dev.toastbits.ytmapi.RadioBuilderEndpoint
 import dev.toastbits.ytmapi.RadioBuilderModifier
 import dev.toastbits.ytmapi.SongRelatedContentEndpoint
 import dev.toastbits.ytmapi.YoutubeApi
 import dev.toastbits.ytmapi.model.external.YoutubeVideoFormat
+import dev.toastbits.ytmapi.model.external.YoutubePage
+import dev.toastbits.ytmapi.model.external.Thumbnail
 import dev.toastbits.ytmapi.endpoint.*
 import dev.toastbits.ytmapi.formats.VideoFormatsEndpoint
 import dev.toastbits.ytmapi.impl.youtubemusic.RelatedGroup
 import dev.toastbits.ytmapi.itemcache.MediaItemCache
+import dev.toastbits.ytmapi.radio.RadioContinuation
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.http.Headers
+import kotlinx.serialization.json.JsonObjectBuilder
+import kotlinx.serialization.json.JsonObject
 
 open class UnimplementedYoutubeApi(
     override val data_language: String = "",
     override val ui_language: String = "",
-    override val item_cache: MediaItemCache? = null
+    override val item_cache: MediaItemCache = MediaItemCache(),
+    override val client: HttpClient = HttpClient(CIO)
 ): YoutubeApi {
     override suspend fun init() {}
 
@@ -38,7 +42,10 @@ open class UnimplementedYoutubeApi(
         throw NotImplementedError()
     }
 
-    override suspend fun HttpRequestBuilder.postWithBody(body: Map<String, Any?>?, context: YoutubeApi.PostBodyContext): HttpRequestBuilder {
+    override suspend fun HttpRequestBuilder.postWithBody(
+        context: YoutubeApi.PostBodyContext,
+        buildPostBody: (JsonObjectBuilder.() -> Unit)?
+    ): HttpRequestBuilder {
         throw NotImplementedError()
     }
 
@@ -60,28 +67,28 @@ open class UnimplementedYoutubeApi(
     }
     override val CreateYoutubeChannel = object : CreateYoutubeChannelEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun createYoutubeChannel(headers: Map<String, String>, channel_creation_token: String, params: Map<String, String>): Result<Artist> {
+        override suspend fun createYoutubeChannel(headers: Headers, channel_creation_token: String, params: Map<String, String>): Result<Artist> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYoutubeApi
     }
     override val LoadSong = object : LoadSongEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun loadSong(song_id: String): Result<SongData> {
+        override suspend fun loadSong(song_id: String): Result<Song> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYoutubeApi
     }
     override val LoadArtist = object : LoadArtistEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun loadArtist(artist_id: String): Result<ArtistData> {
+        override suspend fun loadArtist(artist_id: String): Result<Artist> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYoutubeApi
     }
     override val LoadPlaylist = object : LoadPlaylistEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun loadPlaylist(playlist_id: String, continuation: MediaItemLayout.Continuation?, browse_params: String?, playlist_url: String?): Result<Playlist> {
+        override suspend fun loadPlaylist(playlist_id: String, continuation: RadioContinuation?, browse_params: String?, playlist_url: String?): Result<Playlist> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYoutubeApi
@@ -109,33 +116,33 @@ open class UnimplementedYoutubeApi(
     }
     override val SongRadio = object : SongRadioEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun getSongRadio(video_id: String, continuation: String?, filters: List<RadioBuilderModifier>): Result<RadioData> {
+        override suspend fun getSongRadio(song_id: String, continuation: String?, filters: List<RadioBuilderModifier>): Result<RadioData> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYoutubeApi
     }
     override val ArtistWithParams = object : ArtistWithParamsEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun loadArtistWithParams(browse_params: BrowseParamsData): Result<List<ArtistWithParamsRow>> {
+        override suspend fun loadArtistWithParams(browse_params: YoutubePage.BrowseParamsData): Result<List<ArtistWithParamsRow>> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYoutubeApi
     }
     override val ArtistRadio: ArtistRadioEndpoint = object : ArtistRadioEndpoint() {
-        override suspend fun getArtistRadio(artist: Artist, continuation: String?): Result<RadioData> {
+        override suspend fun getArtistRadio(artist_id: String, continuation: String?): Result<RadioData> {
             throw NotImplementedError()
         }
         override val api: YoutubeApi = this@UnimplementedYoutubeApi
     }
     override val ArtistShuffle: ArtistShuffleEndpoint = object : ArtistShuffleEndpoint() {
-        override suspend fun getArtistShuffle(artist: Artist, continuation: String?): Result<RadioData> {
+        override suspend fun getArtistShuffle(artist_shuffle_playlist_id: String, continuation: String?): Result<RadioData> {
             throw NotImplementedError()
         }
         override val api: YoutubeApi = this@UnimplementedYoutubeApi
     }
     override val PlaylistContinuation = object : PlaylistContinuationEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun getPlaylistContinuation(initial: Boolean, token: String, skip_initial: Int): Result<Pair<List<MediaItemData>, String?>> {
+        override suspend fun getPlaylistContinuation(initial: Boolean, token: String, skip_initial: Int): Result<Pair<List<MediaItem>, RadioContinuation?>> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYoutubeApi

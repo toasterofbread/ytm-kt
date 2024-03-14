@@ -1,6 +1,6 @@
 package dev.toastbits.ytmapi.endpoint
 
-import dev.toastbits.ytmapi.model.external.mediaitem.layout.MediaItemLayout
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItemLayout
 import dev.toastbits.ytmapi.YoutubeApi
 
 abstract class SearchEndpoint: YoutubeApi.Endpoint() {

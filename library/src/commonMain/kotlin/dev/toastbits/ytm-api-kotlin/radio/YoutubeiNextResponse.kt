@@ -3,11 +3,19 @@
 package dev.toastbits.ytmapi.radio
 
 import dev.toastbits.ytmapi.model.external.mediaitem.Artist
-import dev.toastbits.ytmapi.model.external.mediaitem.db.loadMediaItemValue
-import dev.toastbits.ytmapi.model.external.mediaitem.enums.MediaItemType
 import dev.toastbits.ytmapi.model.external.mediaitem.Playlist
 import dev.toastbits.ytmapi.model.external.mediaitem.Song
+import dev.toastbits.ytmapi.model.external.mediaitem.MediaItem
 import dev.toastbits.ytmapi.model.*
+import dev.toastbits.ytmapi.model.internal.BrowseEndpoint
+import dev.toastbits.ytmapi.model.internal.TextRuns
+import dev.toastbits.ytmapi.model.internal.WatchEndpoint
+import dev.toastbits.ytmapi.model.internal.MusicThumbnailRenderer
+import dev.toastbits.ytmapi.model.internal.MusicResponsiveListItemRenderer
+import dev.toastbits.ytmapi.model.internal.TextRun
+import dev.toastbits.ytmapi.model.internal.NavigationEndpoint
+import dev.toastbits.ytmapi.YoutubeApi
+import dev.toastbits.ytmapi.itemcache.MediaItemCache
 
 data class YoutubeiNextResponse(
     val contents: Contents
@@ -60,23 +68,23 @@ data class YoutubeiNextResponse(
         val title: TextRuns,
         val longBylineText: TextRuns,
         val menu: Menu,
-        val thumbnail: MusicThumbnailRenderer.Thumbnail,
+        val thumbnail: MusicThumbnailRenderer.RendererThumbnail,
         val badges: List<MusicResponsiveListItemRenderer.Badge>?
     ) {
-        suspend fun getArtist(): Result<Artist?> = runCatching {
+        suspend fun getArtist(api: YoutubeApi): Result<Artist?> = runCatching {
             // Get artist ID directly
             for (run in longBylineText.runs!! + title.runs!!) {
                 val page_type = run.browse_endpoint_type?.let { type ->
-                    MediaItemType.fromBrowseEndpointType(type)
+                    MediaItem.Type.fromBrowseEndpointType(type)
                 }
-                if (page_type != MediaItemType.ARTIST) {
+                if (page_type != MediaItem.Type.ARTIST) {
                     continue
                 }
 
                 val browse_id: String = run.navigationEndpoint?.browseEndpoint?.browseId ?: continue
                 return@runCatching Artist(
                     id = browse_id,
-                    title = run.text
+                    name = run.text
                 )
             }
 
@@ -92,21 +100,14 @@ data class YoutubeiNextResponse(
                 }
 
                 val playlist_id: String = run.navigationEndpoint.browseEndpoint.browseId ?: continue
+                val playlist: Playlist = api.item_cache.loadPlaylist(
+                    api,
+                    playlist_id,
+                    setOf(MediaItemCache.PlaylistKey.ARTIST_ID)
+                )
 
-                var artist_id: String? = item_cache.getPlaylistArtist(playlist_id)
-
-                if (artist_id == null) {
-                    val playlist: Playlist? = api.LoadPlaylist.implementedOrNull().loadPlaylist()
-                    artist_id = playlist?.artist_id
-
-                    val artist = artist_load_result?.fold(
-                        { it },
-                        { return Result.failure(it) }
-                    )
-                }
-
-                if (artist_id != null) {
-                    return@runCatching Artist(artist_id)
+                if (playlist.artist != null) {
+                    return@runCatching playlist.artist
                 }
             }
 
@@ -115,7 +116,7 @@ data class YoutubeiNextResponse(
             if (artist_title != null) {
                 return@runCatching Artist(
                     id = "",
-                    title = artist_title.text
+                    name = artist_title.text
                 )
             }
 
