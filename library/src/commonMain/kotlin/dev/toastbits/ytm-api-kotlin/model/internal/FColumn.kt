@@ -1,5 +1,0 @@
-package dev.toastbits.ytmapi.model.internal
-
-data class FlexColumn(val musicResponsiveListItemFlexColumnRenderer: MusicResponsiveListItemColumnRenderer)
-data class FixedColumn(val musicResponsiveListItemFixedColumnRenderer: MusicResponsiveListItemColumnRenderer)
-data class MusicResponsiveListItemColumnRenderer(val text: TextRuns)

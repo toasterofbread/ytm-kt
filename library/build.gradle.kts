@@ -1,8 +1,6 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
-    id("module.publication")
-
+    id("com.android.library")
+    kotlin("multiplatform")
     kotlin("plugin.serialization") version "1.9.22"
 }
 
@@ -32,18 +30,13 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
             }
         }
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test)
-            }
-        }
     }
 }
 
 android {
-    namespace = "dev.toastbits.ytm.api.kotlin"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    namespace = "dev.toastbits.ytmkt"
+    compileSdk = (findProperty("android.compileSdk") as String).toInt()
     defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
+        minSdk = (findProperty("android.minSdk") as String).toInt()
     }
 }
