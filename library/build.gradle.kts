@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
+    id("module.publication")
+
     kotlin("plugin.serialization") version "1.9.22"
 }
 
@@ -8,7 +10,7 @@ kotlin {
     targetHierarchy.default()
     jvm()
     androidTarget {
-        publishLibraryVariants("release", "debug")
+        publishLibraryVariants("release")
         compilations.all {
             kotlinOptions {
                 jvmTarget = "1.8"
