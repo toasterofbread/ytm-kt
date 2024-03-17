@@ -34,7 +34,7 @@ data class YoutubeUiString(
                     return YoutubeUiString(this, index)
                 }
             }
-            
+
             return RawUiString(key)
         }
     }
@@ -46,18 +46,14 @@ data class YoutubeUiString(
 
     private var localised: Pair<String, String?>? = null
     private fun getLocalised(language: String): Pair<String, String?> {
-        if (localised == null) {
-            val strings: YoutubeUILocalisation.LocalisationSet = type.getStringData()
+        val strings: YoutubeUILocalisation.LocalisationSet = type.getStringData()
 
-            val item: Map<String, Pair<String, String?>>? = strings.items.getOrNull(index)
-            if (item == null) {
-                throw RuntimeException("Could not get localised string item ($index, ${strings.items.toList()})")
-            }
-
-            localised = getLocalisationSetItemString(language, item)
+        val item: Map<String, Pair<String, String?>>? = strings.items.getOrNull(index)
+        if (item == null) {
+            throw RuntimeException("Could not get localised string item ($index, ${strings.items.toList()})")
         }
 
-        return localised!!
+        return getLocalisationSetItemString(language, item)
     }
 
     private fun getLocalisationSetItemString(

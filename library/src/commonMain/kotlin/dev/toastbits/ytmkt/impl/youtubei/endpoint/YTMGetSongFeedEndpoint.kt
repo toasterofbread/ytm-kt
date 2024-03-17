@@ -47,7 +47,6 @@ open class YTMGetSongFeedEndpoint(override val api: YoutubeiApi): SongFeedEndpoi
 
     override suspend fun getSongFeed(
         min_rows: Int,
-        allow_cached: Boolean,
         params: String?,
         continuation: String?
     ): Result<SongFeedLoadResult> = runCatching {

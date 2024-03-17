@@ -65,11 +65,6 @@ data class Header(
         get() = getRenderer()
 }
 
-//val thumbnails = (header.obj("thumbnail") ?: header.obj("foregroundThumbnail")!!)
-//    .obj("musicThumbnailRenderer")!!
-//    .obj("thumbnail")!!
-//    .array<JsonObject>("thumbnails")!!
-
 interface YoutubeiHeaderContainer {
     val header: YoutubeiHeader?
 }

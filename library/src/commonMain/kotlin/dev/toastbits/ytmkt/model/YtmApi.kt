@@ -52,7 +52,7 @@ interface YtmApi {
     val VideoFormats: VideoFormatsEndpoint
 
     // --- Feed ---
-    val HomeFeed: SongFeedEndpoint
+    val SongFeed: SongFeedEndpoint
     val GenericFeedViewMorePage: GenericFeedViewMorePageEndpoint
     val SongRadio: SongRadioEndpoint
 

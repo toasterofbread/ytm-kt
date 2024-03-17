@@ -11,15 +11,17 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Headers
 import kotlinx.serialization.json.put
 
-class YoutubeChannelNotCreatedException(
-    val headers: Headers,
-    val channel_creation_token: String?
-): RuntimeException()
-
+/**
+ * Contains user authentication information used by [YoutubeiApi]
+ *
+ * @param api The [YoutubeiApi] using this object.
+ * @param headers Must contain the `authorization` and `cookie` headers.
+ * @param own_channel_id The YouTube channel ID of the user. Used in some instances to mark items as being owned by the user.
+ */
 open class YoutubeiAuthenticationState(
     override val api: YoutubeiApi,
-    override val own_channel_id: String,
-    headers: Headers
+    headers: Headers,
+    override val own_channel_id: String?
 ): ApiAuthenticationState(headers, INCLUDED_HEADERS) {
     override val AccountPlaylists = YTMAccountPlaylistsEndpoint(this)
     override val CreateAccountPlaylist = YTMCreateAccountPlaylistEndpoint(this)
@@ -71,3 +73,8 @@ open class YTMGenericFeedViewMorePageEndpoint(override val api: YoutubeiApi): Ge
         return@runCatching items
     }
 }
+
+class YoutubeChannelNotCreatedException(
+    val headers: Headers,
+    val channel_creation_token: String?
+): RuntimeException()

@@ -3,7 +3,7 @@ package dev.toastbits.ytmkt.uistrings
 import dev.toastbits.ytmkt.uistrings.localised.UILanguages
 import dev.toastbits.ytmkt.uistrings.localised.getYoutubeArtistPageLocalisations
 import dev.toastbits.ytmkt.uistrings.localised.getYoutubeFilterChipsLocalisations
-import dev.toastbits.ytmkt.uistrings.localised.getYoutubeHomeFeedLocalisations
+import dev.toastbits.ytmkt.uistrings.localised.getYoutubeSongFeedLocalisations
 import dev.toastbits.ytmkt.uistrings.localised.getYoutubeOwnChannelLocalisations
 import dev.toastbits.ytmkt.uistrings.localised.getYoutubeSearchPageLocalisations
 
@@ -53,7 +53,7 @@ object YoutubeUILocalisation {
         }
     }
 
-    internal val HOME_FEED_STRINGS: LocalisationSet = getYoutubeHomeFeedLocalisations(UILanguages)
+    internal val HOME_FEED_STRINGS: LocalisationSet = getYoutubeSongFeedLocalisations(UILanguages)
     internal val OWN_CHANNEL_STRINGS: LocalisationSet = getYoutubeOwnChannelLocalisations(UILanguages)
     internal val ARTIST_PAGE_STRINGS: LocalisationSet = getYoutubeArtistPageLocalisations(UILanguages)
     internal val SEARCH_PAGE_STRINGS: LocalisationSet = getYoutubeSearchPageLocalisations(UILanguages)

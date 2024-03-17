@@ -49,17 +49,16 @@ import kotlinx.serialization.json.buildJsonObject
  * See endpoint class definitions for usage documentation.
  *
  * @property data_language Two-part language code for data strings such as song and artist names.
- * @property ui_language Two-part language code for UI strings such as feed row titles and filter labels.
  * @property api_url Base API url to use for requests. Defaults to https://music.youtube.com/youtubei/v1/.
  */
 @Suppress("LeakingThis")
 open class YoutubeiApi(
     open val data_language: String = "en-GB",
-    open val ui_language: String = "en-GB",
     val api_url: String = DEFAULT_API_URL,
-    override val user_auth_state: YoutubeiAuthenticationState? = null,
     override val item_cache: MediaItemCache = MediaItemCache()
 ): YtmApi {
+    override var user_auth_state: YoutubeiAuthenticationState? = null
+
     companion object {
         const val DEFAULT_API_URL: String = "https://music.youtube.com/youtubei/v1/"
     }
@@ -77,7 +76,7 @@ open class YoutubeiApi(
     override val VideoFormats: VideoFormatsEndpoint = YoutubeiVideoFormatsEndpoint(this)
 
     // --- Feed ---
-    override val HomeFeed = YTMGetSongFeedEndpoint(this)
+    override val SongFeed = YTMGetSongFeedEndpoint(this)
     override val GenericFeedViewMorePage = YTMGenericFeedViewMorePageEndpoint(this)
     override val SongRadio = YTMSongRadioEndpoint(this)
 
@@ -178,10 +177,8 @@ open class YoutubeiApi(
     }
 
     private val data_hl: String get() = data_language.split('-', limit = 2).first()
-    private val ui_hl: String get() = ui_language.split('-', limit = 2).first()
 
     internal val post_body_default: JsonObject get() = YoutubeiRequestData.getYtmContext(data_hl)
-    internal val post_body_default_ui_language: JsonObject get() = YoutubeiRequestData.getYtmContext(ui_hl)
     internal val post_body_android_music: JsonObject get() = YoutubeiRequestData.getYtmContextAndroidMusic(data_hl)
     internal val post_body_android: JsonObject get() = YoutubeiRequestData.getYtmContextAndroid(data_hl)
     internal val post_body_mobile: JsonObject get() = YoutubeiRequestData.getYtmContextMobile(data_hl)

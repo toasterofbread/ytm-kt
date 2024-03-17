@@ -36,7 +36,7 @@ open class UnimplementedYtmApi: YtmApi {
     }
 
     override fun HttpRequestBuilder.postWithBody(
-        base_context: JsonObject?,
+        base: JsonObject?,
         buildPostBody: (JsonObjectBuilder.() -> Unit)?
     ) {
         throw NotImplementedError()
@@ -86,9 +86,9 @@ open class UnimplementedYtmApi: YtmApi {
         }
         override val api = this@UnimplementedYtmApi
     }
-    override val HomeFeed = object : SongFeedEndpoint() {
+    override val SongFeed = object : SongFeedEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun getSongFeed(min_rows: Int, allow_cached: Boolean, params: String?, continuation: String?): Result<SongFeedLoadResult> {
+        override suspend fun getSongFeed(min_rows: Int, params: String?, continuation: String?): Result<SongFeedLoadResult> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYtmApi

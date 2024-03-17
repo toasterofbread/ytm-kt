@@ -1,6 +1,5 @@
 package dev.toastbits.ytmkt.impl.youtubei.endpoint
 
-import dev.toastbits.ytmkt.impl.youtubei.YoutubeiPostBody
 import dev.toastbits.ytmkt.model.external.mediaitem.YtmMediaItem
 import dev.toastbits.ytmkt.model.external.mediaitem.YtmPlaylist
 import dev.toastbits.ytmkt.endpoint.AccountPlaylistsEndpoint
@@ -79,7 +78,7 @@ open class YTMCreateAccountPlaylistEndpoint(override val auth: YoutubeiAuthentic
         val response: HttpResponse = api.client.request {
             endpointPath("playlist/create")
             addApiHeadersWithAuthenticated()
-            postWithBody(YoutubeiPostBody.UI_LANGUAGE.getPostBody(api)) {
+            postWithBody {
                 put("title", title)
                 put("description", description)
             }

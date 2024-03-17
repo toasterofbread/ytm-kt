@@ -1,6 +1,5 @@
 package dev.toastbits.ytmkt.impl.youtubei.endpoint
 
-import dev.toastbits.ytmkt.impl.youtubei.YoutubeiPostBody
 import dev.toastbits.ytmkt.endpoint.YoutubeChannelCreationFormEndpoint
 import dev.toastbits.ytmkt.impl.youtubei.YoutubeiApi
 import dev.toastbits.ytmkt.model.external.YoutubeAccountCreationForm
@@ -21,7 +20,7 @@ open class YTMYoutubeChannelCreationFormEndpoint(override val api: YoutubeiApi):
             headers {
                 appendAll(headers)
             }
-            postWithBody(YoutubeiPostBody.UI_LANGUAGE.getPostBody(api)) {
+            postWithBody {
                 put("source", "MY_CHANNEL_CHANNEL_CREATION_SOURCE")
                 put("channelCreationToken", channel_creation_token)
             }

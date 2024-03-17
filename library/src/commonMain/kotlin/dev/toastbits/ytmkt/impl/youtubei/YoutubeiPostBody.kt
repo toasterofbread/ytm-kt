@@ -6,8 +6,7 @@ enum class YoutubeiPostBody {
     BASE,
     ANDROID_MUSIC,
     ANDROID,
-    MOBILE,
-    UI_LANGUAGE;
+    MOBILE;
 
     fun getPostBody(api: YoutubeiApi): JsonObject =
         when (this) {
@@ -15,7 +14,6 @@ enum class YoutubeiPostBody {
             ANDROID_MUSIC -> api.post_body_android_music
             ANDROID -> api.post_body_android
             MOBILE -> api.post_body_mobile
-            UI_LANGUAGE -> api.post_body_default_ui_language
         }
 
     companion object {

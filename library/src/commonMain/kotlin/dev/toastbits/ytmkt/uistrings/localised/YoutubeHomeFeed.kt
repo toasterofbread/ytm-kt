@@ -2,7 +2,7 @@ package dev.toastbits.ytmkt.uistrings.localised
 
 import dev.toastbits.ytmkt.uistrings.YoutubeUILocalisation
 
-fun getYoutubeHomeFeedLocalisations(languages: UILanguages): YoutubeUILocalisation.LocalisationSet =
+fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisation.LocalisationSet =
     with(languages) {
         YoutubeUILocalisation.LocalisationSet().apply {
             add(

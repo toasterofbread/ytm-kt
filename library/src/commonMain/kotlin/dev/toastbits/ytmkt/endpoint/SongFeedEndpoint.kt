@@ -20,7 +20,6 @@ data class SongFeedFilterChip(
 abstract class SongFeedEndpoint: ApiEndpoint() {
     abstract suspend fun getSongFeed(
         min_rows: Int = -1,
-        allow_cached: Boolean = true,
         params: String? = null,
         continuation: String? = null
     ): Result<SongFeedLoadResult>
