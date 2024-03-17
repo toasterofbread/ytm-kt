@@ -8,7 +8,7 @@ kotlin {
     targetHierarchy.default()
     jvm()
     androidTarget {
-        publishLibraryVariants("release")
+        publishLibraryVariants("release", "debug")
         compilations.all {
             kotlinOptions {
                 jvmTarget = "1.8"
