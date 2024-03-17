@@ -7,15 +7,21 @@ import io.ktor.client.call.body
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import kotlinx.serialization.json.put
+import kotlinx.serialization.Serializable
 
+@Serializable
 private data class PlayerLikeResponse(
     val playerOverlays: PlayerOverlays?
 ) {
     val status: LikeButtonRenderer? get() = playerOverlays?.playerOverlayRenderer?.actions?.single()?.likeButtonRenderer
 
-    class PlayerOverlays(val playerOverlayRenderer: PlayerOverlayRenderer?)
+    @Serializable
+    data class PlayerOverlays(val playerOverlayRenderer: PlayerOverlayRenderer?)
+    @Serializable
     data class PlayerOverlayRenderer(val actions: List<Action>?)
+    @Serializable
     data class Action(val likeButtonRenderer: LikeButtonRenderer?)
+    @Serializable
     data class LikeButtonRenderer(val likeStatus: String, val likesAllowed: Boolean)
 }
 

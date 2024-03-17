@@ -98,12 +98,15 @@ data class MusicTwoRowItemRenderer(
             val thumbnail_provider: ThumbnailProvider? = thumbnailRenderer.toThumbnailProvider()
 
             item = when (YtmMediaItem.Type.fromBrowseEndpointType(page_type)) {
-                YtmMediaItem.Type.SONG ->
+                YtmMediaItem.Type.SONG -> {
+                    val song_id: String = YtmSong.cleanId(browse_id)
                     YtmSong(
-                        YtmSong.cleanId(browse_id),
+                        song_id,
                         name = title,
-                        thumbnail_provider = thumbnail_provider
+                        thumbnail_provider = thumbnail_provider,
+                        artist = getArtist(YtmSong(song_id), api)
                     )
+                }
                 YtmMediaItem.Type.ARTIST ->
                     YtmArtist(
                         browse_id,
