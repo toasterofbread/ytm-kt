@@ -11,15 +11,19 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.plugins.expectSuccess
 import kotlinx.serialization.json.put
 import kotlin.random.Random
+import kotlinx.serialization.Serializable
 
+@Serializable
 private data class PlaybackTrackingRepsonse(
     val playbackTracking: PlaybackTracking
 ) {
     val playback_url: String get() = playbackTracking.videostatsPlaybackUrl.baseUrl
 
+    @Serializable
     data class PlaybackTracking(
         val videostatsPlaybackUrl: TrackingUrl
     )
+    @Serializable
     data class TrackingUrl(val baseUrl: String)
 }
 

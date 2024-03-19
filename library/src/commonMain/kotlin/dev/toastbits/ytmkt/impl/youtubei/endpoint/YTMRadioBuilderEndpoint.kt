@@ -12,6 +12,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import kotlinx.serialization.json.put
+import kotlinx.serialization.Serializable
 
 open class YTMRadioBuilderEndpoint(override val api: YoutubeiApi): RadioBuilderEndpoint() {
     // https://gist.github.com/toasterofbread/8982ffebfca5919cb51e8967e0122982
@@ -92,6 +93,7 @@ open class YTMRadioBuilderEndpoint(override val api: YoutubeiApi): RadioBuilderE
     }
 }
 
+@Serializable
 private data class RadioBuilderBrowseResponse(
     val contents: Contents,
     val frameworkUpdates: FrameworkUpdates
@@ -103,30 +105,53 @@ private data class RadioBuilderBrowseResponse(
     val mutations: List<Mutation> get() =
         frameworkUpdates.entityBatchUpdate.mutations
 
+    @Serializable
     data class Contents(val singleColumnBrowseResultsRenderer: SingleColumnBrowseResultsRenderer)
+    @Serializable
     data class SingleColumnBrowseResultsRenderer(val tabs: List<Tab>)
+    @Serializable
     data class Tab(val tabRenderer: TabRenderer)
+    @Serializable
     data class TabRenderer(val content: Content)
+    @Serializable
     data class Content(val sectionListRenderer: SectionListRenderer)
+    @Serializable
     data class SectionListRenderer(val contents: List<SectionListRendererContent>)
+    @Serializable
     data class SectionListRendererContent(val itemSectionRenderer: ItemSectionRenderer)
+    @Serializable
     data class ItemSectionRenderer(val contents: List<ItemSectionRendererContent>)
+    @Serializable
     data class ItemSectionRendererContent(val elementRenderer: ElementRenderer)
+    @Serializable
     data class ElementRenderer(val newElement: NewElement)
+    @Serializable
     data class NewElement(val type: Type)
+    @Serializable
     data class Type(val componentType: ComponentType)
+    @Serializable
     data class ComponentType(val model: Model)
+    @Serializable
     data class Model(val musicRadioBuilderModel: MusicRadioBuilderModel)
+    @Serializable
     data class MusicRadioBuilderModel(val seedItems: List<SeedItem>)
+    @Serializable
     data class SeedItem(val itemEntityKey: String, val musicThumbnail: MusicThumbnail, val title: String)
+    @Serializable
     data class MusicThumbnail(val image: Image)
+    @Serializable
     data class Image(val sources: List<Thumbnail>)
 
+    @Serializable
     data class FrameworkUpdates(val entityBatchUpdate: EntityBatchUpdate)
+    @Serializable
     data class EntityBatchUpdate(val mutations: List<Mutation>)
+    @Serializable
     data class Mutation(val entityKey: String, val payload: Payload) {
         val token: String? get() = payload.musicFormBooleanChoice?.opaqueToken
     }
+    @Serializable
     data class Payload(val musicFormBooleanChoice: MusicFormBooleanChoice?)
+    @Serializable
     data class MusicFormBooleanChoice(val opaqueToken: String)
 }
