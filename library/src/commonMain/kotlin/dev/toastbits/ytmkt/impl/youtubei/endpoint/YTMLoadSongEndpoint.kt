@@ -42,7 +42,7 @@ open class YTMLoadSongEndpoint(override val api: YoutubeiApi): LoadSongEndpoint(
         return@runCatching YtmSong(
             song_id,
             name = video_details.title,
-            artist = YtmArtist(video_details.channelId)
+            artists = listOf(YtmArtist(video_details.channelId))
         )
     }
 }

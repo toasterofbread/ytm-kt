@@ -33,7 +33,7 @@ data class MusicResponsiveListItemRenderer(
         var video_is_main: Boolean = true
 
         var title: String? = null
-        var artist: YtmArtist? = null
+        var artists: MutableList<YtmArtist>? = null
         var playlist: YtmPlaylist? = null
         var duration: Long? = null
         var album: YtmPlaylist? = null
@@ -54,7 +54,7 @@ data class MusicResponsiveListItemRenderer(
                 }
                 YtmMediaItem.Type.ARTIST -> {
                     video_is_main = false
-                    artist = YtmArtist(browse_id)
+                    artists = mutableListOf(YtmArtist(browse_id))
                 }
                 else -> {}
             }
@@ -84,10 +84,19 @@ data class MusicResponsiveListItemRenderer(
                     }
 
                     val browse_endpoint: BrowseEndpoint = run.navigationEndpoint.browseEndpoint ?: continue
-                    if (artist == null && browse_endpoint.browseId != null && browse_endpoint.getMediaItemType() == YtmMediaItem.Type.ARTIST) {
-                        artist = YtmArtist(
-                            browse_endpoint.browseId,
-                            name = run.text
+                    if (browse_endpoint.browseId != null && browse_endpoint.getMediaItemType() == YtmMediaItem.Type.ARTIST) {
+                        if (artists?.any { it.id == browse_endpoint.browseId } == true) {
+                            continue
+                        }
+
+                        if (artists == null) {
+                            artists = mutableListOf()
+                        }
+                        artists!!.add(
+                            YtmArtist(
+                                browse_endpoint.browseId,
+                                name = run.text
+                            )
                         )
                     }
                 }
@@ -133,21 +142,25 @@ data class MusicResponsiveListItemRenderer(
                     thumbnail_provider = thumbnail_provider,
                     name = title
                 )
-                ?: artist?.copy(
-                    thumbnail_provider = thumbnail_provider,
-                    name = artist.name ?: title
-                )
+                ?: artists?.firstOrNull()?.let { artist ->
+                    artist.copy(
+                        thumbnail_provider = thumbnail_provider,
+                        name = artist.name ?: title
+                    )
+                }
                 ?: return null
         }
 
         // Handle songs with no artist (or 'Various artists')
-        if (artist == null && (item_data is YtmSong || item_data is YtmPlaylist)) {
+        if (artists == null && (item_data is YtmSong || item_data is YtmPlaylist)) {
             if (flexColumns != null && flexColumns.size > 1) {
                 val text = flexColumns[1].musicResponsiveListItemFlexColumnRenderer.text
                 if (text.runs != null) {
-                    artist = YtmArtist(
-                        YtmArtist.getForItemId(item_data),
-                        name = text.first_text
+                    artists = mutableListOf(
+                        YtmArtist(
+                            YtmArtist.getForItemId(item_data),
+                            name = text.first_text
+                        )
                     )
                 }
             }
@@ -161,9 +174,14 @@ data class MusicResponsiveListItemRenderer(
 
             when (browse_endpoint.getMediaItemType()) {
                 YtmMediaItem.Type.ARTIST -> {
-                    if (artist == null) {
-                        artist = YtmArtist(browse_endpoint.browseId)
+                    if (artists?.any { it.id == browse_endpoint.browseId } == true) {
+                        continue
                     }
+
+                    if (artists == null) {
+                        artists = mutableListOf()
+                    }
+                    artists!!.add(YtmArtist(browse_endpoint.browseId))
                 }
                 YtmMediaItem.Type.PLAYLIST -> {
                     if (album == null) {
@@ -176,13 +194,13 @@ data class MusicResponsiveListItemRenderer(
 
         if (item_data is YtmSong) {
             item_data = item_data.copy(
-                artist = artist,
+                artists = artists,
                 album = album
             )
         }
         else if (item_data is YtmPlaylist) {
             item_data = item_data.copy(
-                artist = artist
+                artist = artists?.firstOrNull()
             )
         }
 

@@ -7,7 +7,7 @@ data class YtmSong(
     override val name: String? = null,
     override val description: String? = null,
     override val thumbnail_provider: ThumbnailProvider? = null,
-    val artist: YtmArtist? = null,
+    val artists: List<YtmArtist>? = null,
     val type: Type? = null,
     val is_explicit: Boolean = false,
     val album: YtmPlaylist? = null,
@@ -17,6 +17,8 @@ data class YtmSong(
 ): YtmMediaItem {
     init {
         check(id == cleanId(id))
+
+        check(artists?.distinctBy { it.id }?.size == artists?.size) { artists.toString() }
     }
 
     enum class Type {

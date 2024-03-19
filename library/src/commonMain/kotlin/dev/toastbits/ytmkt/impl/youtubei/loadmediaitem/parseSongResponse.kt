@@ -30,11 +30,11 @@ suspend fun parseSongResponse(
     val title: String = video.title.first_text
     val is_explicit: Boolean = video.badges?.any { it.isExplicit() } == true
 
-    val artist: YtmArtist? = video.getArtist(api).getOrThrow()
+    val artists: List<YtmArtist>? = video.getArtists(api).getOrThrow()
 
     return@runCatching YtmSong(
         id = song_id,
-        artist = artist,
+        artists = artists,
         name = title,
         is_explicit = is_explicit,
         lyrics_browse_id = lyrics_browse_id,

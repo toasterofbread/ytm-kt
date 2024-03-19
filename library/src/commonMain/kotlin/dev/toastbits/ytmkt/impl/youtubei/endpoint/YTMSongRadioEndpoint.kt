@@ -36,7 +36,7 @@ open class YTMSongRadioEndpoint(override val api: YoutubeiApi): SongRadioEndpoin
                         setOf(MediaItemCache.SongKey.ARTIST_ID)
                     )
 
-                    val artist: YtmArtist = song.artist
+                    val artist: YtmArtist = song.artists?.firstOrNull()
                         ?: throw NullPointerException("Song $song_id has no artist")
 
                     val radio = api.ArtistRadio.getArtistRadio(artist.id, null).getOrThrow()
@@ -100,7 +100,7 @@ open class YTMSongRadioEndpoint(override val api: YoutubeiApi): SongRadioEndpoin
                 return@map YtmSong(
                     renderer.videoId,
                     name = renderer.title.first_text,
-                    artist = renderer.getArtist(api).getOrThrow()
+                    artists = renderer.getArtists(api).getOrThrow()
                 )
             } ?: emptyList(),
             radio?.continuations?.firstOrNull()?.data?.continuation,

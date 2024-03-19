@@ -8,7 +8,7 @@ class YtmSongBuilder(
     override var name: String? = null
     override var description: String? = null
     override var thumbnail_provider: ThumbnailProvider? = null
-    var artist: YtmArtist? = null
+    var artists: List<YtmArtist>? = null
     var type: YtmSong.Type? = null
     var is_explicit: Boolean = false
     var album: YtmPlaylist? = null
@@ -22,7 +22,7 @@ class YtmSongBuilder(
             name = name,
             description = description,
             thumbnail_provider = thumbnail_provider,
-            artist = artist,
+            artists = artists,
             type = type,
             is_explicit = is_explicit,
             album = album,

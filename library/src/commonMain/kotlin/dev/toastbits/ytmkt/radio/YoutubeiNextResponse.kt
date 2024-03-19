@@ -92,26 +92,33 @@ data class YoutubeiNextResponse(
         val thumbnail: MusicThumbnailRenderer.RendererThumbnail,
         val badges: List<MusicResponsiveListItemRenderer.Badge>?
     ) {
-        suspend fun getArtist(api: YtmApi): Result<YtmArtist?> = runCatching {
-            // Get artist ID directly
-            for (run in longBylineText.runs!! + title.runs!!) {
-                val page_type = run.browse_endpoint_type?.let { type ->
-                    YtmMediaItem.Type.fromBrowseEndpointType(type)
-                }
-                if (page_type != YtmMediaItem.Type.ARTIST) {
-                    continue
+        suspend fun getArtists(api: YtmApi): Result<List<YtmArtist>?> = runCatching {
+            // Get artist IDs directly
+            val artists: List<YtmArtist>? = (longBylineText.runs.orEmpty() + title.runs.orEmpty())
+                .mapNotNull { run ->
+                    val browse_id: String = run.navigationEndpoint?.browseEndpoint?.browseId
+                        ?: return@mapNotNull null
+
+                    val page_type = run.browse_endpoint_type?.let { type ->
+                        YtmMediaItem.Type.fromBrowseEndpointType(type)
+                    }
+                    if (page_type != YtmMediaItem.Type.ARTIST) {
+                        return@mapNotNull null
+                    }
+
+                    return@mapNotNull YtmArtist(
+                        id = browse_id,
+                        name = run.text
+                    )
                 }
 
-                val browse_id: String = run.navigationEndpoint?.browseEndpoint?.browseId ?: continue
-                return@runCatching YtmArtist(
-                    id = browse_id,
-                    name = run.text
-                )
+            if (!artists.isNullOrEmpty()) {
+                return@runCatching artists
             }
 
             val menu_artist: String? = menu.menuRenderer.getArtist()?.menuNavigationItemRenderer?.navigationEndpoint?.browseEndpoint?.browseId
             if (menu_artist != null) {
-                return@runCatching YtmArtist(menu_artist)
+                return@runCatching listOf(YtmArtist(menu_artist))
             }
 
             // Get artist from album
@@ -128,16 +135,18 @@ data class YoutubeiNextResponse(
                 )
 
                 if (playlist.artist != null) {
-                    return@runCatching playlist.artist
+                    return@runCatching listOf(playlist.artist)
                 }
             }
 
             // Get title-only artist (Resolves to 'Various artists' when viewed on YouTube)
             val artist_title: TextRun? = longBylineText.runs?.firstOrNull { it.navigationEndpoint == null }
             if (artist_title != null) {
-                return@runCatching YtmArtist(
-                    id = "",
-                    name = artist_title.text
+                return@runCatching listOf(
+                    YtmArtist(
+                        id = "",
+                        name = artist_title.text
+                    )
                 )
             }
 

@@ -19,19 +19,21 @@ data class MusicTwoRowItemRenderer(
     val menu: YoutubeiNextResponse.Menu?,
     val subtitleBadges: List<MusicResponsiveListItemRenderer.Badge>?
 ) {
-    private fun getArtist(host_item: YtmMediaItem, api: YtmApi): YtmArtist? {
-        for (run in subtitle?.runs ?: emptyList()) {
+    private fun getArtists(host_item: YtmMediaItem, api: YtmApi): List<YtmArtist>? {
+        val artists: List<YtmArtist>? = subtitle?.runs?.mapNotNull { run ->
             val browse_endpoint: BrowseEndpoint? = run.navigationEndpoint?.browseEndpoint
-            if (browse_endpoint?.browseId == null) {
-                continue
+            if (browse_endpoint?.browseId == null || browse_endpoint.getMediaItemType() != YtmMediaItem.Type.ARTIST) {
+                return@mapNotNull null
             }
 
-            if (browse_endpoint.getMediaItemType() == YtmMediaItem.Type.ARTIST) {
-                return YtmArtist(
-                    browse_endpoint.browseId,
-                    name = run.text
-                )
-            }
+            return@mapNotNull YtmArtist(
+                browse_endpoint.browseId,
+                name = run.text
+            )
+        }
+
+        if (!artists.isNullOrEmpty()) {
+            return artists
         }
 
         if (host_item is YtmSong) {
@@ -42,8 +44,10 @@ data class MusicTwoRowItemRenderer(
 
             val index: Int = if (song_type == YtmSong.Type.VIDEO) 0 else 1
             subtitle?.runs?.getOrNull(index)?.also {
-                return YtmArtist(YtmArtist.getForItemId(host_item)).copy(
-                    name = it.text
+                return listOf(
+                    YtmArtist(YtmArtist.getForItemId(host_item)).copy(
+                        name = it.text
+                    )
                 )
             }
         }
@@ -73,7 +77,7 @@ data class MusicTwoRowItemRenderer(
                     else YtmSong.Type.VIDEO,
                 name = this@MusicTwoRowItemRenderer.title.first_text,
                 thumbnail_provider = thumbnailRenderer.toThumbnailProvider(),
-                artist = getArtist(YtmSong(song_id), api),
+                artists = getArtists(YtmSong(song_id), api),
                 is_explicit = subtitleBadges?.any { it.isExplicit() } == true,
                 album = album
             )
@@ -104,7 +108,7 @@ data class MusicTwoRowItemRenderer(
                         song_id,
                         name = title,
                         thumbnail_provider = thumbnail_provider,
-                        artist = getArtist(YtmSong(song_id), api)
+                        artists = getArtists(YtmSong(song_id), api)
                     )
                 }
                 YtmMediaItem.Type.ARTIST ->
@@ -118,7 +122,7 @@ data class MusicTwoRowItemRenderer(
                     YtmPlaylist(
                         playlist_id,
                         type = YtmPlaylist.Type.fromBrowseEndpointType(page_type),
-                        artist = getArtist(YtmPlaylist(playlist_id), api),
+                        artist = getArtists(YtmPlaylist(playlist_id), api)?.firstOrNull(),
                         name = title,
                         thumbnail_provider = thumbnail_provider
                     )

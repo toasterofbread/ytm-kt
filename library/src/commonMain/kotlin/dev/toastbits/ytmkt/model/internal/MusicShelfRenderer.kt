@@ -41,7 +41,7 @@ data class MusicCardShelfRenderer(
             item = endpoint.browseEndpoint!!.getMediaItem()!!.copyWithName(title_text)
         }
 
-        var artist: YtmArtist? = null
+        var artists: MutableList<YtmArtist> = mutableListOf()
         var album: YtmPlaylist? = null
 
         for (run in subtitle.runs ?: emptyList()) {
@@ -50,11 +50,7 @@ data class MusicCardShelfRenderer(
                 YtmMediaItem.Type.ARTIST -> {
                     val artist_item: YtmMediaItem? = run.navigationEndpoint?.browseEndpoint?.getMediaItem()
                     if (artist_item is YtmArtist) {
-                        artist = artist_item
-
-                        if (album != null) {
-                            break
-                        }
+                        artists.add(artist_item)
                     }
                 }
                 YtmMediaItem.Type.PLAYLIST -> {
@@ -65,28 +61,26 @@ data class MusicCardShelfRenderer(
                     val album_item: YtmMediaItem? = run.navigationEndpoint?.browseEndpoint?.getMediaItem()
                     if (album_item is YtmPlaylist && album_item.type == YtmPlaylist.Type.ALBUM) {
                         album = album_item.copyWithName(run.text)
-
-                        if (artist != null) {
-                            break
-                        }
                     }
                 }
                 else -> {}
             }
         }
 
-        if (artist == null && item is YtmSong || item is YtmPlaylist) {
-            artist = YtmArtist(
-                YtmArtist.getForItemId(item),
-                name = subtitle.runs?.getOrNull(1)?.text
+        if (artists.isEmpty() && item is YtmSong || item is YtmPlaylist) {
+            artists.add(
+                YtmArtist(
+                    YtmArtist.getForItemId(item),
+                    name = subtitle.runs?.getOrNull(1)?.text
+                )
             )
         }
 
         val thumbnail_provider: ThumbnailProvider? = thumbnail.toThumbnailProvider()
 
         return when (item) {
-            is YtmSong -> item.copy(artist = artist, thumbnail_provider = thumbnail_provider, album = album)
-            is YtmPlaylist -> item.copy(artist = artist, thumbnail_provider = thumbnail_provider)
+            is YtmSong -> item.copy(artists = artists, thumbnail_provider = thumbnail_provider, album = album)
+            is YtmPlaylist -> item.copy(artist = artists.firstOrNull(), thumbnail_provider = thumbnail_provider)
             is YtmArtist -> item.copy(thumbnail_provider = thumbnail_provider)
             else -> throw NotImplementedError(item::class.toString())
         }

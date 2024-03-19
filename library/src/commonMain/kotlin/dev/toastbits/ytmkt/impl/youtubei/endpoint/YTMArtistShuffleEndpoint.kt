@@ -60,12 +60,12 @@ open class YTMArtistShuffleEndpoint(override val api: YoutubeiApi): ArtistShuffl
                 val renderer = item.getRenderer()
 
                 val title: String = renderer.title.first_text
-                val artist: YtmArtist? = renderer.getArtist(api).getOrThrow()
+                val artists: List<YtmArtist>? = renderer.getArtists(api).getOrThrow()
 
                 return@map YtmSong(
                     id = renderer.videoId,
                     name = title,
-                    artist = artist
+                    artists = artists
                 )
             } ?: emptyList(),
             radio?.continuations?.firstOrNull()?.data?.continuation

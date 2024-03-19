@@ -64,18 +64,16 @@ class MusicMultiRowListItemRenderer(
             }
         }
 
-        var artist: YtmArtist? = null
-        for (run in subtitle.runs ?: emptyList()) {
-            val browse_endpoint: BrowseEndpoint = run.navigationEndpoint?.browseEndpoint ?: continue
-            if (browse_endpoint.browseId == null || browse_endpoint.getMediaItemType() != YtmMediaItem.Type.ARTIST) {
-                continue
+        val artists: List<YtmArtist>? = subtitle.runs?.mapNotNull { run ->
+            val browse_endpoint: BrowseEndpoint? = run.navigationEndpoint?.browseEndpoint
+            if (browse_endpoint?.browseId == null || browse_endpoint.getMediaItemType() != YtmMediaItem.Type.ARTIST) {
+                return@mapNotNull null
             }
 
-            artist = YtmArtist(
+            return@mapNotNull YtmArtist(
                 browse_endpoint.browseId,
                 name = run.text
             )
-            break
         }
 
         val first_title = title.runs!!.first()
@@ -88,7 +86,7 @@ class MusicMultiRowListItemRenderer(
                 parseYoutubeDurationString(text, hl)
             },
             type = if (onTap.getMusicVideoType() == "MUSIC_VIDEO_TYPE_PODCAST_EPISODE") YtmSong.Type.PODCAST else null,
-            artist = artist,
+            artists = artists,
             album = album
         )
     }
