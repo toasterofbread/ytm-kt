@@ -31,17 +31,18 @@ private val PLAIN_HEADERS: List<String> = listOf("accept-language", "user-agent"
 open class YTMGetSongFeedEndpoint(override val api: YoutubeiApi): SongFeedEndpoint() {
 
     /**
-     * Returns the title to use for the feed row with the passed browse ID starting with FEmusic_ (such as FEmusic_listen_again)
+     * Returns the title to use for the feed row with the passed browse ID starting with FEmusic_ (such as FEmusic_listen_again).
      *
-     * @param browse_id The browse ID of the feed row
-     * @return the desired title of the row, or null to use the textual title
+     * @param browse_id The browse ID of the feed row.
+     * @return the desired title of the row, or null to use the textual title.
      */
     open fun getMusicBrowseIdRowTitle(browse_id: String): UiString? = null
 
     /**
-     * Returns the layout type to use for the feed row with the passed browse ID starting with FEmusic_ (such as FEmusic_listen_again)
-     * @param browse_id The browse ID of the feed row
-     * @return the desired layout type of the row
+     * Returns the layout type to use for the feed row with the passed browse ID starting with FEmusic_ (such as FEmusic_listen_again).
+     *
+     * @param browse_id The browse ID of the feed row.
+     * @return the desired layout type of the row.
      */
     open fun getMusicBrowseIdRowType(browse_id: String): ItemLayoutType? = null
 
