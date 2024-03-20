@@ -9,7 +9,7 @@ class YtmPlaylistBuilder(
     override var name: String? = null
     override var description: String? = null
     override var thumbnail_provider: ThumbnailProvider? = null
-    var artist: YtmArtist? = null
+    var artists: List<YtmArtist>? = null
     var type: YtmPlaylist.Type? = null
     var year: Int? = null
     var items: List<YtmSong>? = null
@@ -26,7 +26,7 @@ class YtmPlaylistBuilder(
             name = name,
             description = description,
             thumbnail_provider = thumbnail_provider,
-            artist = artist,
+            artists = artists,
             type = type,
             year = year,
             items = items,

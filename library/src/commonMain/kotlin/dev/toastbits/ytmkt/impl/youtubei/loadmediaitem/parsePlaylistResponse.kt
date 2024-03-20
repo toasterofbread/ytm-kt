@@ -68,23 +68,24 @@ suspend fun parsePlaylistResponse(
         builder.description = header_renderer.description?.first_text
         builder.thumbnail_provider = ThumbnailProvider.fromThumbnails(header_renderer.getThumbnails())
 
-        header_renderer.subtitle?.runs?.also { subtitle ->
-            val artist_run: TextRun? = subtitle.firstOrNull {
-                it.navigationEndpoint?.browseEndpoint?.let { endpoint ->
-                    endpoint.browseId != null && endpoint.getMediaItemType() == YtmMediaItem.Type.ARTIST
-                } ?: false
+        for (run in header_renderer.subtitle?.runs.orEmpty()) {
+            val browse_endpoint = run.navigationEndpoint?.browseEndpoint
+            if (browse_endpoint?.browseId == null) {
+                if (run.text.all { it.isDigit() }) {
+                    builder.year = run.text.toInt()
+                }
+                continue
+            }
+            else if (browse_endpoint.getMediaItemType() != YtmMediaItem.Type.ARTIST) {
+                continue
             }
 
-            if (artist_run != null) {
-                builder.artist = YtmArtist(
-                    id = artist_run.navigationEndpoint!!.browseEndpoint!!.browseId!!,
-                    name = artist_run.text
+            builder.artists = builder.artists.orEmpty().plus(
+                YtmArtist(
+                    id = browse_endpoint.browseId,
+                    name = run.text
                 )
-            }
-
-            builder.year = subtitle.lastOrNull { last_run ->
-                last_run.text.all { it.isDigit() }
-            }?.text?.toInt()
+            ).distinctBy { it.id }
         }
 
         header_renderer.secondSubtitle?.runs?.also { second_subtitle ->

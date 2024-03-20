@@ -134,8 +134,8 @@ data class YoutubeiNextResponse(
                     setOf(MediaItemCache.PlaylistKey.ARTIST_ID)
                 )
 
-                if (playlist.artist != null) {
-                    return@runCatching listOf(playlist.artist)
+                if (playlist.artists != null) {
+                    return@runCatching playlist.artists
                 }
             }
 

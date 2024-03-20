@@ -9,7 +9,7 @@ data class YtmPlaylist(
     override val description: String? = null,
     override val thumbnail_provider: ThumbnailProvider? = null,
     val type: Type? = null,
-    val artist: YtmArtist? = null,
+    val artists: List<YtmArtist>? = null,
     val year: Int? = null,
     val items: List<YtmSong>? = null,
     val owner_id: String? = null,
@@ -24,7 +24,7 @@ data class YtmPlaylist(
     }
 
     enum class Type {
-        LOCAL, PLAYLIST, ALBUM, AUDIOBOOK, PODCAST, RADIO;
+        PLAYLIST, ALBUM, AUDIOBOOK, PODCAST, RADIO;
 
         companion object {
             fun fromBrowseEndpointType(type: String): Type {

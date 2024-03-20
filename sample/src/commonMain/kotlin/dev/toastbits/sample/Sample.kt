@@ -5,6 +5,8 @@ import dev.toastbits.ytmkt.impl.youtubei.YoutubeiAuthenticationState
 import dev.toastbits.ytmkt.endpoint.SongFeedEndpoint
 import dev.toastbits.ytmkt.endpoint.SongFeedLoadResult
 import io.ktor.http.Headers
+import io.ktor.client.request.request
+
 
 suspend fun main() {
     // Initialise the Youtubei api implementation
@@ -12,6 +14,9 @@ suspend fun main() {
         YoutubeiApi(
             data_language = "en-GB"
         )
+
+    // Optionally, get and use a visitor ID so that continuations work while logged out
+    // api.getNewVisitorId()
 
     // Uncomment and populate Headers.build to use the API as a logged-in user
     // api.user_auth_state =
@@ -33,7 +38,6 @@ suspend fun main() {
 
     song_feed.printFeed()
 
-    // Note: The feed doesn't usually have a continuation unless logged in
     if (song_feed.ctoken == null) {
         println("Feed has no continuation")
         return

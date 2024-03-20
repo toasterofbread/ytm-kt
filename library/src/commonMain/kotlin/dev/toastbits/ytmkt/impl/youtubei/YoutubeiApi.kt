@@ -5,22 +5,7 @@ import dev.toastbits.ytmkt.endpoint.ArtistRadioEndpoint
 import dev.toastbits.ytmkt.endpoint.ArtistShuffleEndpoint
 import dev.toastbits.ytmkt.formats.VideoFormatsEndpoint
 import dev.toastbits.ytmkt.formats.YoutubeiVideoFormatsEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMArtistRadioEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMArtistShuffleEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMArtistWithParamsEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMCreateYoutubeChannelEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMGetSongFeedEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMLoadArtistEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMLoadPlaylistEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMLoadSongEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMPlaylistContinuationEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMRadioBuilderEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSearchEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSearchSuggestionsEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSongLyricsEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSongRadioEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSongRelatedContentEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMYoutubeChannelCreationFormEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.*
 import dev.toastbits.ytmkt.itemcache.MediaItemCache
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
@@ -58,6 +43,7 @@ open class YoutubeiApi(
     override val item_cache: MediaItemCache = MediaItemCache()
 ): YtmApi {
     override var user_auth_state: YoutubeiAuthenticationState? = null
+    private var visitor_id: String? = null
 
     companion object {
         const val DEFAULT_API_URL: String = "https://music.youtube.com/youtubei/v1/"
@@ -66,6 +52,7 @@ open class YoutubeiApi(
     // -- User auth ---
     override val YoutubeChannelCreationForm = YTMYoutubeChannelCreationFormEndpoint(this)
     override val CreateYoutubeChannel = YTMCreateYoutubeChannelEndpoint(this)
+    private val GetVisitorId = YTMGetVisitorIdEndpoint(this)
 
     // --- Item loading ---
     override val LoadSong = YTMLoadSongEndpoint(this)
@@ -138,7 +125,7 @@ open class YoutubeiApi(
         val base_body: JsonObject = base ?: YoutubeiPostBody.DEFAULT.getPostBody(this@YoutubeiApi)
 
         if (buildPostBody == null) {
-            setBody(Json.encodeToString(base))
+            setBody(Json.encodeToString(base_body))
         }
         else {
             val body: MutableMap<String, JsonElement> = buildJsonObject(buildPostBody).toMutableMap()
@@ -166,7 +153,15 @@ open class YoutubeiApi(
                     set(key, value.first())
                 }
             }
+
+            visitor_id?.also {
+                set("X-Goog-EOM-Visitor-Id", it)
+            }
         }
+    }
+
+    suspend fun getNewVisitorId() {
+        visitor_id = GetVisitorId.getVisitorId().getOrThrow()
     }
 
     private val post_headers: Headers = Headers.build {

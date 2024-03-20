@@ -80,7 +80,7 @@ data class MusicCardShelfRenderer(
 
         return when (item) {
             is YtmSong -> item.copy(artists = artists, thumbnail_provider = thumbnail_provider, album = album)
-            is YtmPlaylist -> item.copy(artist = artists.firstOrNull(), thumbnail_provider = thumbnail_provider)
+            is YtmPlaylist -> item.copy(artists = artists, thumbnail_provider = thumbnail_provider)
             is YtmArtist -> item.copy(thumbnail_provider = thumbnail_provider)
             else -> throw NotImplementedError(item::class.toString())
         }

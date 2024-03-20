@@ -200,7 +200,7 @@ data class MusicResponsiveListItemRenderer(
         }
         else if (item_data is YtmPlaylist) {
             item_data = item_data.copy(
-                artist = artists?.firstOrNull()
+                artists = artists
             )
         }
 

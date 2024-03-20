@@ -122,7 +122,7 @@ data class MusicTwoRowItemRenderer(
                     YtmPlaylist(
                         playlist_id,
                         type = YtmPlaylist.Type.fromBrowseEndpointType(page_type),
-                        artist = getArtists(YtmPlaylist(playlist_id), api)?.firstOrNull(),
+                        artists = getArtists(YtmPlaylist(playlist_id), api),
                         name = title,
                         thumbnail_provider = thumbnail_provider
                     )
