@@ -37,11 +37,23 @@ open class YTMArtistRadioEndpoint(override val api: YoutubeiApi): ArtistRadioEnd
                 when (view_more) {
                     is MediaItemYoutubePage -> {
                         val songs_playlist_id: String = (view_more.browse_media_item as? YtmPlaylist)?.id ?: continue
-                        val playlist: YtmPlaylist = api.item_cache.loadPlaylist(
-                            api,
-                            songs_playlist_id,
-                            setOf(MediaItemCache.PlaylistKey.ITEMS)
-                        )
+                        val browse_params: String? = view_more.getBrowseParamsData()?.browse_params
+                        
+                        val playlist: YtmPlaylist
+                        
+                        if (browse_params == null) {
+                            playlist = api.item_cache.loadPlaylist(
+                                api,
+                                songs_playlist_id,
+                                setOf(MediaItemCache.PlaylistKey.ITEMS)
+                            )
+                        }
+                        else {
+                            playlist = api.LoadPlaylist.loadPlaylist(
+                                songs_playlist_id,
+                                browse_params = browse_params
+                            ).getOrThrow()
+                        }
 
                         if (playlist.items == null) {
                             continue

@@ -96,7 +96,9 @@ open class YTMLoadPlaylistEndpoint(override val api: YoutubeiApi): LoadPlaylistE
             }
         }
 
-        var playlist: YtmPlaylist = parsePlaylistResponse(playlist_id, response, hl, api).getOrThrow()
+        var playlist: YtmPlaylist = 
+            parsePlaylistResponse(playlist_id, response, hl, api).getOrThrow()
+                .copy(playlist_url = loaded_playlist_url)
 
         val thumbnail_provider: ThumbnailProvider? = playlist.thumbnail_provider
         if (

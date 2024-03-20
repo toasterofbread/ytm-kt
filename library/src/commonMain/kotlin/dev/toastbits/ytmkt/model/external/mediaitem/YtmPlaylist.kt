@@ -16,7 +16,8 @@ data class YtmPlaylist(
     val continuation: RadioContinuation? = null,
     val item_set_ids: List<String>? = null,
     val item_count: Int? = null,
-    val total_duration: Long? = null
+    val total_duration: Long? = null,
+    val playlist_url: String? = null
 ): YtmMediaItem {
     init {
         check(id == cleanId(id))

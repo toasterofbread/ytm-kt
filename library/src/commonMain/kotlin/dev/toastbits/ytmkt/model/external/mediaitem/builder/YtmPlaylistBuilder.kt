@@ -18,6 +18,7 @@ class YtmPlaylistBuilder(
     var item_set_ids: List<String>? = null
     var item_count: Int? = null
     var total_duration: Long? = null
+    var playlist_url: String? = null
 
     override fun build(): YtmPlaylist =
         YtmPlaylist(
@@ -33,6 +34,7 @@ class YtmPlaylistBuilder(
             continuation = continuation,
             item_set_ids = item_set_ids,
             item_count = item_count,
-            total_duration = total_duration
+            total_duration = total_duration,
+            playlist_url = playlist_url
         )
 }
