@@ -33,7 +33,7 @@ data class MusicCardShelfRenderer(
         val endpoint = title.runs!!.first().navigationEndpoint!!
         if (endpoint.watchEndpoint != null) {
             item = YtmSong(
-                endpoint.watchEndpoint.videoId!!,
+                YtmSong.cleanId(endpoint.watchEndpoint.videoId!!),
                 name = title_text
             )
         }

@@ -16,9 +16,7 @@ data class YtmSong(
     val lyrics_browse_id: String? = null
 ): YtmMediaItem {
     init {
-        check(id == cleanId(id))
-
-        check(artists?.distinctBy { it.id }?.size == artists?.size) { artists.toString() }
+        check(id == cleanId(id)) { "Song ID ($id) was not cleaned before YtmSong creation" }
     }
 
     enum class Type {

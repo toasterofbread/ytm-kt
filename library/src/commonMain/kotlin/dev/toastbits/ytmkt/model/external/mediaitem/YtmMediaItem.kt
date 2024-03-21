@@ -12,9 +12,9 @@ interface YtmMediaItem {
         SONG, ARTIST, PLAYLIST;
 
         fun itemFromId(id: String): YtmMediaItem = when (this) {
-            SONG -> YtmSong(id)
+            SONG -> YtmSong(YtmSong.cleanId(id))
             ARTIST -> YtmArtist(id)
-            PLAYLIST -> YtmPlaylist(id)
+            PLAYLIST -> YtmPlaylist(YtmPlaylist.cleanId(id))
         }
 
         companion object {

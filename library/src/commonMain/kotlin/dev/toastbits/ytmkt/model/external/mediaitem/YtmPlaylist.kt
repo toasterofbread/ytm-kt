@@ -20,7 +20,7 @@ data class YtmPlaylist(
     val playlist_url: String? = null
 ): YtmMediaItem {
     init {
-        check(id == cleanId(id))
+        check(id == cleanId(id)) { "Playlist ID ($id) was not cleaned before YtmPlaylist creation" }
     }
 
     enum class Type {

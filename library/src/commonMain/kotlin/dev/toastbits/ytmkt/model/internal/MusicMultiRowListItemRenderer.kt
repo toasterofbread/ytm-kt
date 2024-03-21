@@ -38,7 +38,7 @@ class MusicMultiRowListItemRenderer(
         val podcast_text: TextRun? = secondTitle?.runs?.firstOrNull()
         if (podcast_text?.navigationEndpoint?.browseEndpoint?.browseId != null) {
             album = YtmPlaylist(
-                podcast_text.navigationEndpoint.browseEndpoint.browseId,
+                YtmPlaylist.cleanId(podcast_text.navigationEndpoint.browseEndpoint.browseId),
                 name = podcast_text.text
             )
         }
@@ -52,13 +52,13 @@ class MusicMultiRowListItemRenderer(
 
                 if (browse_endpoint.getPageType() == "MUSIC_PAGE_TYPE_PODCAST_SHOW_DETAIL_PAGE") {
                     album = YtmPlaylist(
-                        browse_endpoint.browseId,
+                        YtmPlaylist.cleanId(browse_endpoint.browseId),
                         type = YtmPlaylist.Type.PODCAST
                     )
                     break
                 }
                 else if (browse_endpoint.getMediaItemType() == YtmMediaItem.Type.PLAYLIST) {
-                    album = YtmPlaylist(browse_endpoint.browseId)
+                    album = YtmPlaylist(YtmPlaylist.cleanId(browse_endpoint.browseId))
                     break
                 }
             }

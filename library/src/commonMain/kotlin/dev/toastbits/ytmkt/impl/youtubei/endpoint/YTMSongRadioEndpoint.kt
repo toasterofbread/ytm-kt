@@ -98,7 +98,7 @@ open class YTMSongRadioEndpoint(override val api: YoutubeiApi): SongRadioEndpoin
                 val renderer = item.getRenderer()
 
                 return@map YtmSong(
-                    renderer.videoId,
+                    YtmSong.cleanId(renderer.videoId),
                     name = renderer.title.first_text,
                     artists = renderer.getArtists(api).getOrThrow()
                 )

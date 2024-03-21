@@ -62,7 +62,7 @@ data class MusicTwoRowItemRenderer(
             for (item in menu?.menuRenderer?.items ?: emptyList()) {
                 val browse_endpoint: BrowseEndpoint = item.menuNavigationItemRenderer?.navigationEndpoint?.browseEndpoint ?: continue
                 if (browse_endpoint.browseId != null && browse_endpoint.getMediaItemType() == YtmMediaItem.Type.PLAYLIST) {
-                    album = YtmPlaylist(browse_endpoint.browseId)
+                    album = YtmPlaylist(YtmPlaylist.cleanId(browse_endpoint.browseId))
                     break
                 }
             }
@@ -87,7 +87,7 @@ data class MusicTwoRowItemRenderer(
 
         if (navigationEndpoint.watchPlaylistEndpoint != null) {
             item = YtmPlaylist(
-                id = navigationEndpoint.watchPlaylistEndpoint.playlistId,
+                id = YtmPlaylist.cleanId(navigationEndpoint.watchPlaylistEndpoint.playlistId),
                 type = YtmPlaylist.Type.RADIO,
                 name = title.first_text,
                 thumbnail_provider = thumbnailRenderer.toThumbnailProvider()

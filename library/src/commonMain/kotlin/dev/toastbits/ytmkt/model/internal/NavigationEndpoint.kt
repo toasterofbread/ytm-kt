@@ -15,17 +15,17 @@ data class NavigationEndpoint(
     fun getMediaItem(): YtmMediaItem? {
         if (watchEndpoint != null) {
             if (watchEndpoint.videoId != null) {
-                return YtmSong(watchEndpoint.videoId)
+                return YtmSong(YtmSong.cleanId(watchEndpoint.videoId))
             }
             else if (watchEndpoint.playlistId != null) {
-                return YtmPlaylist(watchEndpoint.playlistId)
+                return YtmPlaylist(YtmPlaylist.cleanId(watchEndpoint.playlistId))
             }
         }
         if (browseEndpoint != null) {
             browseEndpoint.getMediaItem()?.also { return it }
         }
         if (watchPlaylistEndpoint != null) {
-            return YtmPlaylist(watchPlaylistEndpoint.playlistId)
+            return YtmPlaylist(YtmPlaylist.cleanId(watchPlaylistEndpoint.playlistId))
         }
         return null
     }
