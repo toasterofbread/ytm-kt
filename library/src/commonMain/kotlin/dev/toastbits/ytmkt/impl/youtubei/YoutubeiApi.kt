@@ -141,6 +141,10 @@ open class YoutubeiApi(
     }
 
     override fun HttpRequestBuilder.addUnauthenticatedApiHeaders(include: List<String>?) {
+        addUnauthenticatedApiHeaders(include, add_visitor_id = true)
+    }
+
+    fun HttpRequestBuilder.addUnauthenticatedApiHeaders(include: List<String>? = null, add_visitor_id: Boolean = true) {
         headers {
             if (!include.isNullOrEmpty()) {
                 for (header_key in include) {
@@ -154,8 +158,10 @@ open class YoutubeiApi(
                 }
             }
 
-            visitor_id?.also {
-                set("X-Goog-EOM-Visitor-Id", it)
+            if (add_visitor_id) {
+                visitor_id?.also {
+                    set("X-Goog-EOM-Visitor-Id", it)
+                }
             }
         }
     }

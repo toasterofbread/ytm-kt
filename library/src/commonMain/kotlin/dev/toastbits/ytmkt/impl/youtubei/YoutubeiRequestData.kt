@@ -29,7 +29,6 @@ object YoutubeiRequestData {
                 put("clientVersion", "1.20230306.01.00")
                 put("userAgent", ytm_user_agent)
                 put("acceptHeader", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
-                put("visitorData", "DgtGVmRrZ01mUE5mWSjLm")
             }
             putJsonObject("user") {}
         }

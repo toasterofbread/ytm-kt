@@ -12,7 +12,9 @@ open class YTMGetVisitorIdEndpoint(override val api: YoutubeiApi): ApiEndpoint()
         val response: HttpResponse = api.client.request {
             endpointPath("visitor_id")
 
-            addApiHeadersWithoutAuthentication()
+            with (api) {
+                addUnauthenticatedApiHeaders(add_visitor_id = false)
+            }
             postWithBody()
         }
 
