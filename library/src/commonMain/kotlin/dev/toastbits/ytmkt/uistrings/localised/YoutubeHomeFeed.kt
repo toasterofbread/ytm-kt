@@ -7,148 +7,172 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
         YoutubeUILocalisation.LocalisationSet().apply {
             add(
                 en to "Listen again",
-                ja to "もう一度聴く" ,
-                zh to "再次收听" ,
+                ja to "もう一度聴く",
+                zh to "再次收听",
                 es to "Volver a escuchar",
-                fr to "Réécouter"
+                fr to "Réécouter",
+                tr to "Yeniden dinleyin"
             )
             add(
                 en to "Quick picks",
-                ja to "おすすめ" ,
-                zh to "快速收听" ,
+                ja to "おすすめ",
+                zh to "快速收听",
                 es to "Selección rápida",
-                fr to "Sélection rapide"
+                fr to "Sélection rapide",
+                tr to "Hızlı seçimler"
             )
             add(
                 en to "START RADIO BASED ON A SONG",
-                zh to "根据一首歌开启电台" ,
+                zh to "根据一首歌开启电台",
                 ja to "曲を選んでラジオを再生",
-                fr to "Démarrer une radio basée sur un titre"
+                es to "Iniciar la radio basada en una canción",
+                fr to "Démarrer une radio basée sur un titre",
+                tr to "Bir şarkıya göre radyoyu başlatın"
             )
             add(
                 en to "Covers and remixes",
                 ja to "カバーとリミックス" ,
-                zh to "翻唱和混音" ,
+                zh to "翻唱和混音",
                 es to "Covers y remixes",
-                fr to "Reprises et remix"
+                fr to "Reprises et remix",
+                tr to "Kapaklar ve resimler"
             )
             add(
                 en to "Recommended albums",
                 ja to "おすすめのアルバム" ,
-                zh to "推荐的专辑" ,
+                zh to "推荐的专辑",
                 es to "Álbumes recomendados",
-                fr to "Albums recommandés"
+                fr to "Albums recommandés",
+                tr to "Önerilen albümler"
             )
             add(
                 en to "Forgotten favourites",
                 ja to "最近聞いていないお気に入り" ,
-                zh to "昔日最爱" ,
+                zh to "昔日最爱",
                 es to "Favoritos olvidados",
-                fr to "Favoris à redécouvrir"
+                fr to "Favoris à redécouvrir",
+                tr to "Unutulan favoriler"
             )
             add(
                 en to "From your library",
                 zh to "来自你的库" ,
                 ja to "ライブラリから",
-                fr to "De votre bibliothèque"
+                es to "De tu biblioteca",
+                fr to "De votre bibliothèque",
+                tr to "Kütüphanenizden"
             )
             add(
                 en to "From the community",
-                ja to "コミュニティから" ,
-                zh to "来自社区" ,
+                ja to "コミュニティから",
+                zh to "来自社区",
                 es to "De la comunidad",
-                fr to "De la communauté"
+                fr to "De la communauté",
+                tr to "Topluluktan"
             )
             add(
                 en to "Recommended music videos",
-                ja to "おすすめのミュージック ビデオ" ,
+                ja to "おすすめのミュージック ビデオ",
                 zh to "推荐的 MV" ,
                 es to "Videos musicales recomendados",
-                fr to "Clips musicaux recommandés"
+                fr to "Clips musicaux recommandés",
+                tr to "Önerilen müzik videoları"
             )
             add(
                 en to "Live performances",
                 ja to "ライブ" ,
                 zh to "现场表演" ,
                 es to "Presentaciones en vivo",
-                fr to "Concerts"
+                fr to "Concerts",
+                tr to "Canlı performanslar"
             )
             add(
                 en to "Recommended radios",
-                ja to "おすすめのラジオ" ,
-                zh to "推荐的电台" ,
+                ja to "おすすめのラジオ",
+                zh to "推荐的电台",
                 es to "Estaciones de radio recomendadas",
                 fr to "Radios recommandées",
+                tr to "Önerilen radyolar",
                 id = YoutubeUILocalisation.StringID.FEED_ROW_RADIOS
             )
             add(
                 en to "FOR YOU",
-                zh to "为你精选" ,
+                zh to "为你精选",
                 ja to "あなたへのおすすめ",
-                fr to "Pour vous"
+                es to "Para ti",
+                fr to "Pour vous",
+                tr to "Senin için"
             )
             add(
                 en to "Trending songs",
-                ja to "急上昇曲" ,
-                zh to "热门歌曲" ,
+                ja to "急上昇曲",
+                zh to "热门歌曲",
                 es to "Canciónes del momento",
-                fr to "Titres tendance"
+                fr to "Titres tendance",
+                tr to "Trend şarkılar"
             )
             add(
                 en to "Rock Artists",
-                ja to "ロック アーティスト" ,
-                zh to "摇滚歌手" ,
+                ja to "ロック アーティスト",
+                zh to "摇滚歌手",
                 es to "Artistas de Rock",
-                fr to "Artistes de Rock"
+                fr to "Artistes de Rock",
+                tr to "Rock sanatçıları"
             )
             add(
                 en to "Hits by decade",
                 ja to "Hits by decade",
-                zh to "年代金曲" ,
+                zh to "年代金曲",
                 ja to "年代別のヒット",
-                fr to "Succès par décennie"
+                fr to "Succès par décennie",
+                tr to "On yıla göre hitler"
             )
             add(
                 en to "JUST UPDATED",
                 ja to "JUST UPDATED",
-                zh to "最近更新" ,
+                zh to "最近更新",
                 ja to "最近の更新",
-                fr to "Mises à jour récentes"
+                fr to "Mises à jour récentes",
+                tr to "Şimdi güncellenenler"
             )
             add(
                 en to "Today's hits",
                 ja to "Today's hits",
-                zh to "今日热门" ,
+                zh to "今日热门",
                 ja to "今日のヒット",
-                fr to "Les tubes du jour"
+                fr to "Les tubes du jour",
+                tr to "Bugünün hitleri"
             )
             add(
                 en to "Long listening",
-                ja to "長編ミュージック ビデオ" ,
-                zh to "长时间聆听" ,
+                ja to "長編ミュージック ビデオ",
+                zh to "长时间聆听",
                 es to "Reproducción prolongada",
-                fr to "Écoute prolongée"
+                fr to "Écoute prolongée",
+                tr to "Uzun dinleme"
             )
             add(
                 en to "Celebrating Africa Month",
                 ja to "Celebrating Africa Month",
-                zh to "庆祝非洲月" ,
+                zh to "庆祝非洲月",
                 ja to "アフリカ月を祝う",
-                fr to "Célébrons le Mois de l'Afrique"
+                fr to "Célébrons le Mois de l'Afrique",
+                tr to "Afrika ayı kutlaması"
             )
             add(
                 en to "Feel good",
                 ja to "Feel good",
-                zh to "欢快" ,
+                zh to "欢快",
                 ja to "いい気分",
-                fr to "Bonne humeur"
+                fr to "Bonne humeur",
+                tr to "İyi hisset"
             )
             add(
                 en to "Fresh new music",
                 ja to "Fresh new music",
-                zh to "全新音乐" ,
+                zh to "全新音乐",
                 ja to "新鮮な曲",
-                fr to "Nouveautés"
+                fr to "Nouveautés",
+                tr to "Taze yeni müzik"
             )
             add(
                 en to "#TBT",
@@ -160,7 +184,8 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 ja to "ライブラリから" ,
                 zh to "来自你的库" ,
                 es to "De tu biblioteca",
-                fr to "De votre bibliothèque"
+                fr to "De votre bibliothèque",
+                tr to "Kütüphanenizden"
             )
             add(
                 es to "Nuevos Lanzamientos"
@@ -174,29 +199,37 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
             add(
                 en to "Recaps",
                 ja to "ハイライト",
+                tr to "Özetler"
             )
             add(
                 ja to "卒業 〜旅立ちの季節〜"
             )
             add(
                 en to "Anime & Soundtracks",
-                ja to "アニメ＆サントラ"
+                ja to "アニメ＆サントラ",
+                tr to "Anime & Müzikler"
             )
             add(
                 en to "Vocaloid & Utaite",
-                ja to "ボカロ&歌い手"
+                ja to "ボカロ&歌い手",
+                tr to "Vocaloid & Utaite"
+                
             )
             add(
                 en to "Trending community playlists",
-                ja to "急上昇のコミュニティ再生リスト"
+                ja to "急上昇のコミュニティ再生リスト",
+                tr to "Vocaloid & Utaite"
             )
             add(
                 en to "Trending in Shorts",
-                ja to "急上昇のショート動画"
+                ja to "急上昇のショート動画",
+                tr to "Kısalarda trend"
+
             )
             add(
                 en to "Focus",
-                ja to "フォーカス"
+                ja to "フォーカス",
+                tr to "Odaklanma"
             )
             add(
                 ja to "お気に入り"

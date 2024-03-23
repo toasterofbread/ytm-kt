@@ -11,6 +11,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "最佳结果" ,
                 es to "Mejor resultado",
                 fr to "Meilleur résultat"
+                tr to "En iyi sonuç"
             )
             add(
                 en to "Songs",
@@ -18,6 +19,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "歌曲" ,
                 es to "Canciónes",
                 fr to "Titres"
+                tr to "Şarkılar"
             )
             add(
                 en to "Videos",
@@ -25,6 +27,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "视频" ,
                 es to "Videos",
                 fr to "Vidéos"
+                tr to "Videolar"
             )
             add(
                 en to "Artists",
@@ -32,6 +35,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "歌手" ,
                 es to "Artistas",
                 fr to "Artistes"
+                tr to "Sanatçılar"
             )
             add(
                 en to "Albums",
@@ -39,6 +43,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "专辑" ,
                 es to "Artistas",
                 fr to "Albums"
+                tr to "Albümler"
             )
             add(
                 en to "Community playlists",
@@ -48,6 +53,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "社区播放列表" ,
                 es to "Playlist de la comunidad",
                 fr to "Liste de lecture de la communauté"
+                tr to "Topluluk oynatma listeleri"
             )
             add(
                 en to "Profiles",
@@ -55,6 +61,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "个人资料" ,
                 es to "Perfiles",
                 fr to "Profiles"
+                tr to "Profiller"
             )
         }
     }
