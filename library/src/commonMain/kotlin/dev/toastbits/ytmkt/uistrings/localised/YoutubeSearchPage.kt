@@ -10,7 +10,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "上位の検索結果" ,
                 zh to "最佳结果" ,
                 es to "Mejor resultado",
-                fr to "Meilleur résultat"
+                fr to "Meilleur résultat",
                 tr to "En iyi sonuç"
             )
             add(
@@ -18,7 +18,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "曲" ,
                 zh to "歌曲" ,
                 es to "Canciónes",
-                fr to "Titres"
+                fr to "Titres",
                 tr to "Şarkılar"
             )
             add(
@@ -26,7 +26,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "動画" ,
                 zh to "视频" ,
                 es to "Videos",
-                fr to "Vidéos"
+                fr to "Vidéos",
                 tr to "Videolar"
             )
             add(
@@ -34,7 +34,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "アーティスト" ,
                 zh to "歌手" ,
                 es to "Artistas",
-                fr to "Artistes"
+                fr to "Artistes",
                 tr to "Sanatçılar"
             )
             add(
@@ -42,7 +42,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "アルバム" ,
                 zh to "专辑" ,
                 es to "Artistas",
-                fr to "Albums"
+                fr to "Albums",
                 tr to "Albümler"
             )
             add(
@@ -52,7 +52,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "プレイリスト" ,
                 zh to "社区播放列表" ,
                 es to "Playlist de la comunidad",
-                fr to "Liste de lecture de la communauté"
+                fr to "Liste de lecture de la communauté",
                 tr to "Topluluk oynatma listeleri"
             )
             add(
@@ -60,7 +60,7 @@ fun getYoutubeSearchPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "プロフィール" ,
                 zh to "个人资料" ,
                 es to "Perfiles",
-                fr to "Profiles"
+                fr to "Profiles",
                 tr to "Profiller"
             )
         }
