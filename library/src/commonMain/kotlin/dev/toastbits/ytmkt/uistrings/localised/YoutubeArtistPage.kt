@@ -12,6 +12,7 @@ fun getYoutubeArtistPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "歌曲",
                 fr to "Titres",
                 tr to "Müzikler",
+                ru to "Треки",
                 id = YoutubeUILocalisation.StringID.ARTIST_ROW_SONGS
             )
             add(
@@ -21,6 +22,7 @@ fun getYoutubeArtistPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "专辑",
                 fr to "Albums",
                 tr to "Albümler",
+                ru to "Альбомы",
                 id = YoutubeUILocalisation.StringID.ARTIST_ROW_OTHER
             )
             add(
@@ -30,6 +32,7 @@ fun getYoutubeArtistPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "视频",
                 fr to "Vidéos",
                 tr to "Videolar",
+                ru to "Видео",
                 id = YoutubeUILocalisation.StringID.ARTIST_ROW_VIDEOS
             )
             add(
@@ -39,6 +42,7 @@ fun getYoutubeArtistPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "单曲",
                 fr to "Singles",
                 tr to "Tekler",
+                ru to "Синглы",
                 id = YoutubeUILocalisation.StringID.ARTIST_ROW_SINGLES
             )
             add(
@@ -48,6 +52,7 @@ fun getYoutubeArtistPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "播放列表",
                 fr to "Liste de lecture",
                 tr to "Oynatma listeleri",
+                ru to "Плейлисты",
                 id = YoutubeUILocalisation.StringID.ARTIST_ROW_OTHER
             )
             add(
@@ -57,6 +62,7 @@ fun getYoutubeArtistPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "来自你的库",
                 fr to "De votre bibliothèque",
                 tr to "Kütüphanenizden",
+                ru to "Из вашей библиотеки",
                 id = YoutubeUILocalisation.StringID.ARTIST_ROW_OTHER
             )
             add(
@@ -70,6 +76,7 @@ fun getYoutubeArtistPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 fr to "Artistes similaires",
                 tr to "Hayranlar şunları da beğenebilir",
                 tr to "Benzer sanatçılar",
+                ru to "Фанатам также нравится",
                 id = YoutubeUILocalisation.StringID.ARTIST_ROW_ARTISTS
             )
             add(
@@ -78,7 +85,8 @@ fun getYoutubeArtistPageLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "精选",
                 es to "Aparece en",
                 fr to "Mis en avant sur",
-                tr to "Öne çıkanlar"
+                tr to "Öne çıkanlar",
+                ru to "Представлено на"
             )
         }
     }
