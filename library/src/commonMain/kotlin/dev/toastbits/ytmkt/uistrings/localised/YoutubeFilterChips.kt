@@ -12,6 +12,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "放松",
                 fr to "Détente",
                 tr to "Rahatlatıcı",
+                ru to "Релакс",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_RELAX
             )
             add(
@@ -21,6 +22,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "充电",
                 fr to "Énergie",
                 tr to "Enerjik",
+                ru to "Заряд энергии",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_ENERGISE
             )
             add(
@@ -30,6 +32,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "活力",
                 fr to "Énergie",
                 tr to "Enerjik",
+                ru to "Заряд энергии",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_ENERGISE
             )
             add(
@@ -39,6 +42,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "健身",
                 fr to "Sport",
                 tr to "Antrenman",
+                ru to "Тренировка",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_WORKOUT
             )
             add(
@@ -48,6 +52,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "通勤",
                 fr to "Pour la route",
                 tr to "Gidip Gelme",
+                ru to "В дороге",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_COMMUTE
             )
             add(
@@ -57,6 +62,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "专注",
                 fr to "Concentration",
                 tr to "Odaklanma",
+                ru to "Концентрация",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_FOCUS
             )
             add(
@@ -66,6 +72,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "播客",
                 fr to "Podcasts",
                 tr to "Podcast'ler",
+                ru to "Подкасты",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_PODCASTS
             )
             add(
@@ -74,6 +81,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "派对",
                 fr to "Fête",
                 tr to "Parti",
+                ru to "Вечеринка",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_PARTY
             )
             add(
@@ -82,6 +90,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "浪漫",
                 fr to "Romance",
                 tr to "Romantik",
+                ru to "Романтика",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_ROMANCE
             )
             add(
@@ -90,6 +99,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "悲伤",
                 fr to "Triste",
                 tr to "Üzgün",
+                ru to "Грустная",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_SAD
             )
             add(
@@ -98,6 +108,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "轻快",
                 fr to "Bonne humeur",
                 tr to "İyi Hisset",
+                ru to "Веселая",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_FEEL_GOOD
             )
             add(
@@ -106,6 +117,7 @@ fun getYoutubeFilterChipsLocalisations(languages: UILanguages): YoutubeUILocalis
                 zh to "睡眠",
                 fr to "Sommeil",
                 tr to "Uyku",
+                ru to "Сон",
                 id = YoutubeUILocalisation.StringID.SONG_FEED_SLEEP
             )
         }

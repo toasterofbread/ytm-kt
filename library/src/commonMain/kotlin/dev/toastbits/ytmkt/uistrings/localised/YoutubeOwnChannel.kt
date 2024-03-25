@@ -11,7 +11,8 @@ fun getYoutubeOwnChannelLocalisations(languages: UILanguages): YoutubeUILocalisa
                 zh to "反复聆听的歌曲" ,
                 es to "Canciones que más escuchastes",
                 fr to "Titres en boucle",
-                tr to "Tekrarlanan şarkılar"
+                tr to "Tekrarlanan şarkılar",
+                ru to "Треки на повторе"
             )
             add(
                 en to "Artists on repeat",
@@ -19,14 +20,16 @@ fun getYoutubeOwnChannelLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "繰り返し再生するアーティスト" ,
                 es to "Artistas más escuchados",
                 fr to "Artistes en boucle",
-                tr to "Tekrarlanan sanatçılar"
+                tr to "Tekrarlanan sanatçılar",
+                ru to "Исполнители на повторе"
             )
             add(
                 en to "Videos on repeat",
                 zh to "反复收看的视频" ,
                 ja to "繰り返し再生されている動画",
                 fr to "Clips en boucle",
-                tr to "Tekrarlanan videolar"
+                tr to "Tekrarlanan videolar",
+                ru to "Видео на повторе"
             )
             add(
                 en to "Playlists on repeat",
@@ -34,7 +37,8 @@ fun getYoutubeOwnChannelLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "繰り返し再生するプレイリスト" ,
                 es to "Playlist mas escuchadas",
                 fr to "Liste de lecture en boucle",
-                tr to "Tekrarlanan oynatma listeleri"
+                tr to "Tekrarlanan oynatma listeleri",
+                ru to "Плейлисты на повторе"
             )
             add(
                 en to "Playlists",
@@ -42,7 +46,8 @@ fun getYoutubeOwnChannelLocalisations(languages: UILanguages): YoutubeUILocalisa
                 ja to "再生リスト" ,
                 es to "Playlists",
                 fr to "Liste de lecture",
-                tr to "Oynatma listeleri"
+                tr to "Oynatma listeleri",
+                ru to "Плейлисты"
             )
         }
     }
