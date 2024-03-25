@@ -101,8 +101,8 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 zh to "推荐的电台",
                 es to "Estaciones de radio recomendadas",
                 fr to "Radios recommandées",
-                tr to "Önerilen radyolar",,
-                ru to "Рекомендованные радиостанции"
+                tr to "Önerilen radyolar",
+                ru to "Рекомендованные радиостанции",
                 id = YoutubeUILocalisation.StringID.FEED_ROW_RADIOS
             )
             add(
@@ -237,7 +237,7 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 ja to "ボカロ&歌い手",
                 tr to "Vocaloid & Utaite",
                 ru to "Вокалоиды и Утайте"
-                
+
             )
             add(
                 en to "Trending community playlists",
