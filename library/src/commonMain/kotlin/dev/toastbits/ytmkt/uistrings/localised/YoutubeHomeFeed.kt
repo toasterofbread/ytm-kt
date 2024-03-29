@@ -242,7 +242,6 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
             add(
                 en to "Trending community playlists",
                 ja to "急上昇のコミュニティ再生リスト",
-                tr to "Vocaloid & Utaite",
                 ru to "Популярные плейлисты от сообщества"
             )
             add(
