@@ -28,17 +28,18 @@ open class YTMLikedArtistsEndpoint(override val auth: YoutubeiAuthenticationStat
         val data: YoutubeiBrowseResponse = response.body()
 
         val playlist_data: List<YoutubeiShelfContentsItem> =
-            data.contents!!
-                .singleColumnBrowseResultsRenderer!!
+            (((((((
+                data.contents ?: throw RuntimeException("contents is null $data"))
+                .singleColumnBrowseResultsRenderer ?: throw RuntimeException("singleColumnBrowseResultsRenderer is null $data"))
                 .tabs
                 .first()
                 .tabRenderer
-                .content!!
-                .sectionListRenderer!!
-                .contents!!
+                .content ?: throw RuntimeException("tabRenderer.content is null $data"))
+                .sectionListRenderer ?: throw RuntimeException("sectionListRenderer is null $data"))
+                .contents ?: throw RuntimeException("sectionListRenderer.contents is null $data"))
                 .first()
-                .musicShelfRenderer!!
-                .contents!!
+                .musicShelfRenderer ?: throw RuntimeException("musicShelfRenderer is null $data"))
+                .contents ?: throw RuntimeException("musicShelfRenderer.contents is null $data"))
 
         return@runCatching playlist_data.mapNotNull {
             val item: YtmMediaItem? = it.toMediaItemData(hl, api)?.first
