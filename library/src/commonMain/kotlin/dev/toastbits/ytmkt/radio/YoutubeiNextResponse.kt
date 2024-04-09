@@ -45,7 +45,7 @@ data class YoutubeiNextResponse(
     class ChipCloudRenderer(val chips: List<Chip>)
     @Serializable
     class Chip(val chipCloudChipRenderer: ChipCloudChipRenderer) {
-        fun getPlaylistId(): String = chipCloudChipRenderer.navigationEndpoint.queueUpdateCommand.fetchContentsCommand.watchEndpoint.playlistId!!
+        fun getPlaylistId(): String? = chipCloudChipRenderer.navigationEndpoint.queueUpdateCommand.fetchContentsCommand.watchEndpoint.playlistId
     }
     @Serializable
     class ChipCloudChipRenderer(val navigationEndpoint: ChipNavigationEndpoint)

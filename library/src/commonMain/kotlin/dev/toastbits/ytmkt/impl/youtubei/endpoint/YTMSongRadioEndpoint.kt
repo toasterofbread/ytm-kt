@@ -84,7 +84,7 @@ open class YTMSongRadioEndpoint(override val api: YoutubeiApi): SongRadioEndpoin
 
             radio = renderer.content?.playlistPanelRenderer
             out_filters = renderer.subHeaderChipCloud?.chipCloudRenderer?.chips?.mapNotNull { chip ->
-                radioToFilters(chip.getPlaylistId(), song_id)
+                chip.getPlaylistId()?.let { radioToFilters(it, song_id) }
             }
         }
         else {
