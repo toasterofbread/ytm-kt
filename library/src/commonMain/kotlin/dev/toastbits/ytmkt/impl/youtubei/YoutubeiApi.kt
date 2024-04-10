@@ -43,7 +43,7 @@ open class YoutubeiApi(
     override val item_cache: MediaItemCache = MediaItemCache()
 ): YtmApi {
     override var user_auth_state: YoutubeiAuthenticationState? = null
-    private var visitor_id: String? = null
+    var visitor_id: String? = null
 
     companion object {
         const val DEFAULT_API_URL: String = "https://music.youtube.com/youtubei/v1/"
@@ -52,7 +52,7 @@ open class YoutubeiApi(
     // -- User auth ---
     override val YoutubeChannelCreationForm = YTMYoutubeChannelCreationFormEndpoint(this)
     override val CreateYoutubeChannel = YTMCreateYoutubeChannelEndpoint(this)
-    private val GetVisitorId = YTMGetVisitorIdEndpoint(this)
+    val GetVisitorId = YTMGetVisitorIdEndpoint(this)
 
     // --- Item loading ---
     override val LoadSong = YTMLoadSongEndpoint(this)
@@ -164,10 +164,6 @@ open class YoutubeiApi(
                 }
             }
         }
-    }
-
-    suspend fun getNewVisitorId() {
-        visitor_id = GetVisitorId.getVisitorId().getOrThrow()
     }
 
     private val post_headers: Headers = Headers.build {

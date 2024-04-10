@@ -16,7 +16,7 @@ suspend fun main() {
         )
 
     // Optionally, get and use a visitor ID so that continuations work while logged out
-    // api.getNewVisitorId()
+    // api.visitor_id = api.GetVisitorId.getVisitorId().getOrThrow()
 
     // Uncomment and populate Headers.build to use the API as a logged-in user
     // api.user_auth_state =
