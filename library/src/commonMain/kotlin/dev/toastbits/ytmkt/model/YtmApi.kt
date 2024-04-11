@@ -8,6 +8,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.HttpRequestBuilder
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonObjectBuilder
+import kotlinx.serialization.json.Json
 
 /**
  * Contains all non-authenticated YouTube endpoints.
@@ -22,6 +23,7 @@ import kotlinx.serialization.json.JsonObjectBuilder
  */
 interface YtmApi {
     val client: HttpClient
+    val json: Json
     val item_cache: MediaItemCache
     val user_auth_state: ApiAuthenticationState?
 

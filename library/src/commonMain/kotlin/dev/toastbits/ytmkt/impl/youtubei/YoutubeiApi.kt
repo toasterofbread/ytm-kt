@@ -93,12 +93,7 @@ open class YoutubeiApi(
     protected open fun HttpClientConfig<CIOEngineConfig>.configureClient() {
         expectSuccess = true
         install(ContentNegotiation) {
-            json(
-                Json {
-                    ignoreUnknownKeys = true
-                    explicitNulls = false
-                }
-            )
+            json(json)
         }
 
         defaultRequest {
@@ -110,6 +105,12 @@ open class YoutubeiApi(
     override val client: HttpClient = HttpClient(CIO) {
         configureClient()
     }
+
+    override val json: Json =
+        Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+        }
 
     override fun HttpRequestBuilder.endpointPath(path: String) {
         url.pathSegments = path.split("/")

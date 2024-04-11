@@ -21,10 +21,12 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.Headers
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.Json
 import dev.toastbits.ytmkt.model.external.YoutubeAccountCreationForm
 
 open class UnimplementedYtmApi: YtmApi {
     override val client: HttpClient = HttpClient(CIO)
+    override val json: Json = Json.Default
     override val item_cache: MediaItemCache = MediaItemCache()
 
     override fun HttpRequestBuilder.endpointPath(path: String) {
