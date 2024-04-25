@@ -11,12 +11,10 @@ ytm-kt currently supports the following Kotlin platforms:
 
 #### Gradle:
 
-1. Add the [JitPack](https://jitpack.io/) repository to your root build file
+1. Add the [JitPack](https://jitpack.io/) repository to your dependency resolution
 ```
-dependencyResolutionManagement {
-  repositories {
-    maven { url 'https://jitpack.io' }
-  }
+repositories {
+  maven("https://jitpack.io")
 }
 ```
 
