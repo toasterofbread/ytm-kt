@@ -8,40 +8,46 @@ plugins {
 }
 
 publishing {
-    publications.withType<MavenPublication> {
-        artifact(tasks.register("${name}JavadocJar", Jar::class) {
-            archiveClassifier.set("javadoc")
-            archiveAppendix.set(this@withType.name)
-        })
+    publications {
+        afterEvaluate { afterEvaluate {
+            withType<MavenPublication> {
+                artifactId = artifactId.replace("library", "ytmkt")
 
-        pom {
-            name.set("ytm-kt")
-            description.set("A Kotlin library for scraping data from YouTube Music")
-            url.set("https://github.com/toasterofbread/ytm-kt")
+                artifact(tasks.register("${name}JavadocJar", Jar::class) {
+                    archiveClassifier.set("javadoc")
+                    archiveAppendix.set(this@withType.name)
+                })
 
-            licenses {
-                license {
-                    name.set("GPL-3.0")
-                    url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
+                pom {
+                    name.set("ytm-kt")
+                    description.set("A Kotlin library for scraping data from YouTube Music")
+                    url.set("https://github.com/toasterofbread/ytm-kt")
+
+                    licenses {
+                        license {
+                            name.set("GPL-3.0")
+                            url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("toasterofbread")
+                            name.set("Talo Halton")
+                            email.set("talohalton@gmail.com")
+                            url.set("https://github.com/toasterofbread")
+                        }
+                    }
+                    scm {
+                        connection.set("https://github.com/toasterofbread/ytm-kt.git")
+                        url.set("https://github.com/toasterofbread/ytm-kt")
+                    }
+                    issueManagement {
+                        system.set("Github")
+                        url.set("https://github.com/toasterofbread/ytm-kt/issues")
+                    }
                 }
             }
-            developers {
-                developer {
-                    id.set("toasterofbread")
-                    name.set("Talo Halton")
-                    email.set("talohalton@gmail.com")
-                    url.set("https://github.com/toasterofbread")
-                }
-            }
-            scm {
-                connection.set("https://github.com/toasterofbread/ytm-kt.git")
-                url.set("https://github.com/toasterofbread/ytm-kt")
-            }
-            issueManagement {
-                system.set("Github")
-                url.set("https://github.com/toasterofbread/ytm-kt/issues")
-            }
-        }
+        } }
     }
 }
 

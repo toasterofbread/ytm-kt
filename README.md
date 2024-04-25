@@ -22,9 +22,9 @@ dependencyResolutionManagement {
 
 2. To your dependencies, add the line corresponding to the target platform (replace `<version>` with the desired ytm-kt [version](https://github.com/toasterofbread/ytm-kt/tags))
 
-- Android: `implementation("dev.toastbits.ytm-kt:library-android:<version>")`
-- Desktop (Kotlin/JVM): `implementation("dev.toastbits.ytm-kt:library-jvm:<version>")`
-- Linux (Kotlin/Native): `implementation("dev.toastbits.ytm-kt:library-linuxx64:<version>")`
+- Android: `implementation("dev.toastbits.ytmkt:ytmkt-android:<version>")`
+- Desktop (Kotlin/JVM): `implementation("dev.toastbits.ytmkt:ytmkt-jvm:<version>")`
+- Linux (Kotlin/Native): `implementation("dev.toastbits.ytmkt:ytmkt-linuxx64:<version>")`
 
 ## Usage
 
