@@ -5,6 +5,13 @@ import dev.toastbits.ytmkt.uistrings.localised.getHoursMinutesSecondsSuffixes
 
 private const val HOUR_MS: Long = 3600000L
 
+private fun StringBuilder.appendTwoDigits(n: Long) {
+    if (n < 10) {
+        this.append("0")
+    }
+    this.append("$n")
+}
+
 fun durationToString(duration_ms: Long, hl: String, short: Boolean = false): String {
     val string: StringBuilder = StringBuilder()
 
@@ -14,10 +21,16 @@ fun durationToString(duration_ms: Long, hl: String, short: Boolean = false): Str
 
     if (short) {
         if (hours > 0L) {
-            string.append("$hours:$minutes:$seconds")
+            string.append("$hours")
+            string.append(":")
+            string.appendTwoDigits(minutes)
+            string.append(":")
+            string.appendTwoDigits(seconds)
         }
         else {
-            string.append("$minutes:$seconds")
+            string.append("$minutes")
+            string.append(":")
+            string.appendTwoDigits(seconds)
         }
     }
     else {
