@@ -3,6 +3,7 @@ package dev.toastbits.ytmkt.model.external
 interface PlaylistEditor {
     sealed class Action(val changes_items: Boolean = false) {
         data class SetTitle(val title: String): Action()
+        data class SetDescription(val description: String): Action()
         data class SetImage(val image_url: String?): Action()
         data class SetImageWidth(val image_width: Float?): Action()
 

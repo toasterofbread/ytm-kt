@@ -79,6 +79,7 @@ private class AccountPlaylistEditor(
                     }
 
                     is PlaylistEditor.Action.SetTitle -> {}
+                    is PlaylistEditor.Action.SetDescription -> {}
                     is PlaylistEditor.Action.SetImage -> {}
                     is PlaylistEditor.Action.SetImageWidth -> {}
                 }
@@ -92,6 +93,12 @@ private class AccountPlaylistEditor(
                 return buildJsonObject {
                     put("action", "ACTION_SET_PLAYLIST_NAME")
                     put("playlistName", action.title)
+                }
+            }
+            is PlaylistEditor.Action.SetDescription -> {
+                return buildJsonObject {
+                    put("action", "ACTION_SET_PLAYLIST_DESCRIPTION")
+                    put("playlistDescription", action.description)
                 }
             }
             is PlaylistEditor.Action.Add -> {
