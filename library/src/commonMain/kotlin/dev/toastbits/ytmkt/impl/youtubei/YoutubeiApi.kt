@@ -86,6 +86,16 @@ open class YoutubeiApi(
     override val SongRelatedContent = YTMSongRelatedContentEndpoint(this)
     override val SongLyrics = YTMSongLyricsEndpoint(this)
 
+    override val json: Json =
+        Json {
+            ignoreUnknownKeys = true
+            explicitNulls = false
+        }
+
+    override val client: HttpClient = HttpClient(CIO) {
+        configureClient()
+    }
+
     /**
      * Configures the default HttpClient used by endpoints.
      */
@@ -101,16 +111,6 @@ open class YoutubeiApi(
             url.parameters.append("prettyPrint", "false")
         }
     }
-
-    override val client: HttpClient = HttpClient(CIO) {
-        configureClient()
-    }
-
-    override val json: Json =
-        Json {
-            ignoreUnknownKeys = true
-            explicitNulls = false
-        }
 
     override fun HttpRequestBuilder.endpointPath(path: String) {
         url.pathSegments = path.split("/")
