@@ -6,48 +6,48 @@ fun getYoutubeOwnChannelLocalisations(languages: UILanguages): YoutubeUILocalisa
     with(languages) {
         YoutubeUILocalisation.LocalisationSet().apply {
             add(
-                en to "Songs on repeat",
-                ja to "繰り返し再生されている曲" ,
-                zh to "反复聆听的歌曲" ,
-                es to "Canciones que más escuchastes",
-                fr to "Titres en boucle",
-                tr to "Tekrarlanan şarkılar",
-                ru to "Треки на повторе"
+                en_GB to "Songs on repeat",
+                ja_JP to "繰り返し再生されている曲" ,
+                zh_CN to "反复聆听的歌曲" ,
+                es_US to "Canciones que más escuchastes",
+                fr_FR to "Titres en boucle",
+                tr_TR to "Tekrarlanan şarkılar",
+                ru_RU to "Треки на повторе"
             )
             add(
-                en to "Artists on repeat",
-                zh to "反复聆听的歌手" ,
-                ja to "繰り返し再生するアーティスト" ,
-                es to "Artistas más escuchados",
-                fr to "Artistes en boucle",
-                tr to "Tekrarlanan sanatçılar",
-                ru to "Исполнители на повторе"
+                en_GB to "Artists on repeat",
+                zh_CN to "反复聆听的歌手" ,
+                ja_JP to "繰り返し再生するアーティスト" ,
+                es_US to "Artistas más escuchados",
+                fr_FR to "Artistes en boucle",
+                tr_TR to "Tekrarlanan sanatçılar",
+                ru_RU to "Исполнители на повторе"
             )
             add(
-                en to "Videos on repeat",
-                zh to "反复收看的视频" ,
-                ja to "繰り返し再生されている動画",
-                fr to "Clips en boucle",
-                tr to "Tekrarlanan videolar",
-                ru to "Видео на повторе"
+                en_GB to "Videos on repeat",
+                zh_CN to "反复收看的视频" ,
+                ja_JP to "繰り返し再生されている動画",
+                fr_FR to "Clips en boucle",
+                tr_TR to "Tekrarlanan videolar",
+                ru_RU to "Видео на повторе"
             )
             add(
-                en to "Playlists on repeat",
-                zh to "反复聆听的歌单" ,
-                ja to "繰り返し再生するプレイリスト" ,
-                es to "Playlist mas escuchadas",
-                fr to "Liste de lecture en boucle",
-                tr to "Tekrarlanan oynatma listeleri",
-                ru to "Плейлисты на повторе"
+                en_GB to "Playlists on repeat",
+                zh_CN to "反复聆听的歌单" ,
+                ja_JP to "繰り返し再生するプレイリスト" ,
+                es_US to "Playlist mas escuchadas",
+                fr_FR to "Liste de lecture en boucle",
+                tr_TR to "Tekrarlanan oynatma listeleri",
+                ru_RU to "Плейлисты на повторе"
             )
             add(
-                en to "Playlists",
-                zh to "播放列表" ,
-                ja to "再生リスト" ,
-                es to "Playlists",
-                fr to "Liste de lecture",
-                tr to "Oynatma listeleri",
-                ru to "Плейлисты"
+                en_GB to "Playlists",
+                zh_CN to "播放列表" ,
+                ja_JP to "再生リスト" ,
+                es_US to "Playlists",
+                fr_FR to "Liste de lecture",
+                tr_TR to "Oynatma listeleri",
+                ru_RU to "Плейлисты"
             )
         }
     }

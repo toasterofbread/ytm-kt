@@ -1,14 +1,14 @@
 package dev.toastbits.ytmkt.uistrings.localised
 
 object UILanguages {
-    val en: String = "en-GB"
-    val ja: String = "ja-JP"
-    val pl: String = "pl-PL"
-    val es: String = "es-US"
-    val zh: String = "zh-CN"
-    val fr: String = "fr-FR"
-    val tr: String = "tr-TR"
-    val ru: String = "ru-RU"
+    val en_GB: String = "en-GB"
+    val ja_JP: String = "ja-JP"
+    val pl_PL: String = "pl-PL"
+    val es_US: String = "es-US"
+    val zh_CN: String = "zh-CN"
+    val fr_FR: String = "fr-FR"
+    val tr_TR: String = "tr-TR"
+    val ru_RU: String = "ru-RU"
 }
 
 fun <T> Map<String, T>.getByLanguage(language: String): IndexedValue<Map.Entry<String, T>>? {

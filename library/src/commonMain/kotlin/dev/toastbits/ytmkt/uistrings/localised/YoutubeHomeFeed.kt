@@ -6,276 +6,276 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
     with(languages) {
         YoutubeUILocalisation.LocalisationSet().apply {
             add(
-                en to "Listen again",
-                ja to "もう一度聴く",
-                zh to "再次收听",
-                es to "Volver a escuchar",
-                fr to "Réécouter",
-                tr to "Yeniden dinleyin",
-                ru to "Послушать ещё раз"
+                en_GB to "Listen again",
+                ja_JP to "もう一度聴く",
+                zh_CN to "再次收听",
+                es_US to "Volver a escuchar",
+                fr_FR to "Réécouter",
+                tr_TR to "Yeniden dinleyin",
+                ru_RU to "Послушать ещё раз"
             )
             add(
-                en to "Quick picks",
-                ja to "おすすめ",
-                zh to "快速收听",
-                es to "Selección rápida",
-                fr to "Sélection rapide",
-                tr to "Hızlı seçimler",
-                ru to "Быстрая подборка"
+                en_GB to "Quick picks",
+                ja_JP to "おすすめ",
+                zh_CN to "快速收听",
+                es_US to "Selección rápida",
+                fr_FR to "Sélection rapide",
+                tr_TR to "Hızlı seçimler",
+                ru_RU to "Быстрая подборка"
             )
             add(
-                en to "START RADIO BASED ON A SONG",
-                zh to "根据一首歌开启电台",
-                ja to "曲を選んでラジオを再生",
-                es to "Iniciar la radio basada en una canción",
-                fr to "Démarrer une radio basée sur un titre",
-                tr to "Bir şarkıya göre radyoyu başlatın",
-                ru to "ЗАПУСТИТЬ РАДИОСТАНЦИЮ НА ОСНОВЕ ТРЕКА"
+                en_GB to "START RADIO BASED ON A SONG",
+                zh_CN to "根据一首歌开启电台",
+                ja_JP to "曲を選んでラジオを再生",
+                es_US to "Iniciar la radio basada en una canción",
+                fr_FR to "Démarrer une radio basée sur un titre",
+                tr_TR to "Bir şarkıya göre radyoyu başlatın",
+                ru_RU to "ЗАПУСТИТЬ РАДИОСТАНЦИЮ НА ОСНОВЕ ТРЕКА"
             )
             add(
-                en to "Covers and remixes",
-                ja to "カバーとリミックス" ,
-                zh to "翻唱和混音",
-                es to "Covers y remixes",
-                fr to "Reprises et remix",
-                tr to "Kapaklar ve resimler",
-                ru to "Каверы и ремиксы"
+                en_GB to "Covers and remixes",
+                ja_JP to "カバーとリミックス" ,
+                zh_CN to "翻唱和混音",
+                es_US to "Covers y remixes",
+                fr_FR to "Reprises et remix",
+                tr_TR to "Kapaklar ve resimler",
+                ru_RU to "Каверы и ремиксы"
             )
             add(
-                en to "Recommended albums",
-                ja to "おすすめのアルバム" ,
-                zh to "推荐的专辑",
-                es to "Álbumes recomendados",
-                fr to "Albums recommandés",
-                tr to "Önerilen albümler",
-                ru to "Рекомендованные альбомы"
+                en_GB to "Recommended albums",
+                ja_JP to "おすすめのアルバム" ,
+                zh_CN to "推荐的专辑",
+                es_US to "Álbumes recomendados",
+                fr_FR to "Albums recommandés",
+                tr_TR to "Önerilen albümler",
+                ru_RU to "Рекомендованные альбомы"
             )
             add(
-                en to "Forgotten favourites",
-                ja to "最近聞いていないお気に入り" ,
-                zh to "昔日最爱",
-                es to "Favoritos olvidados",
-                fr to "Favoris à redécouvrir",
-                tr to "Unutulan favoriler",
-                ru to "Забытые избранные"
+                en_GB to "Forgotten favourites",
+                ja_JP to "最近聞いていないお気に入り" ,
+                zh_CN to "昔日最爱",
+                es_US to "Favoritos olvidados",
+                fr_FR to "Favoris à redécouvrir",
+                tr_TR to "Unutulan favoriler",
+                ru_RU to "Забытые избранные"
             )
             add(
-                en to "From your library",
-                zh to "来自你的库" ,
-                ja to "ライブラリから",
-                es to "De tu biblioteca",
-                fr to "De votre bibliothèque",
-                tr to "Kütüphanenizden",
-                ru to "Из вашей библиотеки"
+                en_GB to "From your library",
+                zh_CN to "来自你的库" ,
+                ja_JP to "ライブラリから",
+                es_US to "De tu biblioteca",
+                fr_FR to "De votre bibliothèque",
+                tr_TR to "Kütüphanenizden",
+                ru_RU to "Из вашей библиотеки"
             )
             add(
-                en to "From the community",
-                ja to "コミュニティから",
-                zh to "来自社区",
-                es to "De la comunidad",
-                fr to "De la communauté",
-                tr to "Topluluktan",
-                ru to "От сообщества"
+                en_GB to "From the community",
+                ja_JP to "コミュニティから",
+                zh_CN to "来自社区",
+                es_US to "De la comunidad",
+                fr_FR to "De la communauté",
+                tr_TR to "Topluluktan",
+                ru_RU to "От сообщества"
             )
             add(
-                en to "Recommended music videos",
-                ja to "おすすめのミュージック ビデオ",
-                zh to "推荐的 MV" ,
-                es to "Videos musicales recomendados",
-                fr to "Clips musicaux recommandés",
-                tr to "Önerilen müzik videoları",
-                ru to "Рекомендованные видеоклипы"
+                en_GB to "Recommended music videos",
+                ja_JP to "おすすめのミュージック ビデオ",
+                zh_CN to "推荐的 MV" ,
+                es_US to "Videos musicales recomendados",
+                fr_FR to "Clips musicaux recommandés",
+                tr_TR to "Önerilen müzik videoları",
+                ru_RU to "Рекомендованные видеоклипы"
             )
             add(
-                en to "Live performances",
-                ja to "ライブ" ,
-                zh to "现场表演" ,
-                es to "Presentaciones en vivo",
-                fr to "Concerts",
-                tr to "Canlı performanslar",
-                ru to "Лайв-выступления"
+                en_GB to "Live performances",
+                ja_JP to "ライブ" ,
+                zh_CN to "现场表演" ,
+                es_US to "Presentaciones en vivo",
+                fr_FR to "Concerts",
+                tr_TR to "Canlı performanslar",
+                ru_RU to "Лайв-выступления"
             )
             add(
-                en to "Recommended radios",
-                ja to "おすすめのラジオ",
-                zh to "推荐的电台",
-                es to "Estaciones de radio recomendadas",
-                fr to "Radios recommandées",
-                tr to "Önerilen radyolar",
-                ru to "Рекомендованные радиостанции",
+                en_GB to "Recommended radios",
+                ja_JP to "おすすめのラジオ",
+                zh_CN to "推荐的电台",
+                es_US to "Estaciones de radio recomendadas",
+                fr_FR to "Radios recommandées",
+                tr_TR to "Önerilen radyolar",
+                ru_RU to "Рекомендованные радиостанции",
                 id = YoutubeUILocalisation.StringID.FEED_ROW_RADIOS
             )
             add(
-                en to "FOR YOU",
-                zh to "为你精选",
-                ja to "あなたへのおすすめ",
-                es to "Para ti",
-                fr to "Pour vous",
-                tr to "Senin için",
-                ru to "ДЛЯ ВАС"
+                en_GB to "FOR YOU",
+                zh_CN to "为你精选",
+                ja_JP to "あなたへのおすすめ",
+                es_US to "Para ti",
+                fr_FR to "Pour vous",
+                tr_TR to "Senin için",
+                ru_RU to "ДЛЯ ВАС"
             )
             add(
-                en to "Trending songs",
-                ja to "急上昇曲",
-                zh to "热门歌曲",
-                es to "Canciónes del momento",
-                fr to "Titres tendance",
-                tr to "Trend şarkılar",
-                ru to "Тренды"
+                en_GB to "Trending songs",
+                ja_JP to "急上昇曲",
+                zh_CN to "热门歌曲",
+                es_US to "Canciónes del momento",
+                fr_FR to "Titres tendance",
+                tr_TR to "Trend şarkılar",
+                ru_RU to "Тренды"
             )
             add(
-                en to "Rock Artists",
-                ja to "ロック アーティスト",
-                zh to "摇滚歌手",
-                es to "Artistas de Rock",
-                fr to "Artistes de Rock",
-                tr to "Rock sanatçıları",
-                ru to "Рок исполнители"
+                en_GB to "Rock Artists",
+                ja_JP to "ロック アーティスト",
+                zh_CN to "摇滚歌手",
+                es_US to "Artistas de Rock",
+                fr_FR to "Artistes de Rock",
+                tr_TR to "Rock sanatçıları",
+                ru_RU to "Рок исполнители"
             )
             add(
-                en to "Hits by decade",
-                ja to "Hits by decade",
-                zh to "年代金曲",
-                ja to "年代別のヒット",
-                fr to "Succès par décennie",
-                tr to "On yıla göre hitler",
-                ru to "Хиты десятилетия"
+                en_GB to "Hits by decade",
+                ja_JP to "Hits by decade",
+                zh_CN to "年代金曲",
+                ja_JP to "年代別のヒット",
+                fr_FR to "Succès par décennie",
+                tr_TR to "On yıla göre hitler",
+                ru_RU to "Хиты десятилетия"
             )
             add(
-                en to "JUST UPDATED",
-                ja to "JUST UPDATED",
-                zh to "最近更新",
-                ja to "最近の更新",
-                fr to "Mises à jour récentes",
-                tr to "Şimdi güncellenenler",
-                ru to "НОВИНКИ"
+                en_GB to "JUST UPDATED",
+                ja_JP to "JUST UPDATED",
+                zh_CN to "最近更新",
+                ja_JP to "最近の更新",
+                fr_FR to "Mises à jour récentes",
+                tr_TR to "Şimdi güncellenenler",
+                ru_RU to "НОВИНКИ"
             )
             add(
-                en to "Today's hits",
-                ja to "Today's hits",
-                zh to "今日热门",
-                ja to "今日のヒット",
-                fr to "Les tubes du jour",
-                tr to "Bugünün hitleri",
-                ru to "Хиты дня"
+                en_GB to "Today's hits",
+                ja_JP to "Today's hits",
+                zh_CN to "今日热门",
+                ja_JP to "今日のヒット",
+                fr_FR to "Les tubes du jour",
+                tr_TR to "Bugünün hitleri",
+                ru_RU to "Хиты дня"
             )
             add(
-                en to "Long listening",
-                ja to "長編ミュージック ビデオ",
-                zh to "长时间聆听",
-                es to "Reproducción prolongada",
-                fr to "Écoute prolongée",
-                tr to "Uzun dinleme",
-                ru to "Долгое прослушивание"
+                en_GB to "Long listening",
+                ja_JP to "長編ミュージック ビデオ",
+                zh_CN to "长时间聆听",
+                es_US to "Reproducción prolongada",
+                fr_FR to "Écoute prolongée",
+                tr_TR to "Uzun dinleme",
+                ru_RU to "Долгое прослушивание"
             )
             add(
-                en to "Celebrating Africa Month",
-                ja to "Celebrating Africa Month",
-                zh to "庆祝非洲月",
-                ja to "アフリカ月を祝う",
-                fr to "Célébrons le Mois de l'Afrique",
-                tr to "Afrika ayı kutlaması",
+                en_GB to "Celebrating Africa Month",
+                ja_JP to "Celebrating Africa Month",
+                zh_CN to "庆祝非洲月",
+                ja_JP to "アフリカ月を祝う",
+                fr_FR to "Célébrons le Mois de l'Afrique",
+                tr_TR to "Afrika ayı kutlaması",
             )
             add(
-                en to "Feel good",
-                ja to "Feel good",
-                zh to "欢快",
-                ja to "いい気分",
-                fr to "Bonne humeur",
-                tr to "İyi hisset",
-                ru to "Веселая"
+                en_GB to "Feel good",
+                ja_JP to "Feel good",
+                zh_CN to "欢快",
+                ja_JP to "いい気分",
+                fr_FR to "Bonne humeur",
+                tr_TR to "İyi hisset",
+                ru_RU to "Веселая"
             )
             add(
-                en to "Fresh new music",
-                ja to "Fresh new music",
-                zh to "全新音乐",
-                ja to "新鮮な曲",
-                fr to "Nouveautés",
-                tr to "Taze yeni müzik",
-                ru to "Свежая новая музыка"
+                en_GB to "Fresh new music",
+                ja_JP to "Fresh new music",
+                zh_CN to "全新音乐",
+                ja_JP to "新鮮な曲",
+                fr_FR to "Nouveautés",
+                tr_TR to "Taze yeni müzik",
+                ru_RU to "Свежая новая музыка"
             )
             add(
-                en to "#TBT",
-                zh to "#TBT" ,
-                ja to "#TBT"
+                en_GB to "#TBT",
+                zh_CN to "#TBT" ,
+                ja_JP to "#TBT"
             )
             add(
-                en to "From your library",
-                ja to "ライブラリから" ,
-                zh to "来自你的库" ,
-                es to "De tu biblioteca",
-                fr to "De votre bibliothèque",
-                tr to "Kütüphanenizden",
-                ru to "Из вашей библиотеки"
+                en_GB to "From your library",
+                ja_JP to "ライブラリから" ,
+                zh_CN to "来自你的库" ,
+                es_US to "De tu biblioteca",
+                fr_FR to "De votre bibliothèque",
+                tr_TR to "Kütüphanenizden",
+                ru_RU to "Из вашей библиотеки"
             )
             add(
-                es to "Nuevos Lanzamientos"
+                es_US to "Nuevos Lanzamientos"
             )
             add(
-                es to "Mixes para ti"
+                es_US to "Mixes para ti"
             )
             add(
-                es to "Playlist recomendadas"
+                es_US to "Playlist recomendadas"
             )
             add(
-                en to "Recaps",
-                ja to "ハイライト",
-                tr to "Özetler",
-                ru to "Рекапы"
+                en_GB to "Recaps",
+                ja_JP to "ハイライト",
+                tr_TR to "Özetler",
+                ru_RU to "Рекапы"
             )
             add(
-                ja to "卒業 〜旅立ちの季節〜"
+                ja_JP to "卒業 〜旅立ちの季節〜"
             )
             add(
-                en to "Anime & Soundtracks",
-                ja to "アニメ＆サントラ",
-                tr to "Anime & Müzikler",
-                ru to "Аниме и Саундтреки"
+                en_GB to "Anime & Soundtracks",
+                ja_JP to "アニメ＆サントラ",
+                tr_TR to "Anime & Müzikler",
+                ru_RU to "Аниме и Саундтреки"
             )
             add(
-                en to "Vocaloid & Utaite",
-                ja to "ボカロ&歌い手",
-                tr to "Vocaloid & Utaite",
-                ru to "Вокалоиды и Утайте"
+                en_GB to "Vocaloid & Utaite",
+                ja_JP to "ボカロ&歌い手",
+                tr_TR to "Vocaloid & Utaite",
+                ru_RU to "Вокалоиды и Утайте"
 
             )
             add(
-                en to "Trending community playlists",
-                ja to "急上昇のコミュニティ再生リスト",
-                ru to "Популярные плейлисты от сообщества"
+                en_GB to "Trending community playlists",
+                ja_JP to "急上昇のコミュニティ再生リスト",
+                ru_RU to "Популярные плейлисты от сообщества"
             )
             add(
-                en to "Trending in Shorts",
-                ja to "急上昇のショート動画",
-                tr to "Kısalarda trend",
-                ru to "Популярно в Shorts"
+                en_GB to "Trending in Shorts",
+                ja_JP to "急上昇のショート動画",
+                tr_TR to "Kısalarda trend",
+                ru_RU to "Популярно в Shorts"
 
             )
             add(
-                en to "Focus",
-                ja to "フォーカス",
-                tr to "Odaklanma",
-                ru to "Концентрация"
+                en_GB to "Focus",
+                ja_JP to "フォーカス",
+                tr_TR to "Odaklanma",
+                ru_RU to "Концентрация"
             )
             add(
-                ja to "お気に入り"
+                ja_JP to "お気に入り"
             )
             add(
-                ja to "懐かしのヒット"
+                ja_JP to "懐かしのヒット"
             )
             add(
-                en to "Vocaloid",
-                ja to "ボカロ",
-                ru to "Вокалоид"
+                en_GB to "Vocaloid",
+                ja_JP to "ボカロ",
+                ru_RU to "Вокалоид"
             )
             add(
-                ja to "話題のヒット"
+                ja_JP to "話題のヒット"
             )
             add(
-                ja to "年代別ヒット"
+                ja_JP to "年代別ヒット"
             )
             add(
-                ja to "オールタイム・ヒット"
+                ja_JP to "オールタイム・ヒット"
             )
         }
     }
