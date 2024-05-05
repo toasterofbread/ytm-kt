@@ -6,6 +6,7 @@ object UILanguages {
     val pl: String = "pl-PL"
     val es: String = "es-US"
     val zh: String = "zh-CN"
+    val zh: String = "zh-TW"
     val fr: String = "fr-FR"
     val tr: String = "tr-TR"
     val ru: String = "ru-RU"
