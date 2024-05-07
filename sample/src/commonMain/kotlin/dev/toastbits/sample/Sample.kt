@@ -6,9 +6,9 @@ import dev.toastbits.ytmkt.endpoint.SongFeedEndpoint
 import dev.toastbits.ytmkt.endpoint.SongFeedLoadResult
 import io.ktor.http.Headers
 import io.ktor.client.request.request
+import kotlinx.coroutines.runBlocking
 
-
-suspend fun main() {
+fun main() = runBlocking {
     // Initialise the Youtubei api implementation
     val api: YoutubeiApi =
         YoutubeiApi(
@@ -40,7 +40,7 @@ suspend fun main() {
 
     if (song_feed.ctoken == null) {
         println("Feed has no continuation")
-        return
+        return@runBlocking
     }
 
     // Get the feed's continuation using the ctoken from the first result

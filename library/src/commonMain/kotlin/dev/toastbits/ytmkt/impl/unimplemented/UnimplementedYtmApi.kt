@@ -16,7 +16,6 @@ import dev.toastbits.ytmkt.model.external.RelatedGroup
 import dev.toastbits.ytmkt.itemcache.MediaItemCache
 import dev.toastbits.ytmkt.radio.RadioContinuation
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.http.Headers
 import kotlinx.serialization.json.JsonObjectBuilder
@@ -25,7 +24,7 @@ import kotlinx.serialization.json.Json
 import dev.toastbits.ytmkt.model.external.YoutubeAccountCreationForm
 
 open class UnimplementedYtmApi: YtmApi {
-    override val client: HttpClient = HttpClient(CIO)
+    override val client: HttpClient = HttpClient()
     override val json: Json = Json.Default
     override val item_cache: MediaItemCache = MediaItemCache()
 

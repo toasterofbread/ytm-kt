@@ -9,8 +9,7 @@ import dev.toastbits.ytmkt.impl.youtubei.endpoint.*
 import dev.toastbits.ytmkt.itemcache.MediaItemCache
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.engine.cio.CIOEngineConfig
+import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.HttpRequestBuilder
@@ -92,7 +91,7 @@ open class YoutubeiApi(
             explicitNulls = false
         }
 
-    override val client: HttpClient = HttpClient(CIO) {
+    override val client: HttpClient = HttpClient() {
         configureClient()
     }
 
@@ -100,7 +99,7 @@ open class YoutubeiApi(
      * Configures the default HttpClient used by endpoints.
      */
     @OptIn(ExperimentalSerializationApi::class)
-    protected open fun HttpClientConfig<CIOEngineConfig>.configureClient() {
+    protected open fun HttpClientConfig<out HttpClientEngineConfig>.configureClient() {
         expectSuccess = true
         install(ContentNegotiation) {
             json(json)

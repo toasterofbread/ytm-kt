@@ -14,6 +14,8 @@ pluginManagement {
 
         val dokka_version: String = extra["dokka.version"] as String
         id("org.jetbrains.dokka").version(dokka_version)
+
+        id("com.vanniktech.maven.publish").version("0.28.0")
     }
 }
 
@@ -21,6 +23,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 
