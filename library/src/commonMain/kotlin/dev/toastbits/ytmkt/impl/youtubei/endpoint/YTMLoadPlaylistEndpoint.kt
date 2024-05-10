@@ -7,6 +7,7 @@ import dev.toastbits.ytmkt.model.external.mediaitem.YtmSong
 import dev.toastbits.ytmkt.endpoint.LoadPlaylistEndpoint
 import dev.toastbits.ytmkt.impl.youtubei.YoutubeiApi
 import dev.toastbits.ytmkt.impl.youtubei.loadmediaitem.parsePlaylistResponse
+import dev.toastbits.ytmkt.impl.youtubei.YoutubeiPostBody
 import dev.toastbits.ytmkt.model.internal.Header
 import dev.toastbits.ytmkt.radio.RadioContinuation
 import io.ktor.client.call.body
@@ -40,7 +41,8 @@ open class YTMLoadPlaylistEndpoint(override val api: YoutubeiApi): LoadPlaylistE
         playlist_id: String,
         continuation: RadioContinuation?,
         browse_params: String?,
-        playlist_url: String?
+        playlist_url: String?,
+        use_non_music_api: Boolean
     ): Result<YtmPlaylist> = runCatching {
         if (continuation != null) {
             val (items, cont) = continuation.loadContinuation(api).getOrThrow()
@@ -59,9 +61,9 @@ open class YTMLoadPlaylistEndpoint(override val api: YoutubeiApi): LoadPlaylistE
 
         if (loaded_playlist_url == null) {
             val response: HttpResponse = api.client.request {
-                endpointPath("browse")
-                addApiHeadersWithAuthenticated()
-                postWithBody {
+                endpointPath("browse", non_music_api = use_non_music_api)
+                addApiHeadersWithAuthenticated(non_music_api = use_non_music_api)
+                postWithBody(YoutubeiPostBody.WEB.getPostBody(api)) {
                     put("browseId", browse_id)
                     if (browse_params != null) {
                         put("params", browse_params)
@@ -86,9 +88,9 @@ open class YTMLoadPlaylistEndpoint(override val api: YoutubeiApi): LoadPlaylistE
 
         val hl: String = api.data_language
         val response: HttpResponse = api.client.request {
-            endpointPath("browse")
-            addApiHeadersWithAuthenticated()
-            postWithBody {
+            endpointPath("browse", non_music_api = use_non_music_api)
+            addApiHeadersWithAuthenticated(non_music_api = use_non_music_api)
+            postWithBody(YoutubeiPostBody.WEB.getPostBody(api)) {
                 put("browseId", browse_id)
                 if (browse_params != null) {
                     put("params", browse_params)
@@ -96,7 +98,7 @@ open class YTMLoadPlaylistEndpoint(override val api: YoutubeiApi): LoadPlaylistE
             }
         }
 
-        var playlist: YtmPlaylist = 
+        var playlist: YtmPlaylist =
             parsePlaylistResponse(playlist_id, response, hl, api).getOrThrow()
                 .copy(playlist_url = loaded_playlist_url)
 

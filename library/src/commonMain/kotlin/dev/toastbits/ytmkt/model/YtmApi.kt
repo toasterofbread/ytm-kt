@@ -27,17 +27,17 @@ interface YtmApi {
     val item_cache: MediaItemCache
     val user_auth_state: ApiAuthenticationState?
 
-    fun HttpRequestBuilder.endpointPath(path: String)
+    fun HttpRequestBuilder.endpointPath(path: String, non_music_api: Boolean = false)
 
     fun HttpRequestBuilder.postWithBody(
         base: JsonObject? = null,
         buildPostBody: (JsonObjectBuilder.() -> Unit)? = null
     )
 
-    fun HttpRequestBuilder.addUnauthenticatedApiHeaders(include: List<String>? = null)
+    fun HttpRequestBuilder.addUnauthenticatedApiHeaders(include: List<String>? = null, non_music_api: Boolean = false)
 
-    fun HttpRequestBuilder.addAuthenticatedApiHeaders(include: List<String>? = null) {
-        addUnauthenticatedApiHeaders(include)
+    fun HttpRequestBuilder.addAuthenticatedApiHeaders(include: List<String>? = null, non_music_api: Boolean = false) {
+        addUnauthenticatedApiHeaders(include, non_music_api)
         user_auth_state?.addHeadersToRequest(this, include)
     }
 

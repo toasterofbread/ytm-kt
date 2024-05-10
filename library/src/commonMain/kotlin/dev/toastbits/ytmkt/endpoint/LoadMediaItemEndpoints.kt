@@ -32,18 +32,20 @@ abstract class LoadPlaylistEndpoint: ApiEndpoint() {
     
     /**
      * Loads as much information about the specified playlist as possible.
-     * May also be used to load the continuation of a playlist or 
+     * May also be used to load the continuation of a playlist
      *
      * @param playlist_id The ID of the playlist to load.
      * @param continuation A continuation of this playlist.
      * @param browse_params The browse params to use when loading the playlist, such as from [MediaItemYoutubePage][dev.toastbits.ytmkt.model.external.MediaItemYoutubePage].
      * @param playlist_url The canonical URL pointing to this playlist. May be loaded by the endpoint if not provided. See [YtmPlaylist.playlist_url].
+     * @param use_non_music_api Whether to use the non-music API, if configured
      * @return a playlist object containing all known information.
      */
     abstract suspend fun loadPlaylist(
         playlist_id: String,
         continuation: RadioContinuation? = null,
         browse_params: String? = null,
-        playlist_url: String? = null
+        playlist_url: String? = null,
+        use_non_music_api: Boolean = false
     ): Result<YtmPlaylist>
 }

@@ -30,6 +30,23 @@ data class MusicResponsiveListItemRenderer(
     fun toMediaItemAndPlaylistSetVideoId(hl: String): Pair<YtmMediaItem, String?>? {
         var video_id: String? = playlistItemData?.videoId ?: navigationEndpoint?.watchEndpoint?.videoId
         val browse_id: String? = navigationEndpoint?.browseEndpoint?.browseId
+
+        if (video_id == null && browse_id == null) {
+            for (thumb in thumbnail?.musicThumbnailRenderer?.thumbnail?.thumbnails ?: emptyList()) {
+                if (thumb.url.startsWith("https://i.ytimg.com/vi/")) {
+                    val id_end: Int = thumb.url.indexOf('/', 23)
+                    if (id_end == -1) {
+                        continue
+                    }
+
+                    video_id = thumb.url.substring(23, id_end)
+                    break
+                }
+            }
+
+            // https://i.ytimg.com/vi/U5fJi2fJIsA/hqdefault.jpg?sqp=-oaymwEWCMACELQBIAQqCghQEJADGFogjgJIWg&rs=AMzJL3nzLlxvv3cF9brHQamTp2a6JO_CrA
+        }
+
         var video_is_main: Boolean = true
 
         var title: String? = null

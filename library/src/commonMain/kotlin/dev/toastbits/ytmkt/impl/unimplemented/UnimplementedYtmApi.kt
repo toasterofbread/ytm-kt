@@ -28,11 +28,11 @@ open class UnimplementedYtmApi: YtmApi {
     override val json: Json = Json.Default
     override val item_cache: MediaItemCache = MediaItemCache()
 
-    override fun HttpRequestBuilder.endpointPath(path: String) {
+    override fun HttpRequestBuilder.endpointPath(path: String, non_music_api: Boolean) {
         throw NotImplementedError()
     }
 
-    override fun HttpRequestBuilder.addUnauthenticatedApiHeaders(include: List<String>?) {
+    override fun HttpRequestBuilder.addUnauthenticatedApiHeaders(include: List<String>?, non_music_api: Boolean) {
         throw NotImplementedError()
     }
 
@@ -75,14 +75,14 @@ open class UnimplementedYtmApi: YtmApi {
     }
     override val LoadPlaylist = object : LoadPlaylistEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun loadPlaylist(playlist_id: String, continuation: RadioContinuation?, browse_params: String?, playlist_url: String?): Result<YtmPlaylist> {
+        override suspend fun loadPlaylist(playlist_id: String, continuation: RadioContinuation?, browse_params: String?, playlist_url: String?, use_non_music_api: Boolean): Result<YtmPlaylist> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYtmApi
     }
     override val VideoFormats = object : VideoFormatsEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun getVideoFormats(id: String, filter: ((YoutubeVideoFormat) -> Boolean)?): Result<List<YoutubeVideoFormat>> {
+        override suspend fun getVideoFormats(id: String, include_non_default: Boolean, filter: ((YoutubeVideoFormat) -> Boolean)?): Result<List<YoutubeVideoFormat>> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYtmApi

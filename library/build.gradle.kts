@@ -48,7 +48,13 @@ kotlin {
             }
         }
 
-        val linuxMain by getting {
+        val linuxX64Main by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-curl:$ktor_version")
+            }
+        }
+
+        val linuxArm64Main by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio:$ktor_version")
             }
@@ -71,7 +77,7 @@ android {
 }
 
 mavenPublishing {
-    coordinates("dev.toastbits.ytmkt", "ytmkt", "0.1.1")
+    coordinates("dev.toastbits.ytmkt", "ytmkt", "0.1.2")
 
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()

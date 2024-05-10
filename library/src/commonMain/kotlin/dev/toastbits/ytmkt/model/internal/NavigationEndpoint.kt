@@ -10,7 +10,8 @@ data class NavigationEndpoint(
     val browseEndpoint: BrowseEndpoint?,
     val searchEndpoint: SearchEndpoint?,
     val watchPlaylistEndpoint: WatchPlaylistEndpoint?,
-    val channelCreationFormEndpoint: ChannelCreationFormEndpoint?
+    val channelCreationFormEndpoint: ChannelCreationFormEndpoint?,
+    val commandMetadata: CommandMetadata?
 ) {
     fun getMediaItem(): YtmMediaItem? {
         if (watchEndpoint != null) {
@@ -40,3 +41,9 @@ data class NavigationEndpoint(
 
 @Serializable
 data class ChannelCreationFormEndpoint(val channelCreationToken: String)
+
+@Serializable
+data class CommandMetadata(val webCommandMetadata: WebCommandMetadata?)
+
+@Serializable
+data class WebCommandMetadata(val webPageType: String?)

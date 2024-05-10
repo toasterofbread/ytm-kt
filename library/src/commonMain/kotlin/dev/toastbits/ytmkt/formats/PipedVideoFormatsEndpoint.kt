@@ -6,10 +6,12 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.client.plugins.expectSuccess
 import io.ktor.client.call.body
+import kotlinx.serialization.Serializable
 
 class PipedVideoFormatsEndpoint(override val api: YtmApi): VideoFormatsEndpoint() {
     override suspend fun getVideoFormats(
         id: String,
+        include_non_default: Boolean,
         filter: ((YoutubeVideoFormat) -> Boolean)?
     ): Result<List<YoutubeVideoFormat>> = runCatching {
         val response: HttpResponse =
@@ -34,11 +36,13 @@ class PipedVideoFormatsEndpoint(override val api: YtmApi): VideoFormatsEndpoint(
     }
 }
 
+@Serializable
 private data class PipedStreamsResponse(
     val error: String?,
     val message: String?,
     val audioStreams: List<YoutubeVideoFormat>?,
     val relatedStreams: List<RelatedStream>?
 ) {
+    @Serializable
     data class RelatedStream(val url: String, val type: String)
 }

@@ -8,19 +8,19 @@ abstract class ApiEndpoint: ApiImplementable {
     abstract val api: YtmApi
     override fun getNotImplementedMessage(): String = "Endpoint not implemented:\n${getIdentifier()}"
 
-    fun HttpRequestBuilder.endpointPath(path: String) =
+    fun HttpRequestBuilder.endpointPath(path: String, non_music_api: Boolean = false) =
         with (api) {
-            endpointPath(path)
+            endpointPath(path, non_music_api)
         }
 
-    open suspend fun HttpRequestBuilder.addApiHeadersWithAuthenticated(include: List<String>? = null) =
+    open suspend fun HttpRequestBuilder.addApiHeadersWithAuthenticated(include: List<String>? = null, non_music_api: Boolean = false) =
         with (api) {
-            addAuthenticatedApiHeaders(include)
+            addAuthenticatedApiHeaders(include, non_music_api = non_music_api)
         }
 
-    open suspend fun HttpRequestBuilder.addApiHeadersWithoutAuthentication(include: List<String>? = null) =
+    open suspend fun HttpRequestBuilder.addApiHeadersWithoutAuthentication(include: List<String>? = null, non_music_api: Boolean = false) =
         with (api) {
-            addUnauthenticatedApiHeaders(include)
+            addUnauthenticatedApiHeaders(include, non_music_api = non_music_api)
         }
 
     suspend fun HttpRequestBuilder.postWithBody(

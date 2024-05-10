@@ -19,6 +19,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.Headers
 import io.ktor.http.HttpMethod
 import io.ktor.http.contentType
+import io.ktor.http.takeFrom
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -39,6 +40,7 @@ import kotlinx.serialization.json.buildJsonObject
 open class YoutubeiApi(
     open val data_language: String = "en-GB",
     val api_url: String = DEFAULT_API_URL,
+    val non_music_api_url: String = DEFAULT_NON_MUSIC_API_URL,
     override val item_cache: MediaItemCache = MediaItemCache()
 ): YtmApi {
     override var user_auth_state: YoutubeiAuthenticationState? = null
@@ -46,6 +48,7 @@ open class YoutubeiApi(
 
     companion object {
         const val DEFAULT_API_URL: String = "https://music.youtube.com/youtubei/v1/"
+        const val DEFAULT_NON_MUSIC_API_URL: String = "https://www.youtube.com/youtubei/v1/"
     }
 
     // -- User auth ---
@@ -104,15 +107,12 @@ open class YoutubeiApi(
         install(ContentNegotiation) {
             json(json)
         }
-
-        defaultRequest {
-            url(api_url)
-            url.parameters.append("prettyPrint", "false")
-        }
     }
 
-    override fun HttpRequestBuilder.endpointPath(path: String) {
-        url.pathSegments = path.split("/")
+    override fun HttpRequestBuilder.endpointPath(path: String, non_music_api: Boolean) {
+        url.takeFrom((if (!non_music_api) api_url else non_music_api_url).removeSuffix("/"))
+        url.pathSegments += path.split("/")
+        url.parameters.append("prettyPrint", "false")
     }
 
     override fun HttpRequestBuilder.postWithBody(
@@ -140,12 +140,18 @@ open class YoutubeiApi(
         }
     }
 
-    override fun HttpRequestBuilder.addUnauthenticatedApiHeaders(include: List<String>?) {
-        addUnauthenticatedApiHeaders(include, add_visitor_id = true)
+    override fun HttpRequestBuilder.addUnauthenticatedApiHeaders(include: List<String>?, non_music_api: Boolean) {
+        addUnauthenticatedApiHeaders(include, add_visitor_id = true, non_music_api = non_music_api)
     }
 
-    fun HttpRequestBuilder.addUnauthenticatedApiHeaders(include: List<String>? = null, add_visitor_id: Boolean = true) {
+    fun HttpRequestBuilder.addUnauthenticatedApiHeaders(
+        include: List<String>? = null,
+        add_visitor_id: Boolean = true,
+        non_music_api: Boolean = false
+    ) {
         headers {
+            val post_headers: Headers = if (non_music_api) non_music_post_headers else music_post_headers
+
             if (!include.isNullOrEmpty()) {
                 for (header_key in include) {
                     val value: String = post_headers[header_key] ?: continue
@@ -166,11 +172,21 @@ open class YoutubeiApi(
         }
     }
 
-    private val post_headers: Headers = Headers.build {
-        for ((key, value) in YoutubeiRequestData.ytm_headers) {
-            append(key, value)
+    private val music_post_headers: Headers by lazy {
+        Headers.build {
+            for ((key, value) in YoutubeiRequestData.getYtmHeaders(api_url)) {
+                append(key, value)
+            }
+            set("origin", api_url)
         }
-        set("origin", api_url)
+    }
+    private val non_music_post_headers: Headers by lazy {
+        Headers.build {
+            for ((key, value) in YoutubeiRequestData.getYtmHeaders(non_music_api_url)) {
+                append(key, value)
+            }
+            set("origin", non_music_api_url)
+        }
     }
 
     private val data_hl: String get() = data_language.split('-', limit = 2).first()
@@ -179,4 +195,5 @@ open class YoutubeiApi(
     internal val post_body_android_music: JsonObject get() = YoutubeiRequestData.getYtmContextAndroidMusic(data_hl)
     internal val post_body_android: JsonObject get() = YoutubeiRequestData.getYtmContextAndroid(data_hl)
     internal val post_body_mobile: JsonObject get() = YoutubeiRequestData.getYtmContextMobile(data_hl)
+    internal val post_body_web: JsonObject get() = YoutubeiRequestData.getYtmContextWeb(data_hl)
 }

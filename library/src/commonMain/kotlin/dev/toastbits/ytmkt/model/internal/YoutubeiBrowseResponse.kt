@@ -47,7 +47,7 @@ data class YoutubeiBrowseResponse(
     @Serializable
     data class SectionListRenderer(val contents: List<YoutubeiShelf>?, val header: ChipCloudRendererHeader?, val continuations: List<YoutubeiNextResponse.Continuation>?)
     @Serializable
-    data class TwoColumnBrowseResultsRenderer(val tabs: List<Tab>, val secondaryContents: SecondaryContents) {
+    data class TwoColumnBrowseResultsRenderer(val tabs: List<Tab>, val secondaryContents: SecondaryContents?) {
         @Serializable
         data class SecondaryContents(val sectionListRenderer: SectionListRenderer)
     }

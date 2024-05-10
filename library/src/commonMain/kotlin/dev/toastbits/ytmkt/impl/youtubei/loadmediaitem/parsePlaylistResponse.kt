@@ -106,14 +106,17 @@ suspend fun parsePlaylistResponse(
         builder.type = YtmPlaylist.Type.PLAYLIST
     }
 
-    val section_list_renderer: YoutubeiBrowseResponse.SectionListRenderer? = with (parsed.contents!!) {
-        if (singleColumnBrowseResultsRenderer != null) {
-            singleColumnBrowseResultsRenderer.tabs.firstOrNull()?.tabRenderer?.content?.sectionListRenderer
+    val section_list_renderer: YoutubeiBrowseResponse.SectionListRenderer? =
+        parsed.contents?.let { contents ->
+            val tabs: List<YoutubeiBrowseResponse.Tab>? = contents?.singleColumnBrowseResultsRenderer?.tabs ?: contents.twoColumnBrowseResultsRenderer?.tabs
+
+            if (tabs != null) {
+                tabs.firstOrNull()?.tabRenderer?.content?.sectionListRenderer
+            }
+            else {
+                contents.twoColumnBrowseResultsRenderer?.secondaryContents?.sectionListRenderer
+            }
         }
-        else {
-            twoColumnBrowseResultsRenderer?.secondaryContents?.sectionListRenderer
-        }
-    }
 
     for (row in section_list_renderer?.contents.orEmpty().withIndex()) {
         val description: String? = row.value.description
@@ -127,7 +130,7 @@ suspend fun parsePlaylistResponse(
         }
 
         val row_items = row.value.getMediaItemsAndSetIds(hl, api)
-        builder.items = row_items.map { it.first }.filterIsInstance<YtmSong>()
+        builder.items = builder.items.orEmpty() + row_items.map { it.first }.filterIsInstance<YtmSong>()
 
         val continuation_token: String? =
             row.value.musicPlaylistShelfRenderer?.continuations?.firstOrNull()?.nextContinuationData?.continuation

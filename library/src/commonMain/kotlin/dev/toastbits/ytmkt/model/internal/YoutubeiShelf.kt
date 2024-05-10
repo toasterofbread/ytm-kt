@@ -28,20 +28,18 @@ data class YoutubeiShelf(
     fun getNavigationEndpoint(): NavigationEndpoint? =
         musicShelfRenderer?.bottomEndpoint ?: musicCarouselShelfRenderer?.header?.getRenderer()?.moreContentButton?.buttonRenderer?.navigationEndpoint
 
-    fun getMediaItems(hl: String, api: YtmApi): List<YtmMediaItem> =
-        (musicShelfRenderer?.contents ?: musicCarouselShelfRenderer?.contents ?: musicPlaylistShelfRenderer?.contents ?: gridRenderer!!.items).mapNotNull {
-            it.toMediaItemData(hl, api)?.first
-        }
-
     fun getMediaItemsOrNull(hl: String, api: YtmApi): List<YtmMediaItem>? =
         (musicShelfRenderer?.contents ?: musicCarouselShelfRenderer?.contents ?: musicPlaylistShelfRenderer?.contents ?: gridRenderer?.items)?.mapNotNull {
             it.toMediaItemData(hl, api)?.first
-        }
+        } ?: itemSectionRenderer?.getMediaItems()
+
+    fun getMediaItems(hl: String, api: YtmApi): List<YtmMediaItem> =
+        getMediaItemsOrNull(hl, api)!!
 
     fun getMediaItemsAndSetIds(hl: String, api: YtmApi): List<Pair<YtmMediaItem, String?>> =
-        (musicShelfRenderer?.contents ?: musicCarouselShelfRenderer?.contents ?: musicPlaylistShelfRenderer?.contents ?: gridRenderer?.items ?: emptyList()).mapNotNull {
+        (musicShelfRenderer?.contents ?: musicCarouselShelfRenderer?.contents ?: musicPlaylistShelfRenderer?.contents ?: gridRenderer?.items)?.mapNotNull {
             it.toMediaItemData(hl, api)
-        }
+        } ?: itemSectionRenderer?.getMediaItems()?.map { Pair(it, null) } ?: emptyList()
 
     fun getRenderer(): Any? =
         musicShelfRenderer ?:

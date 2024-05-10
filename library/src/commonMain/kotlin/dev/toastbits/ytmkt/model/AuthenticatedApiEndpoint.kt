@@ -11,8 +11,8 @@ abstract class AuthenticatedApiEndpoint: ApiEndpoint() {
             addUnauthenticatedApiHeaders(include)
         }
 
-    override suspend fun HttpRequestBuilder.addApiHeadersWithAuthenticated(include: List<String>?) {
-        addApiHeadersWithoutAuthentication()
+    override suspend fun HttpRequestBuilder.addApiHeadersWithAuthenticated(include: List<String>?, non_music_api: Boolean) {
+        addApiHeadersWithoutAuthentication(non_music_api = non_music_api)
         auth.addHeadersToRequest(this, include)
     }
 }
