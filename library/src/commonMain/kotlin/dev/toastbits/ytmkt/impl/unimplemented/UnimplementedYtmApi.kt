@@ -136,7 +136,7 @@ open class UnimplementedYtmApi: YtmApi {
     }
     override val Search = object : SearchEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun searchMusic(query: String, params: String?): Result<SearchResults> {
+        override suspend fun search(query: String, params: String?, non_music: Boolean): Result<SearchResults> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYtmApi

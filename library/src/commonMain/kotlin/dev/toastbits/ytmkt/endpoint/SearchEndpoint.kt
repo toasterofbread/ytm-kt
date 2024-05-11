@@ -4,7 +4,7 @@ import dev.toastbits.ytmkt.model.ApiEndpoint
 import dev.toastbits.ytmkt.model.external.mediaitem.MediaItemLayout
 
 abstract class SearchEndpoint: ApiEndpoint() {
-    abstract suspend fun searchMusic(query: String, params: String? = null): Result<SearchResults>
+    abstract suspend fun search(query: String, params: String? = null, non_music: Boolean = false): Result<SearchResults>
 }
 
 enum class SearchType {

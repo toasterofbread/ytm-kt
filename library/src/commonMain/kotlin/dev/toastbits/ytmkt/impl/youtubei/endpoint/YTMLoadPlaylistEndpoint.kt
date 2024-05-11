@@ -63,7 +63,9 @@ open class YTMLoadPlaylistEndpoint(override val api: YoutubeiApi): LoadPlaylistE
             val response: HttpResponse = api.client.request {
                 endpointPath("browse", non_music_api = use_non_music_api)
                 addApiHeadersWithAuthenticated(non_music_api = use_non_music_api)
-                postWithBody(YoutubeiPostBody.WEB.getPostBody(api)) {
+                postWithBody(
+                    (if (use_non_music_api) YoutubeiPostBody.WEB else YoutubeiPostBody.DEFAULT).getPostBody(api)
+                ) {
                     put("browseId", browse_id)
                     if (browse_params != null) {
                         put("params", browse_params)
@@ -90,7 +92,9 @@ open class YTMLoadPlaylistEndpoint(override val api: YoutubeiApi): LoadPlaylistE
         val response: HttpResponse = api.client.request {
             endpointPath("browse", non_music_api = use_non_music_api)
             addApiHeadersWithAuthenticated(non_music_api = use_non_music_api)
-            postWithBody(YoutubeiPostBody.WEB.getPostBody(api)) {
+            postWithBody(
+                (if (use_non_music_api) YoutubeiPostBody.WEB else YoutubeiPostBody.DEFAULT).getPostBody(api)
+            ) {
                 put("browseId", browse_id)
                 if (browse_params != null) {
                     put("params", browse_params)
