@@ -43,6 +43,7 @@ fun getYoutubeOwnChannelLocalisations(languages: UILanguages): YoutubeUILocalisa
             add(
                 en_GB to "Playlists",
                 zh_CN to "播放列表" ,
+                zh_TW to "播放清單" ,
                 ja_JP to "再生リスト" ,
                 es_US to "Playlists",
                 fr_FR to "Liste de lecture",

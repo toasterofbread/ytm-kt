@@ -18,6 +18,7 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 en_GB to "Quick picks",
                 ja_JP to "おすすめ",
                 zh_CN to "快速收听",
+                zh_TW to "歌曲快選",
                 es_US to "Selección rápida",
                 fr_FR to "Sélection rapide",
                 tr_TR to "Hızlı seçimler",
@@ -36,6 +37,7 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 en_GB to "Covers and remixes",
                 ja_JP to "カバーとリミックス" ,
                 zh_CN to "翻唱和混音",
+                zh_TW to "翻唱和重混",
                 es_US to "Covers y remixes",
                 fr_FR to "Reprises et remix",
                 tr_TR to "Kapaklar ve resimler",
@@ -45,6 +47,7 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 en_GB to "Recommended albums",
                 ja_JP to "おすすめのアルバム" ,
                 zh_CN to "推荐的专辑",
+                zh_TW to "推薦專輯",
                 es_US to "Álbumes recomendados",
                 fr_FR to "Albums recommandés",
                 tr_TR to "Önerilen albümler",
@@ -54,6 +57,7 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 en_GB to "Forgotten favourites",
                 ja_JP to "最近聞いていないお気に入り" ,
                 zh_CN to "昔日最爱",
+                zh_TW to "重溫舊愛",
                 es_US to "Favoritos olvidados",
                 fr_FR to "Favoris à redécouvrir",
                 tr_TR to "Unutulan favoriler",
@@ -81,6 +85,7 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 en_GB to "Recommended music videos",
                 ja_JP to "おすすめのミュージック ビデオ",
                 zh_CN to "推荐的 MV" ,
+                zh_TW to "推薦的音樂影片" ,
                 es_US to "Videos musicales recomendados",
                 fr_FR to "Clips musicaux recommandés",
                 tr_TR to "Önerilen müzik videoları",
@@ -118,6 +123,7 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 en_GB to "Trending songs",
                 ja_JP to "急上昇曲",
                 zh_CN to "热门歌曲",
+                zh_TW to "熱門歌曲",
                 es_US to "Canciónes del momento",
                 fr_FR to "Titres tendance",
                 tr_TR to "Trend şarkılar",
@@ -177,9 +183,10 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 tr_TR to "Afrika ayı kutlaması",
             )
             add(
-                en_GB to "Feel good",
-                ja_JP to "Feel good",
+                en_GB to "Feeling good",
+                ja_JP to "Feeling good",
                 zh_CN to "欢快",
+                zh_TW to "歡樂時光",
                 ja_JP to "いい気分",
                 fr_FR to "Bonne humeur",
                 tr_TR to "İyi hisset",
@@ -246,6 +253,7 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
             )
             add(
                 en_GB to "Trending in Shorts",
+                zh_TW to "在 Shorts 中聆聽過的歌曲"
                 ja_JP to "急上昇のショート動画",
                 tr_TR to "Kısalarda trend",
                 ru_RU to "Популярно в Shorts"
@@ -277,5 +285,54 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
             add(
                 ja_JP to "オールタイム・ヒット"
             )
+            add(
+                en_GB to "Soothing tunes"
+                zh_TW to "流行音樂播放清單"
+            )
+            add(
+                en_GB to "Today's fresh & popular"
+                zh_TW to "最新上架及熱門歌曲"
+            )
+            add(
+                en_GB to "Pop playlists"
+                zh_TW to "流行音樂播放清單"
+            )
+            add(
+                en_GB to "New releases"
+                zh_TW to "最新發行"
+            )
+            add(
+                en_GB to "In the zone"
+                zh_TW to "專注力音樂"
+            )
+            add(
+                en_GB to "Time to sweat"
+                zh_TW to "運動音樂"
+            )
+            add(
+                en_GB to "Party music"
+                zh_TW to "派對音樂"
+            )
+            add(
+                en_GB to "Keep listening"
+                zh_TW to "繼續收聽"
+            )
+            add(
+                en_GB to "Rock moods"
+                zh_TW to "搖滾情境"
+            )
+            add(
+                en_GB to "Mixed for you"
+                zh_TW to "為你推薦的合輯"
+            )
+            add(
+                en_GB to "Charts"
+                zh_TW to "排行榜"
+            )
+            add(
+                en_GB to "Your shows"
+                zh_TW to "你的 Podcast 節目"
+            )
+            
         }
     }

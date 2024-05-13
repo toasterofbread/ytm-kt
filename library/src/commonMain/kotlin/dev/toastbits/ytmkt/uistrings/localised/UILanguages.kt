@@ -2,10 +2,12 @@ package dev.toastbits.ytmkt.uistrings.localised
 
 object UILanguages {
     val en_GB: String = "en-GB"
+    val en_US: String = "en-US"
     val ja_JP: String = "ja-JP"
     val pl_PL: String = "pl-PL"
     val es_US: String = "es-US"
     val zh_CN: String = "zh-CN"
+    val zh_TW: String = "zh-TW"
     val fr_FR: String = "fr-FR"
     val tr_TR: String = "tr-TR"
     val ru_RU: String = "ru-RU"
