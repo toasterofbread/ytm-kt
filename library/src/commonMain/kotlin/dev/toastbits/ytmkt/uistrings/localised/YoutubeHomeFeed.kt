@@ -253,7 +253,7 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
             )
             add(
                 en_GB to "Trending in Shorts",
-                zh_TW to "在 Shorts 中聆聽過的歌曲"
+                zh_TW to "在 Shorts 中聆聽過的歌曲",
                 ja_JP to "急上昇のショート動画",
                 tr_TR to "Kısalarda trend",
                 ru_RU to "Популярно в Shorts"
@@ -286,53 +286,53 @@ fun getYoutubeSongFeedLocalisations(languages: UILanguages): YoutubeUILocalisati
                 ja_JP to "オールタイム・ヒット"
             )
             add(
-                en_GB to "Soothing tunes"
+                en_GB to "Soothing tunes",
                 zh_TW to "流行音樂播放清單"
             )
             add(
-                en_GB to "Today's fresh & popular"
+                en_GB to "Today's fresh & popular",
                 zh_TW to "最新上架及熱門歌曲"
             )
             add(
-                en_GB to "Pop playlists"
+                en_GB to "Pop playlists",
                 zh_TW to "流行音樂播放清單"
             )
             add(
-                en_GB to "New releases"
+                en_GB to "New releases",
                 zh_TW to "最新發行"
             )
             add(
-                en_GB to "In the zone"
+                en_GB to "In the zone",
                 zh_TW to "專注力音樂"
             )
             add(
-                en_GB to "Time to sweat"
+                en_GB to "Time to sweat",
                 zh_TW to "運動音樂"
             )
             add(
-                en_GB to "Party music"
+                en_GB to "Party music",
                 zh_TW to "派對音樂"
             )
             add(
-                en_GB to "Keep listening"
+                en_GB to "Keep listening",
                 zh_TW to "繼續收聽"
             )
             add(
-                en_GB to "Rock moods"
+                en_GB to "Rock moods",
                 zh_TW to "搖滾情境"
             )
             add(
-                en_GB to "Mixed for you"
+                en_GB to "Mixed for you",
                 zh_TW to "為你推薦的合輯"
             )
             add(
-                en_GB to "Charts"
+                en_GB to "Charts",
                 zh_TW to "排行榜"
             )
             add(
-                en_GB to "Your shows"
+                en_GB to "Your shows",
                 zh_TW to "你的 Podcast 節目"
             )
-            
+
         }
     }
