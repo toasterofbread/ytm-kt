@@ -1,6 +1,9 @@
 package dev.toastbits.ytmkt.model.external
 
-interface ThumbnailProvider {
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed interface ThumbnailProvider {
     fun getThumbnailUrl(quality: Quality): String?
     override fun equals(other: Any?): Boolean
 
@@ -62,6 +65,7 @@ interface ThumbnailProvider {
     }
 }
 
+@Serializable
 data class ThumbnailProviderImpl(
     val url_a: String,
     val url_b: String?

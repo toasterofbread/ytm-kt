@@ -82,7 +82,6 @@ data class MusicCardShelfRenderer(
             is YtmSong -> item.copy(artists = artists, thumbnail_provider = thumbnail_provider, album = album)
             is YtmPlaylist -> item.copy(artists = artists, thumbnail_provider = thumbnail_provider)
             is YtmArtist -> item.copy(thumbnail_provider = thumbnail_provider)
-            else -> throw NotImplementedError(item::class.toString())
         }
     }
 }

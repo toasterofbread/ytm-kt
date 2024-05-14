@@ -2,12 +2,16 @@ package dev.toastbits.ytmkt.model.external.mediaitem
 
 import dev.toastbits.ytmkt.model.external.ThumbnailProvider
 import dev.toastbits.ytmkt.radio.RadioContinuation
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
+@Serializable
 data class YtmPlaylist(
     override val id: String,
     override val name: String? = null,
     override val description: String? = null,
     override val thumbnail_provider: ThumbnailProvider? = null,
+    @SerialName("playlist_type")
     val type: Type? = null,
     val artists: List<YtmArtist>? = null,
     val year: Int? = null,

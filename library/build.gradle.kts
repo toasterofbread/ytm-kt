@@ -77,7 +77,7 @@ android {
 }
 
 mavenPublishing {
-    coordinates("dev.toastbits.ytmkt", "ytmkt", "0.2.0")
+    coordinates("dev.toastbits.ytmkt", "ytmkt", "0.2.1")
 
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
     signAllPublications()

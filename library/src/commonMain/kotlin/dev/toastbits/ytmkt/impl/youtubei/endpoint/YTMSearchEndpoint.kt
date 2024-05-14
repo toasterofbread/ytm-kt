@@ -85,9 +85,7 @@ open class YTMSearchEndpoint(override val api: YoutubeiApi): SearchEndpoint() {
             }
 
             val item_section_renderer: ItemSectionRenderer? = category.itemSectionRenderer
-            println("ISR ${item_section_renderer != null}")
             if (item_section_renderer != null) {
-                println("ISR ITEMS ${item_section_renderer.getMediaItems()}")
                 category_layouts.add(
                     Pair(MediaItemLayout(item_section_renderer.getMediaItems(), null, null), null)
                 )
@@ -117,8 +115,6 @@ open class YTMSearchEndpoint(override val api: YoutubeiApi): SearchEndpoint() {
                                         YtmPlaylist.Type.ALBUM -> SearchType.ALBUM
                                         else -> SearchType.PLAYLIST
                                     }
-
-                                else -> throw NotImplementedError(item::class.toString())
                             },
                             it
                         )
@@ -130,8 +126,6 @@ open class YTMSearchEndpoint(override val api: YoutubeiApi): SearchEndpoint() {
         if (correction_suggestion == null && query.trim().lowercase() == "recursion") {
             correction_suggestion = query
         }
-
-        println("FINAL $category_layouts")
 
         return@runCatching SearchResults(category_layouts, correction_suggestion)
     }

@@ -1,8 +1,10 @@
 package dev.toastbits.ytmkt.model.external.mediaitem
 
 import dev.toastbits.ytmkt.model.external.ThumbnailProvider
+import kotlinx.serialization.Serializable
 
-interface YtmMediaItem {
+@Serializable
+sealed interface YtmMediaItem {
     val id: String
     val name: String?
     val description: String?
@@ -51,5 +53,4 @@ fun <T: YtmMediaItem> T.copyWithName(name: String?): T =
         is YtmSong -> item.copy(name = name) as T
         is YtmArtist -> item.copy(name = name) as T
         is YtmPlaylist -> item.copy(name = name) as T
-        else -> throw NotImplementedError(item::class.toString())
     }

@@ -1,7 +1,9 @@
 package dev.toastbits.ytmkt.model.external.mediaitem
 
 import dev.toastbits.ytmkt.model.external.ThumbnailProvider
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class YtmArtist(
     override val id: String,
     override val name: String? = null,
