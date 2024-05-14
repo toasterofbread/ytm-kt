@@ -18,6 +18,12 @@ private val amount_suffixes: Map<String, Map<String, Int>> = mapOf(
         "千" to 1000,
         "百" to 100
     ),
+    UILanguages.zh_TW to mapOf(
+        "億" to 100000000,
+        "萬" to 10000,
+        "千" to 1000,
+        "百" to 100
+    ),
     UILanguages.ru_RU to mapOf(
         "млрд." to 1000000000,
         "млн." to 1000000,
