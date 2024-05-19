@@ -88,6 +88,7 @@ open class YoutubeiApi(
     override val SongRelatedContent = YTMSongRelatedContentEndpoint(this)
     override val SongLyrics = YTMSongLyricsEndpoint(this)
 
+    @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
     override val json: Json =
         Json {
             ignoreUnknownKeys = true

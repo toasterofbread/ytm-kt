@@ -54,9 +54,7 @@ open class YTMSearchEndpoint(override val api: YoutubeiApi): SearchEndpoint() {
                     val did_you_mean_renderer: DidYouMeanRenderer? = shelf.itemSectionRenderer?.contents?.firstOrNull()?.didYouMeanRenderer
 
                     if (did_you_mean_renderer != null) {
-                        did_you_mean_renderer.correctedQuery?.first_text?.also {
-                            correction_suggestion = it
-                        }
+                        correction_suggestion = did_you_mean_renderer.correctedQuery.first_text
                         return@filter false
                     }
                     else {
@@ -94,7 +92,7 @@ open class YTMSearchEndpoint(override val api: YoutubeiApi): SearchEndpoint() {
 
             val shelf: YTMGetSongFeedEndpoint.MusicShelfRenderer = category.musicShelfRenderer ?: continue
             val items = shelf.contents?.mapNotNull { it.toMediaItemData(hl, api)?.first }?.toMutableList() ?: continue
-            val search_params = if (index == 0) null else chips?.get(index - 1)?.chipCloudChipRenderer?.navigationEndpoint?.searchEndpoint?.params
+            val search_params = if (index == 0) null else chips.getOrNull(index - 1)?.chipCloudChipRenderer?.navigationEndpoint?.searchEndpoint?.params
 
             val title: String? = shelf.title?.firstTextOrNull()
             if (title != null) {

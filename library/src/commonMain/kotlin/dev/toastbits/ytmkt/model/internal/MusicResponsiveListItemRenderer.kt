@@ -109,7 +109,7 @@ data class MusicResponsiveListItemRenderer(
                         if (artists == null) {
                             artists = mutableListOf()
                         }
-                        artists!!.add(
+                        artists.add(
                             YtmArtist(
                                 browse_endpoint.browseId,
                                 name = run.text
@@ -198,7 +198,7 @@ data class MusicResponsiveListItemRenderer(
                     if (artists == null) {
                         artists = mutableListOf()
                     }
-                    artists!!.add(YtmArtist(browse_endpoint.browseId))
+                    artists.add(YtmArtist(browse_endpoint.browseId))
                 }
                 YtmMediaItem.Type.PLAYLIST -> {
                     if (album == null) {

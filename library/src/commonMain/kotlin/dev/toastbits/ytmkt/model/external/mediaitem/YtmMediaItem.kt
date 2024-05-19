@@ -48,6 +48,7 @@ sealed interface YtmMediaItem {
     }
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <T: YtmMediaItem> T.copyWithName(name: String?): T =
     when (val item = this as YtmMediaItem) {
         is YtmSong -> item.copy(name = name) as T

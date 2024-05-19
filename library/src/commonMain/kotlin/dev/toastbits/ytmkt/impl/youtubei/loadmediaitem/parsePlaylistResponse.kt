@@ -108,7 +108,7 @@ suspend fun parsePlaylistResponse(
 
     val section_list_renderer: YoutubeiBrowseResponse.SectionListRenderer? =
         parsed.contents?.let { contents ->
-            val tabs: List<YoutubeiBrowseResponse.Tab>? = contents?.singleColumnBrowseResultsRenderer?.tabs ?: contents.twoColumnBrowseResultsRenderer?.tabs
+            val tabs: List<YoutubeiBrowseResponse.Tab>? = contents.singleColumnBrowseResultsRenderer?.tabs ?: contents.twoColumnBrowseResultsRenderer?.tabs
 
             if (tabs != null) {
                 tabs.firstOrNull()?.tabRenderer?.content?.sectionListRenderer

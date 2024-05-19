@@ -9,14 +9,17 @@ data class YoutubeVideoFormat(
     val bitrate: Int,
     val url: String?,
     val audioTrack: AudioTrack? = null,
-    val loudness_db: Float? = null
+    val audioTrackType: String? = null,
+    val loudness_db: Float? = null,
 ) {
+    fun isDefault(): Boolean =
+        audioTrack?.audioIsDefault == true || audioTrackType != "DUBBED"
+
     fun isAudioOnly(): Boolean =
         mimeType.startsWith("audio")
 
-    override fun toString(): String {
-        return "YoutubeVideoFormat(itag=$itag, mimeType=$mimeType, bitrate=$bitrate, loudness_db=$loudness_db, url=$url)"
-    }
+    override fun toString(): String =
+        "YoutubeVideoFormat(itag=$itag, mimeType=$mimeType, bitrate=$bitrate, loudness_db=$loudness_db, url=$url)"
 
     @Serializable
     data class AudioTrack(val audioIsDefault: Boolean)

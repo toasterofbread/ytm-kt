@@ -57,7 +57,7 @@ class YoutubeiVideoFormatsEndpoint(override val api: YtmApi): VideoFormatsEndpoi
 
         val streaming_data: YoutubeFormatsResponse.StreamingData = formats.streamingData
         return@runCatching streaming_data.adaptiveFormats.mapNotNull { format ->
-            if (!include_non_default && format?.audioTrack?.audioIsDefault == false) {
+            if (!include_non_default && !format.isDefault()) {
                 return@mapNotNull null
             }
 

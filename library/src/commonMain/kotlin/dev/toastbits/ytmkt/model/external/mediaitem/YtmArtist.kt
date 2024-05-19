@@ -22,7 +22,6 @@ data class YtmArtist(
                     is YtmSong -> "FORSONG"
                     is YtmPlaylist -> "FORPLAYLIST"
                     is YtmArtist -> "FORARTIST"
-                    else -> throw NotImplementedError(item::class.toString())
                 }
             return prefix + item.id
         }

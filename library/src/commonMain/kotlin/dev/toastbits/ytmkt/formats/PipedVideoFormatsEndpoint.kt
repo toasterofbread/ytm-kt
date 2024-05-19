@@ -30,9 +30,17 @@ class PipedVideoFormatsEndpoint(override val api: YtmApi): VideoFormatsEndpoint(
             throw RuntimeException(streams.message)
         }
 
-        return@runCatching streams.audioStreams?.let { audio_streams ->
-            if (filter != null) audio_streams.filter(filter) else audio_streams
-        } ?: emptyList()
+        return@runCatching streams.audioStreams.orEmpty().filter { stream ->
+            if (!include_non_default && !stream.isDefault()) {
+                return@filter false
+            }
+
+            if (filter?.invoke(stream) == false) {
+                return@filter false
+            }
+
+            return@filter true
+        }
     }
 }
 
