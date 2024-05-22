@@ -1,9 +1,7 @@
 package dev.toastbits.ytmkt.model.external.mediaitem
 
 import dev.toastbits.ytmkt.model.external.ThumbnailProvider
-import kotlinx.serialization.Serializable
 
-@Serializable
 data class YtmArtist(
     override val id: String,
     override val name: String? = null,
@@ -22,6 +20,7 @@ data class YtmArtist(
                     is YtmSong -> "FORSONG"
                     is YtmPlaylist -> "FORPLAYLIST"
                     is YtmArtist -> "FORARTIST"
+                    else -> throw NotImplementedError(item::class.toString())
                 }
             return prefix + item.id
         }

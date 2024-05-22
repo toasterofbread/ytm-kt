@@ -113,6 +113,8 @@ open class YTMSearchEndpoint(override val api: YoutubeiApi): SearchEndpoint() {
                                         YtmPlaylist.Type.ALBUM -> SearchType.ALBUM
                                         else -> SearchType.PLAYLIST
                                     }
+
+                                else -> throw NotImplementedError(item::class.toString())
                             },
                             it
                         )

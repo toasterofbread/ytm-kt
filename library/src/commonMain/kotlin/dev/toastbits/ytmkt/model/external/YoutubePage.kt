@@ -1,10 +1,8 @@
 package dev.toastbits.ytmkt.model.external
 
 import dev.toastbits.ytmkt.model.external.mediaitem.YtmMediaItem
-import kotlinx.serialization.Serializable
 
-@Serializable
-sealed interface YoutubePage {
+interface YoutubePage {
     data class BrowseParamsData(
         val browse_id: String,
         val browse_params: String?
@@ -13,7 +11,6 @@ sealed interface YoutubePage {
     fun getBrowseParamsData(): YoutubePage.BrowseParamsData?
 }
 
-@Serializable
 data class MediaItemYoutubePage(
     val browse_media_item: YtmMediaItem,
     val browse_params: String?,
@@ -25,7 +22,6 @@ data class MediaItemYoutubePage(
         }
 }
 
-@Serializable
 data class ListPageBrowseIdYoutubePage(
     val media_item: YtmMediaItem,
     val list_page_browse_id: String,
@@ -35,7 +31,6 @@ data class ListPageBrowseIdYoutubePage(
         YoutubePage.BrowseParamsData(list_page_browse_id, browse_params)
 }
 
-@Serializable
 data class PlainYoutubePage(
     val browse_id: String
 ): YoutubePage {
