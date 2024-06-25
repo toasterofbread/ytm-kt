@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinNativeLink
+
 plugins {
     kotlin("multiplatform")
 }
@@ -33,4 +35,24 @@ kotlin {
             }
         }
     }
+}
+
+tasks.withType<KotlinNativeLink> {
+    val link_task: KotlinNativeLink = this
+
+    finalizedBy( tasks.create("${name}Finalise") {
+        doFirst {
+            val patch_command: String = System.getenv("KOTLIN_BINARY_PATCH_COMMAND")?.takeIf { it.isNotBlank() } ?: return@doFirst
+
+            for (dir in link_task.outputs.files) {
+                for (file in dir.listFiles().orEmpty()) {
+                    if (!file.isFile) {
+                        continue
+                    }
+
+                    Runtime.getRuntime().exec(arrayOf(patch_command, file.absolutePath)).waitFor()
+                }
+            }
+        }
+    } )
 }
