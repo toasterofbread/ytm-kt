@@ -12,6 +12,7 @@ import dev.toastbits.ytmkt.model.internal.Header
 import dev.toastbits.ytmkt.model.internal.HeaderRenderer
 import dev.toastbits.ytmkt.model.internal.TextRun
 import dev.toastbits.ytmkt.model.internal.YoutubeiBrowseResponse
+import dev.toastbits.ytmkt.model.internal.YoutubeiShelf
 import dev.toastbits.ytmkt.radio.RadioContinuation
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.call.body
@@ -106,19 +107,17 @@ suspend fun parsePlaylistResponse(
         builder.type = YtmPlaylist.Type.PLAYLIST
     }
 
-    val section_list_renderer: YoutubeiBrowseResponse.SectionListRenderer? =
+    val rows: List<YoutubeiShelf>? =
         parsed.contents?.let { contents ->
             val tabs: List<YoutubeiBrowseResponse.Tab>? = contents.singleColumnBrowseResultsRenderer?.tabs ?: contents.twoColumnBrowseResultsRenderer?.tabs
 
-            if (tabs != null) {
-                tabs.firstOrNull()?.tabRenderer?.content?.sectionListRenderer
-            }
-            else {
-                contents.twoColumnBrowseResultsRenderer?.secondaryContents?.sectionListRenderer
-            }
+            return@let (
+                tabs?.firstOrNull()?.tabRenderer?.content?.sectionListRenderer?.contents.orEmpty()
+                + contents.twoColumnBrowseResultsRenderer?.secondaryContents?.sectionListRenderer?.contents.orEmpty()
+            )
         }
 
-    for (row in section_list_renderer?.contents.orEmpty().withIndex()) {
+    for (row in rows.orEmpty().withIndex()) {
         val description: String? = row.value.description
         if (description != null) {
             builder.description = description
