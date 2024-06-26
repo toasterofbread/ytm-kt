@@ -40,6 +40,17 @@ open class YoutubeiAuthenticationState(
     companion object {
         val INCLUDED_HEADERS: List<String> = listOf("cookie", "authorization", "x-goog-authuser")
         val REQUIRED_HEADERS: List<String> = listOf("authorization", "cookie")
+
+        fun fromMap(api: YoutubeiApi, headers: Map<String, String>, own_channel_id: String?): YoutubeiAuthenticationState =
+            YoutubeiAuthenticationState(
+                api,
+                own_channel_id = own_channel_id,
+                headers = Headers.build {
+                    for ((key, value) in headers) {
+                        append(key, value)
+                    }
+                }
+            )
     }
 }
 
