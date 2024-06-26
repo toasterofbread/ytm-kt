@@ -51,11 +51,10 @@ class YoutubeiVideoFormatsEndpoint(override val api: YtmApi): VideoFormatsEndpoi
             }
 
         val formats: YoutubeFormatsResponse = response.body()
-        if (formats.streamingData == null) {
-            return PipedVideoFormatsEndpoint(api).getVideoFormats(id, include_non_default, filter)
-        }
+        val streaming_data: YoutubeFormatsResponse.StreamingData =
+            formats.streamingData
+            ?: throw NullPointerException("streamingData is null")
 
-        val streaming_data: YoutubeFormatsResponse.StreamingData = formats.streamingData
         return@runCatching streaming_data.adaptiveFormats.mapNotNull { format ->
             if (!include_non_default && !format.isDefault()) {
                 return@mapNotNull null
