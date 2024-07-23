@@ -1,6 +1,7 @@
 import com.vanniktech.maven.publish.SonatypeHost
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.JavadocJar
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
     id("com.android.library")
@@ -26,6 +27,11 @@ kotlin {
     linuxArm64()
     mingwX64()
 
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+    }
+
     applyDefaultHierarchyTemplate()
 
     sourceSets {
@@ -34,7 +40,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
 
                 implementation("io.ktor:ktor-client-core:$ktor_version")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")

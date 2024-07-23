@@ -4,14 +4,14 @@ import dev.toastbits.ytmkt.uistrings.localised.getByLanguage
 import dev.toastbits.ytmkt.model.external.mediaitem.YtmMediaItem
 
 interface UiString {
-    fun getString(language: String): String
+    suspend fun getString(language: String): String
     companion object
 }
 
 data class RawUiString(
     val raw_string: String
 ): UiString {
-    override fun getString(language: String): String = raw_string
+    override suspend fun getString(language: String): String = raw_string
 }
 
 data class YoutubeUiString(
@@ -39,7 +39,7 @@ data class YoutubeUiString(
         }
     }
 
-    override fun getString(language: String): String = getLocalised(language).let { it.second ?: it.first }
+    override suspend fun getString(language: String): String = getLocalised(language).let { it.second ?: it.first }
 
     fun getYoutubeStringId(): YoutubeUILocalisation.StringID? =
         type.getStringData().item_ids[index]
