@@ -4,14 +4,13 @@ A Kotlin Multiplatform library for (unofficially) using the YouTube Music API, o
 
 ## Setup
 
-ytm-kt currently supports the following Kotlin platforms:
-- JVM
+ytm-kt currently supports the following Kotlin targets:
   - Android
-  - Desktop
-- Native
+  - JVM (Desktop)
   - Linux x86_64
   - Linux arm64
   - Windows x86_64
+  - Wasm
 
 #### Gradle:
 
@@ -22,13 +21,11 @@ repositories {
 }
 ```
 
-2. To your dependencies, add the line corresponding to the target platform (replace `<version>` with the desired ytm-kt [version](https://github.com/toasterofbread/ytm-kt/tags))
+2. Add the ytm-kt library dependency (replace `<version>` with the desired ytm-kt [version](https://github.com/toasterofbread/ytm-kt/tags))
 
-- JVM (Android): `implementation("dev.toastbits.ytmkt:ytmkt-android:<version>")`
-- JVM (desktop): `implementation("dev.toastbits.ytmkt:ytmkt-jvm:<version>")`
-- Native (Linux x86_64): `implementation("dev.toastbits.ytmkt:ytmkt-linuxx64:<version>")`
-- Native (Linux arm64): `implementation("dev.toastbits.ytmkt:ytmkt-linuxarm64:<version>")`
-- Native (Windows x86_64): `implementation("dev.toastbits.ytmkt:ytmkt-mingwx64:<version>")`
+```
+implementation("dev.toastbits.ytmkt:ytmkt:<version>")
+```
 
 ## Usage
 
