@@ -24,7 +24,7 @@ data class BrowseEndpoint(
     fun getMediaItem(): YtmMediaItem? =
         getPageType()?.let { page_type ->
             browseId?.let { browse_id ->
-                YtmMediaItem.Type.fromBrowseEndpointType(page_type).itemFromId(browse_id)
+                YtmMediaItem.Type.fromBrowseEndpointType(page_type)?.itemFromId(browse_id)
             }
         }
 

@@ -83,7 +83,7 @@ data class MusicTwoRowItemRenderer(
             )
         }
 
-        val item: YtmMediaItem
+        val item: YtmMediaItem?
 
         if (navigationEndpoint.watchPlaylistEndpoint != null) {
             item = YtmPlaylist(
@@ -101,33 +101,35 @@ data class MusicTwoRowItemRenderer(
             val title: String = title.first_text
             val thumbnail_provider: ThumbnailProvider? = thumbnailRenderer.toThumbnailProvider()
 
-            item = when (YtmMediaItem.Type.fromBrowseEndpointType(page_type)) {
-                YtmMediaItem.Type.SONG -> {
-                    val song_id: String = YtmSong.cleanId(browse_id)
-                    YtmSong(
-                        song_id,
-                        name = title,
-                        thumbnail_provider = thumbnail_provider,
-                        artists = getArtists(YtmSong(song_id), api)
-                    )
+            item =
+                when (YtmMediaItem.Type.fromBrowseEndpointType(page_type)) {
+                    YtmMediaItem.Type.SONG -> {
+                        val song_id: String = YtmSong.cleanId(browse_id)
+                        YtmSong(
+                            song_id,
+                            name = title,
+                            thumbnail_provider = thumbnail_provider,
+                            artists = getArtists(YtmSong(song_id), api)
+                        )
+                    }
+                    YtmMediaItem.Type.ARTIST ->
+                        YtmArtist(
+                            browse_id,
+                            name = title,
+                            thumbnail_provider = thumbnail_provider
+                        )
+                    YtmMediaItem.Type.PLAYLIST ->{
+                        val playlist_id: String = YtmPlaylist.cleanId(browse_id)
+                        YtmPlaylist(
+                            playlist_id,
+                            type = YtmPlaylist.Type.fromBrowseEndpointType(page_type),
+                            artists = getArtists(YtmPlaylist(playlist_id), api),
+                            name = title,
+                            thumbnail_provider = thumbnail_provider
+                        )
+                    }
+                    null -> null
                 }
-                YtmMediaItem.Type.ARTIST ->
-                    YtmArtist(
-                        browse_id,
-                        name = title,
-                        thumbnail_provider = thumbnail_provider
-                    )
-                YtmMediaItem.Type.PLAYLIST ->{
-                    val playlist_id: String = YtmPlaylist.cleanId(browse_id)
-                    YtmPlaylist(
-                        playlist_id,
-                        type = YtmPlaylist.Type.fromBrowseEndpointType(page_type),
-                        artists = getArtists(YtmPlaylist(playlist_id), api),
-                        name = title,
-                        thumbnail_provider = thumbnail_provider
-                    )
-                }
-            }
         }
 
         return item

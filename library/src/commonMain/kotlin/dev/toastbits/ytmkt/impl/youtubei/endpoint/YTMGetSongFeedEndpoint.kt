@@ -167,8 +167,8 @@ open class YTMGetSongFeedEndpoint(override val api: YoutubeiApi): SongFeedEndpoi
             val page_type: String? = browse_endpoint.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType
             val media_item: YtmMediaItem? =
                 if (page_type != null && browse_endpoint.browseId != null)
-                    YtmMediaItem.Type.fromBrowseEndpointType(page_type).itemFromId(browse_endpoint.browseId)
-                        .copyWithName(name = header.title.runs?.getOrNull(0)?.text)
+                    YtmMediaItem.Type.fromBrowseEndpointType(page_type)?.itemFromId(browse_endpoint.browseId)
+                        ?.copyWithName(name = header.title.runs?.getOrNull(0)?.text)
                 else null
 
             add(
