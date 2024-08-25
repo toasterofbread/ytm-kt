@@ -50,7 +50,7 @@ fun main() = runBlocking {
     song_feed_continuation.printFeed()
 }
 
-fun SongFeedLoadResult.printFeed() {
+suspend fun SongFeedLoadResult.printFeed() {
     for (layout in layouts) {
         val en_title: String = layout.title?.getString("en-GB") ?: "?"
         val ja_title: String = layout.title?.getString("ja-JP") ?: "?"
