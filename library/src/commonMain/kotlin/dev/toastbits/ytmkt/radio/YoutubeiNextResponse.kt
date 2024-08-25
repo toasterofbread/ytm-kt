@@ -21,45 +21,45 @@ data class YoutubeiNextResponse(
     val contents: Contents
 ) {
     @Serializable
-    class Contents(val singleColumnMusicWatchNextResultsRenderer: SingleColumnMusicWatchNextResultsRenderer)
+    data class Contents(val singleColumnMusicWatchNextResultsRenderer: SingleColumnMusicWatchNextResultsRenderer)
     @Serializable
-    class SingleColumnMusicWatchNextResultsRenderer(val tabbedRenderer: TabbedRenderer)
+    data class SingleColumnMusicWatchNextResultsRenderer(val tabbedRenderer: TabbedRenderer)
     @Serializable
-    class TabbedRenderer(val watchNextTabbedResultsRenderer: WatchNextTabbedResultsRenderer)
+    data class TabbedRenderer(val watchNextTabbedResultsRenderer: WatchNextTabbedResultsRenderer)
     @Serializable
-    class WatchNextTabbedResultsRenderer(val tabs: List<Tab>)
+    data class WatchNextTabbedResultsRenderer(val tabs: List<Tab>)
     @Serializable
-    class Tab(val tabRenderer: TabRenderer)
+    data class Tab(val tabRenderer: TabRenderer)
     @Serializable
-    class TabRenderer(val content: Content?, val endpoint: TabRendererEndpoint?)
+    data class TabRenderer(val content: Content?, val endpoint: TabRendererEndpoint?)
     @Serializable
-    class TabRendererEndpoint(val browseEndpoint: BrowseEndpoint)
+    data class TabRendererEndpoint(val browseEndpoint: BrowseEndpoint)
     @Serializable
-    class Content(val musicQueueRenderer: MusicQueueRenderer)
+    data class Content(val musicQueueRenderer: MusicQueueRenderer)
     @Serializable
-    class MusicQueueRenderer(val content: MusicQueueRendererContent?, val subHeaderChipCloud: SubHeaderChipCloud?)
+    data class MusicQueueRenderer(val content: MusicQueueRendererContent?, val subHeaderChipCloud: SubHeaderChipCloud?)
 
     @Serializable
-    class SubHeaderChipCloud(val chipCloudRenderer: ChipCloudRenderer)
+    data class SubHeaderChipCloud(val chipCloudRenderer: ChipCloudRenderer)
     @Serializable
-    class ChipCloudRenderer(val chips: List<Chip>)
+    data class ChipCloudRenderer(val chips: List<Chip>)
     @Serializable
-    class Chip(val chipCloudChipRenderer: ChipCloudChipRenderer) {
+    data class Chip(val chipCloudChipRenderer: ChipCloudChipRenderer) {
         fun getPlaylistId(): String? = chipCloudChipRenderer.navigationEndpoint.queueUpdateCommand.fetchContentsCommand.watchEndpoint.playlistId
     }
     @Serializable
-    class ChipCloudChipRenderer(val navigationEndpoint: ChipNavigationEndpoint)
+    data class ChipCloudChipRenderer(val navigationEndpoint: ChipNavigationEndpoint)
     @Serializable
-    class ChipNavigationEndpoint(val queueUpdateCommand: QueueUpdateCommand)
+    data class ChipNavigationEndpoint(val queueUpdateCommand: QueueUpdateCommand)
     @Serializable
-    class QueueUpdateCommand(val fetchContentsCommand: FetchContentsCommand)
+    data class QueueUpdateCommand(val fetchContentsCommand: FetchContentsCommand)
     @Serializable
-    class FetchContentsCommand(val watchEndpoint: WatchEndpoint)
+    data class FetchContentsCommand(val watchEndpoint: WatchEndpoint)
 
     @Serializable
-    class MusicQueueRendererContent(val playlistPanelRenderer: PlaylistPanelRenderer)
+    data class MusicQueueRendererContent(val playlistPanelRenderer: PlaylistPanelRenderer)
     @Serializable
-    class PlaylistPanelRenderer(val contents: List<ResponseRadioItem>, val continuations: List<Continuation>? = null)
+    data class PlaylistPanelRenderer(val contents: List<ResponseRadioItem>, val continuations: List<Continuation>? = null)
     @Serializable
     data class ResponseRadioItem(
         val playlistPanelVideoRenderer: PlaylistPanelVideoRenderer?,
@@ -79,12 +79,12 @@ data class YoutubeiNextResponse(
     }
 
     @Serializable
-    class PlaylistPanelVideoWrapperRenderer(
+    data class PlaylistPanelVideoWrapperRenderer(
         val primaryRenderer: ResponseRadioItem
     )
 
     @Serializable
-    class PlaylistPanelVideoRenderer(
+    data class PlaylistPanelVideoRenderer(
         val videoId: String,
         val title: TextRuns,
         val longBylineText: TextRuns,

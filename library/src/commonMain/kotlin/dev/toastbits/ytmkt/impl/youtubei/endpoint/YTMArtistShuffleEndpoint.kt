@@ -4,11 +4,14 @@ import dev.toastbits.ytmkt.model.external.mediaitem.YtmArtist
 import dev.toastbits.ytmkt.model.external.mediaitem.YtmSong
 import dev.toastbits.ytmkt.endpoint.ArtistShuffleEndpoint
 import dev.toastbits.ytmkt.impl.youtubei.YoutubeiApi
+import dev.toastbits.ytmkt.radio.RadioContinuation
+import dev.toastbits.ytmkt.radio.RadioContinuation.Type
 import dev.toastbits.ytmkt.radio.YoutubeiNextContinuationResponse
 import dev.toastbits.ytmkt.radio.YoutubeiNextResponse
 import io.ktor.client.call.body
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.put
 
 open class YTMArtistShuffleEndpoint(override val api: YoutubeiApi): ArtistShuffleEndpoint() {
@@ -68,7 +71,9 @@ open class YTMArtistShuffleEndpoint(override val api: YoutubeiApi): ArtistShuffl
                     artists = artists
                 )
             } ?: emptyList(),
-            radio?.continuations?.firstOrNull()?.data?.continuation
+            radio?.continuations?.firstOrNull()?.data?.continuation?.let { continuation ->
+                RadioContinuation(continuation, Type.ARTIST_SHUFFLE, artist_shuffle_playlist_id)
+            }
         )
     }
 }
