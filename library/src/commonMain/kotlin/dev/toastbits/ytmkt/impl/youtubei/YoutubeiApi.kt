@@ -197,4 +197,5 @@ open class YoutubeiApi(
     internal val post_body_android: JsonObject get() = YoutubeiRequestData.getYtmContextAndroid(data_hl)
     internal val post_body_mobile: JsonObject get() = YoutubeiRequestData.getYtmContextMobile(data_hl)
     internal val post_body_web: JsonObject get() = YoutubeiRequestData.getYtmContextWeb(data_hl)
+    internal val post_body_ios: JsonObject get() = YoutubeiRequestData.getYtmContextIos(data_hl)
 }

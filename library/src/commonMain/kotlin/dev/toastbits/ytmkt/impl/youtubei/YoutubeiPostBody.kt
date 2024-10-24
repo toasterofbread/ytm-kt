@@ -7,7 +7,8 @@ enum class YoutubeiPostBody {
     ANDROID_MUSIC,
     ANDROID,
     MOBILE,
-    WEB;
+    WEB,
+    IOS;
 
     fun getPostBody(api: YoutubeiApi): JsonObject =
         when (this) {
@@ -16,6 +17,7 @@ enum class YoutubeiPostBody {
             ANDROID -> api.post_body_android
             MOBILE -> api.post_body_mobile
             WEB -> api.post_body_web
+            IOS -> api.post_body_ios
         }
 
     companion object {

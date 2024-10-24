@@ -32,7 +32,7 @@ internal data class YoutubeFormatsResponse(
     val playerConfig: PlayerConfig?
 ) {
     @Serializable
-    data class StreamingData(val formats: List<YoutubeVideoFormat>, val adaptiveFormats: List<YoutubeVideoFormat>)
+    data class StreamingData(val formats: List<YoutubeVideoFormat>? = null, val adaptiveFormats: List<YoutubeVideoFormat>)
     @Serializable
     data class PlayabilityStatus(val status: String)
 

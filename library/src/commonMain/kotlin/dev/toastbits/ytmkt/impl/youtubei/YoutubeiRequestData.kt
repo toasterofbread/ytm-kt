@@ -96,4 +96,21 @@ object YoutubeiRequestData {
             putJsonObject("user") {}
         }
     }
+
+    fun getYtmContextIos(hl: String): JsonObject = buildJsonObject {
+        putJsonObject("context") {
+            putJsonObject("client") {
+                put("hl", hl)
+                put("clientName", "IOS")
+                put("clientVersion", "19.29.1")
+                put("deviceMake", "Apple")
+                put("deviceModel", "iPhone16,2")
+                put("osName", "iPhone")
+                put("osVersion", "17.5.1.21F90")
+                put("userAgent", "com.google.ios.youtube/19.29.1 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X;)")
+                put("acceptHeader", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8")
+            }
+            putJsonObject("user") {}
+        }
+    }
 }
