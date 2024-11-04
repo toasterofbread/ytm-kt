@@ -16,6 +16,11 @@ open class YTMArtistWithParamsEndpoint(override val api: YoutubeiApi): ArtistWit
         browse_params: YoutubePage.BrowseParamsData
     ): Result<List<ArtistWithParamsRow>> = runCatching {
         val hl: String = api.data_language
+
+        // This seems to now return an empty response if done without at least one of:
+        // - the X-Goog-EOM-Visitor-Id header
+        // - context.client.visitorData (in body, same value as X-Goog-EOM-Visitor-Id)
+        // - being logged in
         val response: HttpResponse = api.client.request {
             endpointPath("browse")
             addApiHeadersWithAuthenticated()

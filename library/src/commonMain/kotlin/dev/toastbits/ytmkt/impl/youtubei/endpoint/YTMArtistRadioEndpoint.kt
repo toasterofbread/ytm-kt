@@ -1,17 +1,20 @@
 package dev.toastbits.ytmkt.impl.youtubei.endpoint
 
-import dev.toastbits.ytmkt.model.external.*
-import dev.toastbits.ytmkt.model.external.mediaitem.YtmArtist
-import dev.toastbits.ytmkt.model.external.mediaitem.YtmSong
-import dev.toastbits.ytmkt.model.external.mediaitem.YtmArtistLayout
-import dev.toastbits.ytmkt.model.external.mediaitem.YtmPlaylist
-import dev.toastbits.ytmkt.uistrings.YoutubeUiString
-import dev.toastbits.ytmkt.uistrings.YoutubeUILocalisation
 import dev.toastbits.ytmkt.endpoint.ArtistRadioEndpoint
 import dev.toastbits.ytmkt.endpoint.ArtistWithParamsRow
 import dev.toastbits.ytmkt.impl.youtubei.YoutubeiApi
 import dev.toastbits.ytmkt.itemcache.MediaItemCache
+import dev.toastbits.ytmkt.model.external.ListPageBrowseIdYoutubePage
+import dev.toastbits.ytmkt.model.external.MediaItemYoutubePage
+import dev.toastbits.ytmkt.model.external.PlainYoutubePage
+import dev.toastbits.ytmkt.model.external.YoutubePage
+import dev.toastbits.ytmkt.model.external.mediaitem.YtmArtist
+import dev.toastbits.ytmkt.model.external.mediaitem.YtmArtistLayout
+import dev.toastbits.ytmkt.model.external.mediaitem.YtmPlaylist
+import dev.toastbits.ytmkt.model.external.mediaitem.YtmSong
 import dev.toastbits.ytmkt.model.implementedOrNull
+import dev.toastbits.ytmkt.uistrings.YoutubeUILocalisation
+import dev.toastbits.ytmkt.uistrings.YoutubeUiString
 
 open class YTMArtistRadioEndpoint(override val api: YoutubeiApi): ArtistRadioEndpoint() {
     override suspend fun getArtistRadio(
@@ -36,11 +39,11 @@ open class YTMArtistRadioEndpoint(override val api: YoutubeiApi): ArtistRadioEnd
                 val view_more: YoutubePage = layout.view_more ?: continue
                 when (view_more) {
                     is MediaItemYoutubePage -> {
-                        val songs_playlist_id: String = (view_more.browse_media_item as? YtmPlaylist)?.id ?: continue
+                        val songs_playlist_id: String = view_more.browse_media_item.id
                         val browse_params: String? = view_more.getBrowseParamsData()?.browse_params
-                        
+
                         val playlist: YtmPlaylist
-                        
+
                         if (browse_params == null) {
                             playlist = api.item_cache.loadPlaylist(
                                 api,
