@@ -1,6 +1,7 @@
 import com.vanniktech.maven.publish.SonatypeHost
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.JavadocJar
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 
 plugins {
@@ -32,7 +33,20 @@ kotlin {
         browser()
     }
 
-    applyDefaultHierarchyTemplate()
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    applyDefaultHierarchyTemplate {
+        common {
+            group("allJvm") {
+                withJvm()
+                withAndroidTarget()
+            }
+
+            group("notJvm") {
+                withNative()
+                withWasm()
+            }
+        }
+    }
 
     sourceSets {
         val ktor_version: String = extra["ktor.version"] as String
@@ -48,9 +62,10 @@ kotlin {
             }
         }
 
-        val jvmMain by getting {
+        val allJvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio:$ktor_version")
+                implementation("com.github.teamnewpipe:NewPipeExtractor:v0.24.3")
             }
         }
 

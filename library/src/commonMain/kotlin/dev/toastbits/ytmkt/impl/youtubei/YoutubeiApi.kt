@@ -1,17 +1,32 @@
 package dev.toastbits.ytmkt.impl.youtubei
 
-import dev.toastbits.ytmkt.model.YtmApi
 import dev.toastbits.ytmkt.endpoint.ArtistRadioEndpoint
 import dev.toastbits.ytmkt.endpoint.ArtistShuffleEndpoint
+import dev.toastbits.ytmkt.formats.MultipleVideoFormatsEndpoint
 import dev.toastbits.ytmkt.formats.VideoFormatsEndpoint
-import dev.toastbits.ytmkt.formats.YoutubeiVideoFormatsEndpoint
-import dev.toastbits.ytmkt.impl.youtubei.endpoint.*
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMArtistRadioEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMArtistShuffleEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMArtistWithParamsEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMCreateYoutubeChannelEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMGetSongFeedEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMGetVisitorIdEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMLoadArtistEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMLoadPlaylistEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMLoadSongEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMPlaylistContinuationEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMRadioBuilderEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSearchEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSearchSuggestionsEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSongLyricsEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSongRadioEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMSongRelatedContentEndpoint
+import dev.toastbits.ytmkt.impl.youtubei.endpoint.YTMYoutubeChannelCreationFormEndpoint
 import dev.toastbits.ytmkt.itemcache.MediaItemCache
+import dev.toastbits.ytmkt.model.YtmApi
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.headers
 import io.ktor.client.request.setBody
@@ -62,7 +77,7 @@ open class YoutubeiApi(
     override val LoadPlaylist = YTMLoadPlaylistEndpoint(this)
 
     // --- Video formats ---
-    override val VideoFormats: VideoFormatsEndpoint = YoutubeiVideoFormatsEndpoint(this)
+    override val VideoFormats: VideoFormatsEndpoint = MultipleVideoFormatsEndpoint(this)
 
     // --- Feed ---
     override val SongFeed = YTMGetSongFeedEndpoint(this)

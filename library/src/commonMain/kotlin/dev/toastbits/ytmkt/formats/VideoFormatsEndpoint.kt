@@ -1,6 +1,7 @@
 package dev.toastbits.ytmkt.formats
 
 import dev.toastbits.ytmkt.model.ApiEndpoint
+import dev.toastbits.ytmkt.model.YtmApi
 import dev.toastbits.ytmkt.model.external.YoutubeVideoFormat
 
 abstract class VideoFormatsEndpoint: ApiEndpoint() {
