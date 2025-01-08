@@ -9,6 +9,7 @@ import dev.toastbits.ytmkt.impl.youtubei.YoutubeiApi
 import dev.toastbits.ytmkt.impl.youtubei.loadmediaitem.parsePlaylistResponse
 import dev.toastbits.ytmkt.impl.youtubei.YoutubeiPostBody
 import dev.toastbits.ytmkt.model.internal.Header
+import dev.toastbits.ytmkt.radio.BuiltInRadioContinuation
 import dev.toastbits.ytmkt.radio.RadioContinuation
 import io.ktor.client.call.body
 import io.ktor.client.request.request
@@ -39,7 +40,7 @@ private fun formatBrowseId(browse_id: String): String =
 open class YTMLoadPlaylistEndpoint(override val api: YoutubeiApi): LoadPlaylistEndpoint() {
     override suspend fun loadPlaylist(
         playlist_id: String,
-        continuation: RadioContinuation?,
+        continuation: BuiltInRadioContinuation?,
         browse_params: String?,
         playlist_url: String?,
         use_non_music_api: Boolean

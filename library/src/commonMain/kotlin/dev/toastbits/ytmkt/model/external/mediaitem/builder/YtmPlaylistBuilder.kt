@@ -1,6 +1,7 @@
 package dev.toastbits.ytmkt.model.external.mediaitem
 
 import dev.toastbits.ytmkt.model.external.ThumbnailProvider
+import dev.toastbits.ytmkt.radio.BuiltInRadioContinuation
 import dev.toastbits.ytmkt.radio.RadioContinuation
 
 class YtmPlaylistBuilder(
@@ -14,7 +15,7 @@ class YtmPlaylistBuilder(
     var year: Int? = null
     var items: List<YtmSong>? = null
     var owner_id: String? = null
-    var continuation: RadioContinuation? = null
+    var continuation: BuiltInRadioContinuation? = null
     var item_set_ids: List<String>? = null
     var item_count: Int? = null
     var total_duration: Long? = null

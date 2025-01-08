@@ -22,6 +22,7 @@ import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.Json
 import dev.toastbits.ytmkt.model.external.YoutubeAccountCreationForm
+import dev.toastbits.ytmkt.radio.BuiltInRadioContinuation
 
 open class UnimplementedYtmApi: YtmApi {
     override val client: HttpClient = HttpClient()
@@ -75,7 +76,7 @@ open class UnimplementedYtmApi: YtmApi {
     }
     override val LoadPlaylist = object : LoadPlaylistEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun loadPlaylist(playlist_id: String, continuation: RadioContinuation?, browse_params: String?, playlist_url: String?, use_non_music_api: Boolean): Result<YtmPlaylist> {
+        override suspend fun loadPlaylist(playlist_id: String, continuation: BuiltInRadioContinuation?, browse_params: String?, playlist_url: String?, use_non_music_api: Boolean): Result<YtmPlaylist> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYtmApi
@@ -129,7 +130,7 @@ open class UnimplementedYtmApi: YtmApi {
     }
     override val PlaylistContinuation = object : PlaylistContinuationEndpoint() {
         override fun isImplemented(): Boolean = false
-        override suspend fun getPlaylistContinuation(initial: Boolean, token: String, skip_initial: Int): Result<Pair<List<YtmMediaItem>, RadioContinuation?>> {
+        override suspend fun getPlaylistContinuation(initial: Boolean, token: String, skip_initial: Int): Result<Pair<List<YtmMediaItem>, BuiltInRadioContinuation?>> {
             throw NotImplementedError()
         }
         override val api = this@UnimplementedYtmApi

@@ -13,6 +13,7 @@ import dev.toastbits.ytmkt.model.internal.HeaderRenderer
 import dev.toastbits.ytmkt.model.internal.TextRun
 import dev.toastbits.ytmkt.model.internal.YoutubeiBrowseResponse
 import dev.toastbits.ytmkt.model.internal.YoutubeiShelf
+import dev.toastbits.ytmkt.radio.BuiltInRadioContinuation
 import dev.toastbits.ytmkt.radio.RadioContinuation
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.call.body
@@ -43,9 +44,9 @@ suspend fun parsePlaylistResponse(
             return@mapNotNull if (data_item is YtmSong) data_item else null
         }
 
-        val continuation: RadioContinuation? =
+        val continuation: BuiltInRadioContinuation? =
             playlist_shelf.continuations?.firstOrNull()?.nextRadioContinuationData?.continuation?.let {
-                RadioContinuation(it, RadioContinuation.Type.SONG, playlist_id)
+                BuiltInRadioContinuation(it, BuiltInRadioContinuation.Type.SONG, playlist_id)
             }
 
         val thumbnail_provider: ThumbnailProvider? =
@@ -135,7 +136,7 @@ suspend fun parsePlaylistResponse(
             row.value.musicPlaylistShelfRenderer?.continuations?.firstOrNull()?.nextContinuationData?.continuation
 
         builder.continuation = continuation_token?.let {
-            RadioContinuation(it, RadioContinuation.Type.PLAYLIST)
+            BuiltInRadioContinuation(it, BuiltInRadioContinuation.Type.PLAYLIST)
         }
         builder.item_set_ids = if (row_items.all { it.second != null }) row_items.map { it.second!! } else null
 

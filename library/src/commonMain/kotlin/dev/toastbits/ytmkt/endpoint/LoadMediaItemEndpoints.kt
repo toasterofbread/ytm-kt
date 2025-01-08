@@ -4,6 +4,7 @@ import dev.toastbits.ytmkt.model.ApiEndpoint
 import dev.toastbits.ytmkt.model.external.mediaitem.YtmPlaylist
 import dev.toastbits.ytmkt.model.external.mediaitem.YtmSong
 import dev.toastbits.ytmkt.model.external.mediaitem.YtmArtist
+import dev.toastbits.ytmkt.radio.BuiltInRadioContinuation
 import dev.toastbits.ytmkt.radio.RadioContinuation
 
 abstract class LoadSongEndpoint: ApiEndpoint() {
@@ -43,7 +44,7 @@ abstract class LoadPlaylistEndpoint: ApiEndpoint() {
      */
     abstract suspend fun loadPlaylist(
         playlist_id: String,
-        continuation: RadioContinuation? = null,
+        continuation: BuiltInRadioContinuation? = null,
         browse_params: String? = null,
         playlist_url: String? = null,
         use_non_music_api: Boolean = false

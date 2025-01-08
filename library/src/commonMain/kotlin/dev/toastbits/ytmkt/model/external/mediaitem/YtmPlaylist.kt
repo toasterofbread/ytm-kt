@@ -1,6 +1,7 @@
 package dev.toastbits.ytmkt.model.external.mediaitem
 
 import dev.toastbits.ytmkt.model.external.ThumbnailProvider
+import dev.toastbits.ytmkt.radio.BuiltInRadioContinuation
 import dev.toastbits.ytmkt.radio.RadioContinuation
 
 data class YtmPlaylist(
@@ -13,7 +14,7 @@ data class YtmPlaylist(
     val year: Int? = null,
     val items: List<YtmSong>? = null,
     val owner_id: String? = null,
-    val continuation: RadioContinuation? = null,
+    val continuation: BuiltInRadioContinuation? = null,
     val item_set_ids: List<String>? = null,
     val item_count: Int? = null,
     val total_duration: Long? = null,

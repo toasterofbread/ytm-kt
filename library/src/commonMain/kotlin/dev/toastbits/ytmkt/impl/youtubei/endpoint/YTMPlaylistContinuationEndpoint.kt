@@ -7,6 +7,7 @@ import dev.toastbits.ytmkt.impl.youtubei.YoutubeiApi
 import dev.toastbits.ytmkt.model.internal.YoutubeiBrowseResponse
 import dev.toastbits.ytmkt.radio.RadioContinuation
 import dev.toastbits.ytmkt.itemcache.MediaItemCache
+import dev.toastbits.ytmkt.radio.BuiltInRadioContinuation
 import io.ktor.client.call.body
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
@@ -16,7 +17,7 @@ open class YTMPlaylistContinuationEndpoint(override val api: YoutubeiApi): Playl
         initial: Boolean,
         token: String,
         skip_initial: Int,
-    ): Result<Pair<List<YtmMediaItem>, RadioContinuation?>> = runCatching {
+    ): Result<Pair<List<YtmMediaItem>, BuiltInRadioContinuation?>> = runCatching {
         if (initial) {
             val playlist: YtmPlaylist = api.item_cache.loadPlaylist(
                 api,
@@ -54,9 +55,9 @@ open class YTMPlaylistContinuationEndpoint(override val api: YoutubeiApi): Playl
         return@runCatching Pair(
             items.drop(skip_initial),
             shelf.continuations?.firstOrNull()?.nextContinuationData?.continuation?.let {
-                RadioContinuation(
+                BuiltInRadioContinuation(
                     token = it,
-                    type = RadioContinuation.Type.PLAYLIST
+                    type = BuiltInRadioContinuation.Type.PLAYLIST
                 )
             }
         )
