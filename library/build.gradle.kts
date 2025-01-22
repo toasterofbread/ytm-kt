@@ -65,7 +65,7 @@ kotlin {
         val allJvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-cio:$ktor_version")
-                implementation("com.github.teamnewpipe:NewPipeExtractor:v0.24.3")
+                implementation("com.github.teamnewpipe:NewPipeExtractor:v0.24.4")
             }
         }
 
